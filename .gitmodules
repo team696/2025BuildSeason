@@ -1,0 +1,3 @@
+[submodule "team696Library"]
+	path = src/main/java/frc/team696
+	url = https://github.com/team696/CommonLibrary.git
