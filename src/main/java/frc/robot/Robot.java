@@ -8,7 +8,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Swerve;
 import frc.team696.lib.Logging.BackupLogger;
+import frc.team696.lib.Swerve.Commands.TeleopSwerve;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -16,12 +18,14 @@ public class Robot extends TimedRobot {
 
   public Robot() {
     
-    
-    
     SmartDashboard.putData(CommandScheduler.getInstance());
-
+    configureDriverStationBinds();
+    Swerve.get().setDefaultCommand(TeleopSwerve.New());
   }
 
+  private void configureDriverStationBinds(){
+    TeleopSwerve.config(Swerve.get(), HumanControls.DriverStation.leftJoyX, HumanControls.DriverStation.leftJoyY, HumanControls.DriverStation.rightJoyX, null, 0.07);  
+  }
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
