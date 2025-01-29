@@ -7,7 +7,7 @@ package frc.robot;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.Joystick;
-import frc.robot.subsystems.Swerve;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team696.lib.Swerve.Commands.TeleopSwerve;
 
 /** Add your docs here. */
@@ -17,6 +17,7 @@ public final class HumanControls {
         public static final Joystick OperatorPanelA=new Joystick(1);
         public static final Joystick OperatorPanelB=new Joystick(2);
         public static final Joystick OperatorPanelC=new Joystick(3);
+        public static final JoystickButton resetGyro=new JoystickButton(DriverPanel, 1);
         public static final DoubleSupplier leftJoyY = ()->-DriverPanel.getRawAxis(1);
         public static final DoubleSupplier leftJoyX = ()->DriverPanel.getRawAxis(0);
         public static final DoubleSupplier rightJoyX = ()->-DriverPanel.getRawAxis(2);
