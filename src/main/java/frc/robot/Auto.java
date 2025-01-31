@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -27,6 +28,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -73,6 +75,7 @@ public class Auto {
     private SendableChooser<Command> _autoChooser;
 
     public SysIdRoutine _driveSysIdRoutine; 
+    private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
 
     private Auto (CommandSwerveDrivetrain swerve, boolean shouldUseGUIValues, NamedCommand... commandsToRegister) {
         _swerve = swerve;
@@ -96,23 +99,19 @@ public class Auto {
                 new Alert("Failed to fetch robotConfig GUI Settings", AlertType.kWarning).set(true);
             }
         }
-            
+
         AutoBuilder.configure(
             ()->_swerve.getState().Pose, 
             _swerve::resetPose, 
-            ()->_swerve.getState().Speeds, // TODO: make sure getState().Speeds is robot-relative
-            (speeds, feedforwards) -> _swerve.Drive(speeds), 
+            ()->_swerve.getState().Speeds,
+            (speeds, feedforwards) -> m_pathApplyRobotSpeeds.withSpeeds(speeds)
+            .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
+            .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons()), 
             new PPHolonomicDriveController(  
-                    new PIDConstants(5.0, 0.0, 0.0), 
-                    new PIDConstants(5.0, 0.0, 0.0)),
+                    new PIDConstants(10.0, 0.0, 0.0), 
+                    new PIDConstants(7.0, 0.0, 0.0)),
             config,
-            () -> {
-                Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
-                if (alliance.isPresent()) {
-                    return alliance.get() == DriverStation.Alliance.Red;
-                }
-                return false;
-            },
+            () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
             _swerve
         );
 

@@ -6,6 +6,8 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
+import java.util.Arrays;
+
 import com.ctre.phoenix6.Utils;
 
 import edu.wpi.first.math.VecBuilder;
@@ -17,8 +19,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.commands.PIDtoNearest;
 import frc.robot.commands.PIDtoPosition;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.util.GameInfo;
+import frc.robot.util.PoseUtil;
 import frc.team696.lib.Camera.LimelightHelpers;
 import frc.team696.lib.Logging.BackupLogger;
 import frc.team696.lib.Swerve.Commands.TeleopSwerve;
@@ -51,6 +56,10 @@ public class Robot extends TimedRobot {
       new PIDtoPosition(new Pose2d(13.61,2.65, Rotation2d.fromDegrees(32)))
       .andThen(new PIDtoPosition(new Pose2d(13.34, 0.76, Rotation2d.fromDegrees(107))))
       .repeatedly());
+    if(Robot.isSimulation())
+      HumanControls.DriverStation.test2.whileTrue(
+        new PIDtoNearest()
+      );
     //Swerve.get().setDefaultCommand(TeleopSwerve.New());
   }
 
@@ -85,7 +94,11 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {}
 
   @Override
-  public void autonomousExit() {}
+  public void autonomousExit() {
+    if(m_autonomousCommand!=null){
+      m_autonomousCommand.cancel();
+    }
+  }
 
   @Override
   public void teleopInit() {

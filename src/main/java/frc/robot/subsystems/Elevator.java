@@ -33,10 +33,13 @@ public class Elevator extends SubsystemBase {
   private MotionMagicVoltage positionReq;
   private VoltageOut voltageReq;
   public SysIdRoutine identificationRoutine;
+  // controls the angle of the scoring arm
+  public TalonFactory m_angle;
   /** Creates a new Elevator. */
   private Elevator() {
     m_master=new TalonFactory(BotConstants.Elevator.masterID, BotConstants.rioBus, BotConstants.Elevator.cfg, "Elevator Master");
     m_slave=new TalonFactory(BotConstants.Elevator.slaveId,BotConstants.canivoreBus, BotConstants.Elevator.cfg, "Elevator Slave");
+    //m_angle=new TalonFactory();
     m_slave.Follow(m_master, false);// TODO: determine of the slave needs to go in the same or in the opposite direction to the master
     
     positionReq=new MotionMagicVoltage(0);
