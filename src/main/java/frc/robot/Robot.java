@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import java.util.Arrays;
 
 import com.ctre.phoenix6.Utils;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -19,6 +20,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Auto.NamedCommand;
 import frc.robot.commands.PIDtoNearest;
 import frc.robot.commands.PIDtoPosition;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -43,6 +46,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData(CommandScheduler.getInstance());
     configureDriverStationBinds();
     CommandSwerveDrivetrain.get().registerTelemetry(m_SwerveTelemetry::telemeterize);
+    Auto.Initialize(CommandSwerveDrivetrain.get(), false, new NamedCommand("hi", new WaitCommand(3)));
     CommandSwerveDrivetrain.get().setDefaultCommand(CommandSwerveDrivetrain.get().applyRequest(
       ()->CommandSwerveDrivetrain.fcDriveReq.withVelocityX(
         applyDeadband(HumanControls.DriverStation.leftJoyX.getAsDouble(), 0.07)*MaxSpeed)
@@ -60,6 +64,8 @@ public class Robot extends TimedRobot {
       HumanControls.DriverStation.test2.whileTrue(
         new PIDtoNearest()
       );
+      SmartDashboard.putData(Auto.PathFind(new Pose2d(5,5,Rotation2d.fromDegrees(0))));
+
     //Swerve.get().setDefaultCommand(TeleopSwerve.New());
   }
 
@@ -83,7 +89,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = null;
+    m_autonomousCommand = Auto.get().Selected();
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();

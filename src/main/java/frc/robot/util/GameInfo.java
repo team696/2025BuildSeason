@@ -12,6 +12,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.HumanControls;
 
 /** Add your docs here. */
 public class GameInfo {
@@ -26,6 +29,13 @@ public class GameInfo {
         public Pose2d[] left, right;
     }
     public static FieldSide red, blue;
+    public static FieldSide getFieldSide(){
+        // TODO: Cache the alliance station value somewhere when the match starts
+        return DriverStation.getAlliance().orElse(Alliance.Blue)==Alliance.Blue?blue:red;
+    }
+    public static Pose2d[] getScoringPoses(){
+        return HumanControls.DriverStation.leftOrRight.getAsBoolean()?getFieldSide().left:getFieldSide().right;
+    }
     static{
         blue=new FieldSide();
         blue.left=new Pose2d[]{

@@ -79,7 +79,7 @@ public class Auto {
 
     private Auto (CommandSwerveDrivetrain swerve, boolean shouldUseGUIValues, NamedCommand... commandsToRegister) {
         _swerve = swerve;
-        
+
         RobotConfig config = new RobotConfig(
             SwerveConstants.MASS, 
             SwerveConstants.MOMENT_OF_INERTIA, 
@@ -104,9 +104,9 @@ public class Auto {
             ()->_swerve.getState().Pose, 
             _swerve::resetPose, 
             ()->_swerve.getState().Speeds,
-            (speeds, feedforwards) -> m_pathApplyRobotSpeeds.withSpeeds(speeds)
+            (speeds, feedforwards) -> {m_pathApplyRobotSpeeds.withSpeeds(speeds)
             .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
-            .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons()), 
+            .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons()); System.out.println("medina more like megdina");}, 
             new PPHolonomicDriveController(  
                     new PIDConstants(10.0, 0.0, 0.0), 
                     new PIDConstants(7.0, 0.0, 0.0)),
@@ -128,7 +128,8 @@ public class Auto {
         });
 
         _autoChooser = AutoBuilder.buildAutoChooser();
-        ShuffleDashboard.addAutoChooser(_autoChooser);
+        SmartDashboard.putData(_autoChooser);   
+        //ShuffleDashboard.addAutoChooser(_autoChooser);
 
         _autoChooser.onChange((command)-> {
             visualize();

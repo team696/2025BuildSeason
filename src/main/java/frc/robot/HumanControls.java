@@ -24,14 +24,15 @@ public final class HumanControls {
         public static final JoystickButton scoreL2=null;
         public static final JoystickButton scoreL3=null;
         public static final JoystickButton scoreL4=null;
+        public static final JoystickButton leftOrRight=null;
         // Use one of the switches on the driver station for this
         public static final BooleanSupplier manualOverride=null;
     
         // TODO: make sure the test buttons are removed by week 1
         public static final JoystickButton test1=new JoystickButton(OperatorPanelA, 1);
-        public static final JoystickButton test2=new JoystickButton(OperatorPanelA, 2);
-        public static final JoystickButton test3=new JoystickButton(OperatorPanelA, 3);
-        public static final JoystickButton test4=new JoystickButton(OperatorPanelA, 4);
+        public static final JoystickButton test2=new JoystickButton(OperatorPanelA, 3);
+        public static final JoystickButton test3=new JoystickButton(OperatorPanelA, 4);
+        public static final JoystickButton test4=new JoystickButton(OperatorPanelA, 5);
 
         public static final DoubleSupplier leftJoyY = ()->-DriverPanel.getRawAxis(1);
         public static final DoubleSupplier leftJoyX = ()->DriverPanel.getRawAxis(0);
@@ -45,4 +46,5 @@ public final class HumanControls {
     public final class SinglePS4Controller{
 
     }
+    
 }

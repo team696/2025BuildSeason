@@ -55,7 +55,7 @@ public class Elevator extends SubsystemBase {
   }
 
   /**
-   * Use ONLY for SysID
+   * Use ONLY for SysID. Sets the elevator motors to a specific voltage
    */
   public void DriveVoltage(Voltage v){
     //m_master.setControl(voltageReq.withOutput(v));

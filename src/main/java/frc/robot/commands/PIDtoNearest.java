@@ -47,7 +47,7 @@ public class PIDtoNearest extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    goalPose=PoseUtil.findClosestPose(Arrays.asList(GameInfo.blue.left), CommandSwerveDrivetrain.get().getState().Pose);
+    goalPose=PoseUtil.findClosestPose(Arrays.asList(GameInfo.getFieldSide().left), CommandSwerveDrivetrain.get().getState().Pose);
     Pose2d currPose=CommandSwerveDrivetrain.get().getState().Pose;
     xController.reset(currPose.getX());
     yController.reset(currPose.getY());
