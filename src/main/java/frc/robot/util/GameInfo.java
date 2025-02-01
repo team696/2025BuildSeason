@@ -6,6 +6,8 @@ package frc.robot.util;
 
 import static edu.wpi.first.units.Units.Degree;
 
+import java.util.Arrays;
+
 import com.pathplanner.lib.path.RotationTarget;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -28,17 +30,19 @@ public class GameInfo {
     public static class FieldSide{
         public Pose2d[] left, right;
     }
+
     public static FieldSide red, blue;
     public static FieldSide getFieldSide(){
-        // TODO: Cache the alliance station value somewhere when the match starts
         return DriverStation.getAlliance().orElse(Alliance.Blue)==Alliance.Blue?blue:red;
     }
+
     public static Pose2d[] getScoringPoses(){
         return HumanControls.DriverStation.leftOrRight.getAsBoolean()?getFieldSide().left:getFieldSide().right;
     }
+
     static{
         blue=new FieldSide();
-        blue.left=new Pose2d[]{
+        blue.left=new Pose2d[] {
             new Pose2d(3.539,4.912, Rotation2d.fromDegrees(-60 )),
             new Pose2d(3.179,3.752,Rotation2d.fromDegrees(0)),
             new Pose2d(4.056, 2.689, Rotation2d.fromDegrees(60)),
@@ -46,7 +50,7 @@ public class GameInfo {
             new Pose2d(5.850,4.376,Rotation2d.fromDegrees(180)),
             new Pose2d(4.924,5.351,Rotation2d.fromDegrees(-120))
         };
-        blue.right=new Pose2d[]{
+        blue.right=new Pose2d[] {
             new Pose2d(4.046,5.322, Rotation2d.fromDegrees(-60 )),
             new Pose2d(3.188,4.473,Rotation2d.fromDegrees(0)),
             new Pose2d(3.481,3.050, Rotation2d.fromDegrees(60)),
@@ -54,6 +58,9 @@ public class GameInfo {
             new Pose2d(5.821,3.762,Rotation2d.fromDegrees(180)),
             new Pose2d(5.489,4.932,Rotation2d.fromDegrees(-120))
         };
+        red=new FieldSide();
+        red.left=Arrays.stream(blue.left).map(pose->PoseUtil.mirrorPoseX(pose)).toArray(size->new Pose2d[size]);
+        
         /*red.left=new Pose2d[]{
             new Pose2d(),
             new Pose2d(),
@@ -61,8 +68,9 @@ public class GameInfo {
             new Pose2d(),
             new Pose2d(),
             new Pose2d()
-        };
-        red.right=new Pose2d[]{
+        };*/
+        red.right=Arrays.stream(blue.right).map(pose->PoseUtil.mirrorPoseX(pose)).toArray(size->new Pose2d[size]);
+        /*red.right=new Pose2d[]{
             new Pose2d(),
             new Pose2d(),
             new Pose2d(),

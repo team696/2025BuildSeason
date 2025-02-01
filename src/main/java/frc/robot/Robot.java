@@ -35,36 +35,52 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   public double MaxSpeed=TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
   private SwerveTelemetry m_SwerveTelemetry=new SwerveTelemetry(MaxSpeed);
-
   public void logBuildInfo(){
   }
   public double applyDeadband(double x, double deadband){
     return Math.abs(x)<deadband?0:x;
   }
+  public void putCommandButtons(){
+    SmartDashboard.putData("sim/pidToNearest", new PIDtoNearest());
+
+
+  }
   public Robot() {
     
     SmartDashboard.putData(CommandScheduler.getInstance());
+
     configureDriverStationBinds();
+
     CommandSwerveDrivetrain.get().registerTelemetry(m_SwerveTelemetry::telemeterize);
+
     Auto.Initialize(CommandSwerveDrivetrain.get(), false, new NamedCommand("hi", new WaitCommand(3)));
+
+    // TODO: Restore TeleopSwerve
     CommandSwerveDrivetrain.get().setDefaultCommand(CommandSwerveDrivetrain.get().applyRequest(
       ()->CommandSwerveDrivetrain.fcDriveReq.withVelocityX(
         applyDeadband(HumanControls.DriverStation.leftJoyX.getAsDouble(), 0.07)*MaxSpeed)
         .withVelocityY(applyDeadband(HumanControls.DriverStation.leftJoyY.getAsDouble(), 0.07)*MaxSpeed)
         .withRotationalRate(applyDeadband(HumanControls.DriverStation.rightJoyX.getAsDouble(), 0.07)*9)));
         SmartDashboard.putData("Reset Gyro", Commands.runOnce(()->CommandSwerveDrivetrain.get().seedFieldCentric()));
+    
     SmartDashboard.putData("Drive Forward (Robot Relative)",
     CommandSwerveDrivetrain.get().applyRequest(()->CommandSwerveDrivetrain.rcDriveReq.withSpeeds(new ChassisSpeeds(1, 0, 0))));
+
     HumanControls.DriverStation.resetGyro.onTrue(CommandSwerveDrivetrain.get().runOnce(()->CommandSwerveDrivetrain.get().seedFieldCentric()));
+
     HumanControls.DriverStation.test1.onTrue(
       new PIDtoPosition(new Pose2d(13.61,2.65, Rotation2d.fromDegrees(32)))
       .andThen(new PIDtoPosition(new Pose2d(13.34, 0.76, Rotation2d.fromDegrees(107))))
       .repeatedly());
-    if(Robot.isSimulation())
+
+    if(Robot.isSimulation()){
       HumanControls.DriverStation.test2.whileTrue(
         new PIDtoNearest()
       );
-      SmartDashboard.putData(Auto.PathFind(new Pose2d(5,5,Rotation2d.fromDegrees(0))));
+      putCommandButtons();
+
+    }
+    SmartDashboard.putData("test/pathfindtopose",Auto.PathFind(new Pose2d(5,5,Rotation2d.fromDegrees(0))));
 
     //Swerve.get().setDefaultCommand(TeleopSwerve.New());
   }
