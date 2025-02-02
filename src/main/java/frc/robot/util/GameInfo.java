@@ -42,6 +42,7 @@ public class GameInfo {
 
     static{
         blue=new FieldSide();
+        // TODO: determine the real scoring poses
         blue.left=new Pose2d[] {
             new Pose2d(3.539,4.912, Rotation2d.fromDegrees(-60 )),
             new Pose2d(3.179,3.752,Rotation2d.fromDegrees(0)),
@@ -58,26 +59,13 @@ public class GameInfo {
             new Pose2d(5.821,3.762,Rotation2d.fromDegrees(180)),
             new Pose2d(5.489,4.932,Rotation2d.fromDegrees(-120))
         };
+
+        // The red poses are mirrored from the blue scoring poses
         red=new FieldSide();
         red.left=Arrays.stream(blue.left).map(pose->PoseUtil.mirrorPoseX(pose)).toArray(size->new Pose2d[size]);
         
-        /*red.left=new Pose2d[]{
-            new Pose2d(),
-            new Pose2d(),
-            new Pose2d(),
-            new Pose2d(),
-            new Pose2d(),
-            new Pose2d()
-        };*/
         red.right=Arrays.stream(blue.right).map(pose->PoseUtil.mirrorPoseX(pose)).toArray(size->new Pose2d[size]);
-        /*red.right=new Pose2d[]{
-            new Pose2d(),
-            new Pose2d(),
-            new Pose2d(),
-            new Pose2d(),
-            new Pose2d(),
-            new Pose2d()
-        };*/
+
         L1=new CoralScoringPosition();
         L1.height=10;
         L1.rot=Degree.of(12.0);

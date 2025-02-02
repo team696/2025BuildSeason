@@ -13,6 +13,8 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -75,7 +77,7 @@ public class Auto {
     private SendableChooser<Command> _autoChooser;
 
     public SysIdRoutine _driveSysIdRoutine; 
-    private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
+    private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds().withSteerRequestType(SteerRequestType.MotionMagicExpo).withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
     private Auto (CommandSwerveDrivetrain swerve, boolean shouldUseGUIValues, NamedCommand... commandsToRegister) {
         _swerve = swerve;
@@ -128,11 +130,11 @@ public class Auto {
         });
 
         _autoChooser = AutoBuilder.buildAutoChooser();
-        SmartDashboard.putData(_autoChooser);   
-        //ShuffleDashboard.addAutoChooser(_autoChooser);
+        //SmartDashboard.putData(_autoChooser);   
+        ShuffleDashboard.addAutoChooser(_autoChooser);
 
         _autoChooser.onChange((command)-> {
-            visualize();
+            //visualize();
         });
     }
     /**

@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import java.util.Arrays;
 
 import com.ctre.phoenix6.Utils;
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.VecBuilder;
@@ -16,6 +17,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -45,6 +47,7 @@ public class Robot extends TimedRobot {
 
 
   }
+  private final SendableChooser<Command> autoChooser;
   public Robot() {
     
     SmartDashboard.putData(CommandScheduler.getInstance());
@@ -53,7 +56,7 @@ public class Robot extends TimedRobot {
 
     CommandSwerveDrivetrain.get().registerTelemetry(m_SwerveTelemetry::telemeterize);
 
-    Auto.Initialize(CommandSwerveDrivetrain.get(), false, new NamedCommand("hi", new WaitCommand(3)));
+    //Auto.Initialize(CommandSwerveDrivetrain.get(), false, new NamedCommand("hi", new WaitCommand(3)));
 
     // TODO: Restore TeleopSwerve
     CommandSwerveDrivetrain.get().setDefaultCommand(CommandSwerveDrivetrain.get().applyRequest(
@@ -80,9 +83,11 @@ public class Robot extends TimedRobot {
       putCommandButtons();
 
     }
-    SmartDashboard.putData("test/pathfindtopose",Auto.PathFind(new Pose2d(5,5,Rotation2d.fromDegrees(0))));
+    //SmartDashboard.putData("test/pathfindtopose",Auto.PathFind(new Pose2d(5,5,Rotation2d.fromDegrees(0))));
 
     //Swerve.get().setDefaultCommand(TeleopSwerve.New());
+    autoChooser=AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   private void configureDriverStationBinds(){
@@ -105,7 +110,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = Auto.get().Selected();
+    m_autonomousCommand = autoChooser.getSelected();//Auto.PathFind(new Pose2d(10,1,Rotation2d.fromDegrees(0)));
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -117,6 +122,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousExit() {
+    System.out.println("autonomous exit");
     if(m_autonomousCommand!=null){
       m_autonomousCommand.cancel();
     }
@@ -146,11 +152,16 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    // TODO: implement common library style vision controls
     updateVision();
   }
 
   @Override
   public void teleopExit() {}
+
+  @Override
+  public void simulationPeriodic(){
+  }
 
   @Override
   public void testInit() {
