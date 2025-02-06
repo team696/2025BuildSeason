@@ -8,8 +8,6 @@ import static edu.wpi.first.units.Units.Degree;
 
 import java.util.Arrays;
 
-import com.pathplanner.lib.path.RotationTarget;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Angle;

@@ -14,7 +14,7 @@ public class BotConstants {
     // Used for drivetrain devices (motors, encoders, IMU, etc.). Supports CAN FD.
     public static CANBus canivoreBus;
     static{
-        rioBus=new CANBus("rioBus");
+        rioBus=new CANBus("rio");
         canivoreBus=new CANBus("cv");
     }
     public static class Elevator{
@@ -23,7 +23,7 @@ public class BotConstants {
         public static TalonFXConfiguration cfg;
         static{
             cfg=new TalonFXConfiguration();
-            // TODO: determine all these constants
+            // TODO: determine all these constants (Feedback first, feedforward if needed)
             cfg.Slot0.kP=0;
             cfg.Slot0.kV=0;
             cfg.Slot0.kV=0;

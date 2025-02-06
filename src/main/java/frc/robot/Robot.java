@@ -5,12 +5,16 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import java.util.Arrays;
 
 import com.ctre.phoenix6.Utils;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -22,29 +26,46 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Auto.NamedCommand;
 import frc.robot.commands.PIDtoNearest;
 import frc.robot.commands.PIDtoPosition;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.util.GameInfo;
-import frc.robot.util.PoseUtil;
 import frc.team696.lib.Camera.LimelightHelpers;
 import frc.team696.lib.Logging.BackupLogger;
-import frc.team696.lib.Swerve.Commands.TeleopSwerve;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  public double MaxSpeed=TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+  private double MaxSpeed=TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+  private double MaxRotationalRate=RotationsPerSecond.of(3).in(RadiansPerSecond);
   private SwerveTelemetry m_SwerveTelemetry=new SwerveTelemetry(MaxSpeed);
-  public void logBuildInfo(){
+
+
+  private void logBuildInfo(){
+    BackupLogger.addToQueue("BuildConstants/BuildDate", BuildConstants.BUILD_DATE);
+    BackupLogger.addToQueue("BuildConstants/Branch", BuildConstants.GIT_BRANCH);
+    BackupLogger.addToQueue("BuildConstants/GitSHA", BuildConstants.GIT_SHA);
+    BackupLogger.addToQueue("BuildConstants/GitDate", BuildConstants.GIT_DATE);
+    BackupLogger.addToQueue("BuildConstants/ProjectName", BuildConstants.MAVEN_NAME);
+    switch(BuildConstants.DIRTY){
+      case 0:
+        BackupLogger.addToQueue("BuildConstants/GitDirty", "All Changes Comitted");
+        break;
+      case 1:
+        BackupLogger.addToQueue("BuildConstants/GitDirty", "Uncomitted changes");
+        break;
+      case 2:
+        BackupLogger.addToQueue("BuildConstants/GitDirty", "Unknown");
+        break;
+    }
+
+
   }
   public double applyDeadband(double x, double deadband){
     return Math.abs(x)<deadband?0:x;
   }
   public void putCommandButtons(){
     SmartDashboard.putData("sim/pidToNearest", new PIDtoNearest());
-
+    SmartDashboard.putBoolean("pathfindingConfigured", AutoBuilder.isPathfindingConfigured());
+    SmartDashboard.putData("sim/pathfindToMiddle", AutoBuilder.pathfindToPose(new Pose2d(7,3,Rotation2d.fromDegrees(12)),new PathConstraints(1, 1, Math.PI,Math.PI)));
 
   }
   private final SendableChooser<Command> autoChooser;
@@ -56,6 +77,9 @@ public class Robot extends TimedRobot {
 
     CommandSwerveDrivetrain.get().registerTelemetry(m_SwerveTelemetry::telemeterize);
 
+    // Log Build information
+    logBuildInfo();
+    
     //Auto.Initialize(CommandSwerveDrivetrain.get(), false, new NamedCommand("hi", new WaitCommand(3)));
 
     // TODO: Restore TeleopSwerve
@@ -63,8 +87,9 @@ public class Robot extends TimedRobot {
       ()->CommandSwerveDrivetrain.fcDriveReq.withVelocityX(
         applyDeadband(HumanControls.DriverStation.leftJoyX.getAsDouble(), 0.07)*MaxSpeed)
         .withVelocityY(applyDeadband(HumanControls.DriverStation.leftJoyY.getAsDouble(), 0.07)*MaxSpeed)
-        .withRotationalRate(applyDeadband(HumanControls.DriverStation.rightJoyX.getAsDouble(), 0.07)*9)));
+        .withRotationalRate(applyDeadband(HumanControls.DriverStation.rightJoyX.getAsDouble(), 0.07)*MaxRotationalRate)));
         SmartDashboard.putData("Reset Gyro", Commands.runOnce(()->CommandSwerveDrivetrain.get().seedFieldCentric()));
+    NamedCommands.registerCommand("PIDtoNearest", new PIDtoNearest());
     
     SmartDashboard.putData("Drive Forward (Robot Relative)",
     CommandSwerveDrivetrain.get().applyRequest(()->CommandSwerveDrivetrain.rcDriveReq.withSpeeds(new ChassisSpeeds(1, 0, 0))));
@@ -83,15 +108,16 @@ public class Robot extends TimedRobot {
       putCommandButtons();
 
     }
-    //SmartDashboard.putData("test/pathfindtopose",Auto.PathFind(new Pose2d(5,5,Rotation2d.fromDegrees(0))));
 
-    //Swerve.get().setDefaultCommand(TeleopSwerve.New());
+    // TODO: decide whether or not this will be a temporary fix
     autoChooser=AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
+
+    // Warmup Commands for PathPlanner
+    PathfindingCommand.warmupCommand().schedule();
   }
 
   private void configureDriverStationBinds(){
-    //TeleopSwerve.config(Swerve.get(), HumanControls.DriverStation.leftJoyX, HumanControls.DriverStation.leftJoyY, HumanControls.DriverStation.rightJoyX, null, 0.07);  
   }
   @Override
   public void robotPeriodic() {
@@ -122,7 +148,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousExit() {
-    System.out.println("autonomous exit");
     if(m_autonomousCommand!=null){
       m_autonomousCommand.cancel();
     }
