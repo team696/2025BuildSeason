@@ -20,6 +20,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -40,11 +41,11 @@ public class Robot extends TimedRobot {
 
 
   private void logBuildInfo(){
+    BackupLogger.addToQueue("BuildConstants/ProjectName", BuildConstants.MAVEN_NAME);
     BackupLogger.addToQueue("BuildConstants/BuildDate", BuildConstants.BUILD_DATE);
     BackupLogger.addToQueue("BuildConstants/Branch", BuildConstants.GIT_BRANCH);
     BackupLogger.addToQueue("BuildConstants/GitSHA", BuildConstants.GIT_SHA);
     BackupLogger.addToQueue("BuildConstants/GitDate", BuildConstants.GIT_DATE);
-    BackupLogger.addToQueue("BuildConstants/ProjectName", BuildConstants.MAVEN_NAME);
     switch(BuildConstants.DIRTY){
       case 0:
         BackupLogger.addToQueue("BuildConstants/GitDirty", "All Changes Comitted");
@@ -79,7 +80,7 @@ public class Robot extends TimedRobot {
 
     // Log Build information
     logBuildInfo();
-    
+
     //Auto.Initialize(CommandSwerveDrivetrain.get(), false, new NamedCommand("hi", new WaitCommand(3)));
 
     // TODO: Restore TeleopSwerve
@@ -121,7 +122,12 @@ public class Robot extends TimedRobot {
   }
   @Override
   public void robotPeriodic() {
+    long start=RobotController.getTime();
     CommandScheduler.getInstance().run();
+    long elapsed=RobotController.getTime()-start;
+    BackupLogger.addToQueue("SchedulerTimeMS", elapsed/1000000.0);
+    // TODO: implement common library style vision controls
+    updateVision();
     BackupLogger.logSystemInformation();
   }
 
@@ -167,18 +173,17 @@ public class Robot extends TimedRobot {
     var measurement=LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-corner");
     if(measurement!=null){
       if(measurement.tagCount>0&&measurement.rawFiducials[0].ambiguity<0.5&&measurement.rawFiducials[0].distToCamera<6){
-        double trustMetric=(Math.pow(measurement.rawFiducials[0].distToCamera,2)/60);
+        // Experimental
+        double trustMetric=(Math.pow(measurement.rawFiducials[0].distToCamera,2)*measurement.rawFiducials[0].ambiguity/40);
         CommandSwerveDrivetrain.get().setVisionMeasurementStdDevs(VecBuilder.fill(trustMetric,trustMetric,trustMetric));
         CommandSwerveDrivetrain.get().addVisionMeasurement(measurement.pose, Utils.fpgaToCurrentTime(measurement.timestampSeconds));
-        SmartDashboard.putNumberArray("Balzac",new double[]{measurement.pose.getX(), measurement.pose.getY()});
       }
     }
   }
 
   @Override
   public void teleopPeriodic() {
-    // TODO: implement common library style vision controls
-    updateVision();
+
   }
 
   @Override

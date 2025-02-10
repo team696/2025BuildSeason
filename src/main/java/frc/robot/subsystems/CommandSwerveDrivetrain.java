@@ -18,6 +18,7 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -275,11 +276,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             Drive(c);
         }
     }
-    public Rotation2d angleTo(Translation2d position) {
-        Translation2d delta = getState().Pose.getTranslation().minus(position);
-        Rotation2d rot = Rotation2d.fromRadians(Math.atan2(delta.getY(), delta.getX()));
-        return rot;
-    }
 
     @Override
     public void periodic() {
@@ -315,6 +311,46 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             updateSimState(deltaTime, RobotController.getBatteryVoltage());
         });
         m_simNotifier.startPeriodic(kSimLoopPeriod);
+    }
+    public Pose2d getPose(){
+        return getState().Pose;
+    }
+    /**
+     * 
+     * @param position Position for distance from
+     * @return distance from position argument
+     */
+    public double distTo(Translation2d position) {
+        return getPose().getTranslation().getDistance(position);
+    }
+
+    /**
+     * 
+     * @param position Position for distance from
+     * @return distance from position argument
+     */
+    public double distTo(Pose2d position) {
+        return distTo(position.getTranslation());
+    }
+
+    /**
+     * 
+     * @param position Position for angle to
+     * @return Angle to Position
+     */
+    public Rotation2d angleTo(Translation2d position) {
+        Translation2d delta = getPose().getTranslation().minus(position);
+        Rotation2d rot = Rotation2d.fromRadians(Math.atan2(delta.getY(), delta.getX()));
+        return rot;
+    }
+
+    /**
+     * 
+     * @param position Position for angle to
+     * @return Angle to Position
+     */
+    public Rotation2d angleTo(Pose2d position) {
+        return angleTo(position.getTranslation());
     }
 
 }

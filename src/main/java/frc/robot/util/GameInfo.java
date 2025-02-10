@@ -19,10 +19,13 @@ import frc.robot.HumanControls;
 /** Add your docs here. */
 public class GameInfo {
     public static class CoralScoringPosition{
+        /**
+         * INTENT: DISTANCE will be measured as the displacement UP of the elevator from its lowest position
+         */
         // TODO: go back to distance later
         //Distance height;
-        double height;// will be rotations from default for now
-        Angle rot;
+        public double height;// will be rotations for now
+        public Angle rot;
     }
     public static CoralScoringPosition L1, L2, L3, L4;
     public static class FieldSide{
