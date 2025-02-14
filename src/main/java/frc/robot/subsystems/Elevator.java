@@ -40,7 +40,7 @@ public class Elevator extends SubsystemBase {
     m_master=new TalonFactory(BotConstants.Elevator.masterID, BotConstants.rioBus, BotConstants.Elevator.cfg, "Elevator Master");
     m_slave=new TalonFactory(BotConstants.Elevator.slaveId,BotConstants.canivoreBus, BotConstants.Elevator.cfg, "Elevator Slave");
     //m_angle=new TalonFactory();
-    m_slave.Follow(m_master, false);// TODO: determine of the slave needs to go in the same or in the opposite direction to the master
+    m_slave.Follow(m_master, true);// TODO: determine of the slave needs to go in the same or in the opposite direction to the master
     
     positionReq=new MotionMagicVoltage(0);
     
