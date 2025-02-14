@@ -11,6 +11,9 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import java.util.Arrays;
 
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.swerve.SwerveModule;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathfindingCommand;
@@ -86,8 +89,8 @@ public class Robot extends TimedRobot {
     // TODO: Restore TeleopSwerve
     CommandSwerveDrivetrain.get().setDefaultCommand(CommandSwerveDrivetrain.get().applyRequest(
       ()->CommandSwerveDrivetrain.fcDriveReq.withVelocityX(
-        applyDeadband(HumanControls.DriverStation.leftJoyX.getAsDouble(), 0.07)*MaxSpeed)
-        .withVelocityY(applyDeadband(HumanControls.DriverStation.leftJoyY.getAsDouble(), 0.07)*MaxSpeed)
+        applyDeadband(HumanControls.DriverStation.leftJoyY.getAsDouble(), 0.07)*MaxSpeed)
+        .withVelocityY(applyDeadband(HumanControls.DriverStation.leftJoyX.getAsDouble(), 0.07)*MaxSpeed)
         .withRotationalRate(applyDeadband(HumanControls.DriverStation.rightJoyX.getAsDouble(), 0.07)*MaxRotationalRate)));
         SmartDashboard.putData("Reset Gyro", Commands.runOnce(()->CommandSwerveDrivetrain.get().seedFieldCentric()));
     NamedCommands.registerCommand("PIDtoNearest", new PIDtoNearest());
@@ -125,10 +128,14 @@ public class Robot extends TimedRobot {
     long start=RobotController.getTime();
     CommandScheduler.getInstance().run();
     long elapsed=RobotController.getTime()-start;
-    BackupLogger.addToQueue("SchedulerTimeMS", elapsed/1000000.0);
+    BackupLogger.addToQueue("SchedulerTimeMS", elapsed);
     // TODO: implement common library style vision controls
     updateVision();
     BackupLogger.logSystemInformation();
+    int i = 0;
+    for (SwerveModule<TalonFX, TalonFX, CANcoder> mod : CommandSwerveDrivetrain.get().getModules()) {
+      SmartDashboard.putNumber("Encoder" + ++i, mod.getEncoder().getPosition().getValueAsDouble());
+    }
   }
 
   @Override
