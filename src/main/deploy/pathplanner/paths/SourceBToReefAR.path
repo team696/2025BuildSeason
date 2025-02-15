@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.728176229508197,
-        "y": 5.18780737704918
+        "x": 1.4722500000000003,
+        "y": 7.07675
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.4356762295081973,
-        "y": 6.41630737704918
+        "x": 2.2853469493415943,
+        "y": 6.363039664386715
       },
       "isLocked": false,
-      "linkedName": "ex2"
+      "linkedName": "SourceB"
     },
     {
       "anchor": {
-        "x": 1.64775,
-        "y": 7.0865
+        "x": 3.0029999999999997,
+        "y": 4.366249999999999
       },
       "prevControl": {
-        "x": 2.40825,
-        "y": 6.8135
+        "x": 2.8409604971839766,
+        "y": 4.5566264678922686
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "ReefAR"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -53.13010235415593
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "ComponentPaths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 120.96375653207352
+    "rotation": -49.969740728110416
   },
   "useDefaultConstraints": true
 }

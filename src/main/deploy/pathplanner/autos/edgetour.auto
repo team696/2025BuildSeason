@@ -1,0 +1,61 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "EdgeToReefCR"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ReefCRToSourceB"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceBToReefCL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ReefCLToSourceB"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceBToReefBL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ReefBLToSourceB"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceBToReefAR"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ReefARToSourceR"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

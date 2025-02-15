@@ -1,0 +1,67 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleToReefCR"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ReefCRToSourceB"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceBToReefAL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ReefALToSourceR"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceRToReefFR"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ReefFRToSourceR"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceRToReefEL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ReefELToSourceR"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceRToReefAR"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

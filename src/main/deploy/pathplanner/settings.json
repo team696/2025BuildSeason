@@ -3,7 +3,7 @@
   "robotLength": 1.0,
   "holonomicMode": true,
   "pathFolders": [
-    "CenterO"
+    "ComponentPaths"
   ],
   "autoFolders": [],
   "defaultMaxVel": 3.0,
