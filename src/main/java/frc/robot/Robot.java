@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.commands.PIDtoNearest;
 import frc.robot.commands.PIDtoPosition;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -69,7 +70,7 @@ public class Robot extends TimedRobot {
   public void putCommandButtons(){
     SmartDashboard.putData("sim/pidToNearest", new PIDtoNearest());
     SmartDashboard.putBoolean("pathfindingConfigured", AutoBuilder.isPathfindingConfigured());
-    SmartDashboard.putData("sim/pathfindToMiddle", AutoBuilder.pathfindToPose(new Pose2d(7,3,Rotation2d.fromDegrees(12)),new PathConstraints(1, 1, Math.PI,Math.PI)));
+    SmartDashboard.putData("sim/pathfindToMiddle", new PrintCommand("s").andThen(AutoBuilder.pathfindToPose(new Pose2d(7,3,Rotation2d.fromDegrees(12)),new PathConstraints(1, 1, Math.PI,Math.PI))));
 
   }
   private final SendableChooser<Command> autoChooser;
@@ -93,23 +94,24 @@ public class Robot extends TimedRobot {
         .withVelocityY(applyDeadband(HumanControls.DriverStation.leftJoyX.getAsDouble(), 0.07)*MaxSpeed)
         .withRotationalRate(applyDeadband(HumanControls.DriverStation.rightJoyX.getAsDouble(), 0.07)*MaxRotationalRate)));
         SmartDashboard.putData("Reset Gyro", Commands.runOnce(()->CommandSwerveDrivetrain.get().seedFieldCentric()));
-    NamedCommands.registerCommand("PIDtoNearest", new PIDtoNearest());
+    NamedCommands.registerCommand("PIDtoNearest", new PIDtoNearest(true));
     
     SmartDashboard.putData("Drive Forward (Robot Relative)",
     CommandSwerveDrivetrain.get().applyRequest(()->CommandSwerveDrivetrain.rcDriveReq.withSpeeds(new ChassisSpeeds(1, 0, 0))));
 
-    HumanControls.DriverStation.resetGyro.onTrue(CommandSwerveDrivetrain.get().runOnce(()->CommandSwerveDrivetrain.get().seedFieldCentric()));
+    HumanControls.DriverStation.resetGyro.onTrue(Commands.runOnce(()->CommandSwerveDrivetrain.get().seedFieldCentric()));
 
     HumanControls.DriverStation.test1.onTrue(
       new PIDtoPosition(new Pose2d(13.61,2.65, Rotation2d.fromDegrees(32)))
       .andThen(new PIDtoPosition(new Pose2d(13.34, 0.76, Rotation2d.fromDegrees(107))))
       .repeatedly());
-
-    if(Robot.isSimulation()){
       HumanControls.DriverStation.test2.whileTrue(
         new PIDtoNearest()
       );
       putCommandButtons();
+
+    if(Robot.isSimulation()){
+
 
     }
 

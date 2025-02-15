@@ -36,7 +36,7 @@ public final class HumanControls {
 
         public static final DoubleSupplier leftJoyY = ()->-DriverPanel.getRawAxis(1);
         public static final DoubleSupplier leftJoyX = ()->DriverPanel.getRawAxis(0);
-        public static final DoubleSupplier rightJoyX = ()->-DriverPanel.getRawAxis(2);
+        public static final DoubleSupplier rightJoyX = ()->-DriverPanel.getRawAxis(2)/3;
         
     }
     public final class SingleXboxController{

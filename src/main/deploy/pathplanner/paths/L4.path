@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 4.998872950819672,
-        "y": 5.247745901639345
+        "x": 5.03483606557377,
+        "y": 5.40358606557377
       },
       "prevControl": {
-        "x": 3.9988729508196723,
-        "y": 5.247745901639345
+        "x": 4.03483606557377,
+        "y": 5.40358606557377
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "ep2"
     }
   ],
   "rotationTargets": [],
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -121.82744657667327
+    "rotation": 61.38954033403478
   },
   "reversed": false,
   "folder": null,

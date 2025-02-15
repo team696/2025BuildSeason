@@ -24,6 +24,7 @@ public class PIDtoNearest extends Command {
   /** Creates a new goToPosition. */
   private ProfiledPIDController xController, yController, omegaController;
   private Pose2d goalPose;
+  private boolean ignoreLR;
 
   private double calculateWithTolerance(ProfiledPIDController controller, double measurement, double goal){
     double tolerance=controller.getPositionTolerance();
@@ -31,23 +32,27 @@ public class PIDtoNearest extends Command {
     return Math.abs(error)<tolerance?0:controller.calculate(measurement, goal);
   }
   public PIDtoNearest() {
-
+    this(false);
+  }
+  public PIDtoNearest(boolean ignoreLR){
     addRequirements(CommandSwerveDrivetrain.get());
     xController=new ProfiledPIDController(/*1.7*/3, 0.0, 0.0, new TrapezoidProfile.Constraints(1.0, 1.4));
     yController=new ProfiledPIDController(/*1.7*/3, 0.0, 0.0, new TrapezoidProfile.Constraints(1.0, 1.4));
     xController.setTolerance(0.01);
     yController.setTolerance(0.01);
     
-    omegaController=new ProfiledPIDController(2 , /*1*/0, /*0.3*/0, new TrapezoidProfile.Constraints(1.6, 0.6));
+    omegaController=new ProfiledPIDController(3 , /*1*/0, /*0.3*/0, new TrapezoidProfile.Constraints(1.6, 0.6));
     omegaController.setTolerance(0.12);
-
-
+    this.ignoreLR=ignoreLR;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    goalPose=PoseUtil.findClosestPose(GameInfo.getFieldSide().left, CommandSwerveDrivetrain.get().getState().Pose);
+    if(ignoreLR)
+      goalPose=PoseUtil.findClosestPose(GameInfo.getFieldSide().both, CommandSwerveDrivetrain.get().getState().Pose);
+    else
+      goalPose=PoseUtil.findClosestPose(GameInfo.getFieldSide().left, CommandSwerveDrivetrain.get().getState().Pose);
     Pose2d currPose=CommandSwerveDrivetrain.get().getState().Pose;
     xController.reset(currPose.getX());
     yController.reset(currPose.getY());

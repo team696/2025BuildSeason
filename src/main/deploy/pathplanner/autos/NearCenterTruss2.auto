@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Example Path"
+            "pathName": "CenterTrussToReefER"
           }
         },
         {
@@ -19,31 +19,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "New Path"
+            "pathName": "ReefERToSourceR"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceRToReefEL"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "PIDtoNearest"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "L4"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": null
           }
         }
       ]
     }
   },
-  "resetOdom": false,
+  "resetOdom": true,
   "folder": null,
   "choreoAuto": false
 }

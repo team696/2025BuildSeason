@@ -7,7 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Example Path"
+            "pathName": "CenterTrussToSource"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceToReef"
           }
         },
         {
@@ -19,31 +25,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "New Path"
+            "pathName": "ReefToSource"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceToReef2"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "PIDtoNearest"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "L4"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": null
           }
         }
       ]
     }
   },
-  "resetOdom": false,
+  "resetOdom": true,
   "folder": null,
   "choreoAuto": false
 }

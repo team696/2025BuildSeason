@@ -7,6 +7,7 @@ package frc.robot.util;
 import static edu.wpi.first.units.Units.Degree;
 
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -29,7 +30,7 @@ public class GameInfo {
     }
     public static CoralScoringPosition L1, L2, L3, L4;
     public static class FieldSide{
-        public Pose2d[] left, right;
+        public Pose2d[] left, right, both;
     }
 
     public static FieldSide red, blue;
@@ -45,27 +46,30 @@ public class GameInfo {
         blue=new FieldSide();
         // TODO: determine the real scoring poses
         blue.left=new Pose2d[] {
-            new Pose2d(3.539,4.912, Rotation2d.fromDegrees(-60 )),
-            new Pose2d(3.179,3.752,Rotation2d.fromDegrees(0)),
-            new Pose2d(4.056, 2.689, Rotation2d.fromDegrees(60)),
-            new Pose2d(5.450,2.992,Rotation2d.fromDegrees(120)),
-            new Pose2d(5.850,4.376,Rotation2d.fromDegrees(180)),
-            new Pose2d(4.924,5.351,Rotation2d.fromDegrees(-120))
+            new Pose2d(3.539,4.912, Rotation2d.fromDegrees(-60 +180)),
+            new Pose2d(3.179,3.752,Rotation2d.fromDegrees(0 +180)),
+            new Pose2d(4.056, 2.689, Rotation2d.fromDegrees(60 +180)),
+            new Pose2d(5.450,2.992,Rotation2d.fromDegrees(120 +180)),
+            new Pose2d(5.850,4.376,Rotation2d.fromDegrees(180 +180)),
+            new Pose2d(4.924,5.351,Rotation2d.fromDegrees(-120 +180))
         };
         blue.right=new Pose2d[] {
-            new Pose2d(4.046,5.322, Rotation2d.fromDegrees(-60 )),
-            new Pose2d(3.188,4.473,Rotation2d.fromDegrees(0)),
-            new Pose2d(3.481,3.050, Rotation2d.fromDegrees(60)),
-            new Pose2d(4.836,2.679,Rotation2d.fromDegrees(120)),
-            new Pose2d(5.821,3.762,Rotation2d.fromDegrees(180)),
-            new Pose2d(5.489,4.932,Rotation2d.fromDegrees(-120))
+            new Pose2d(4.046,5.322, Rotation2d.fromDegrees(-60 +180)),
+            new Pose2d(3.188,4.473,Rotation2d.fromDegrees(0 +180)),
+            new Pose2d(3.481,3.050, Rotation2d.fromDegrees(60 +180)),
+            new Pose2d(4.836,2.679,Rotation2d.fromDegrees(120 +180)),
+            new Pose2d(5.821,3.762,Rotation2d.fromDegrees(180 +180)),
+            new Pose2d(5.489,4.932,Rotation2d.fromDegrees(-120 +180))
         };
+        blue.both=Stream.concat(Arrays.stream(blue.left), Arrays.stream(blue.right)).toArray(size->new Pose2d[size]);
 
         // The red poses are mirrored from the blue scoring poses
         red=new FieldSide();
         red.left=Arrays.stream(blue.left).map(pose->PoseUtil.mirrorPoseX(pose)).toArray(size->new Pose2d[size]);
         
         red.right=Arrays.stream(blue.right).map(pose->PoseUtil.mirrorPoseX(pose)).toArray(size->new Pose2d[size]);
+    
+        red.both=Stream.concat(Arrays.stream(red.left), Arrays.stream(red.right)).toArray(size->new Pose2d[size]);
 
         L1=new CoralScoringPosition();
         L1.height=10;
