@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.59525,
-        "y": 7.25225
+        "x": 7.991290801914323,
+        "y": 5.379697812362297
       },
       "isLocked": false,
       "linkedName": "Edge"
     },
     {
       "anchor": {
-        "x": 4.0,
-        "y": 6.0
+        "x": 6.221618852459016,
+        "y": 4.288729508196721
       },
       "prevControl": {
-        "x": 3.0,
-        "y": 6.0
+        "x": 6.750602379014676,
+        "y": 5.379215035375417
       },
       "nextControl": null,
       "isLocked": false,

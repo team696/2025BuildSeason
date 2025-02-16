@@ -37,7 +37,8 @@ public class PIDtoPosition extends Command {
     yController.setTolerance(0.01);
     
     omegaController=new ProfiledPIDController(2 , /*1*/0, /*0.3*/0, new TrapezoidProfile.Constraints(1.6, 0.6));
-    omegaController.setTolerance(0.12);
+    omegaController.enableContinuousInput(-Math.PI, Math.PI);
+    omegaController.setTolerance(0.09);
 
     this.goalPose=goalPose;
 

@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.566,
-        "y": 6.17975
+        "x": 1.4722500000000003,
+        "y": 7.07675
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.579700584987288,
-        "y": 5.806952241681442
+        "x": 2.4722500000000003,
+        "y": 7.07675
       },
       "isLocked": false,
-      "linkedName": "MiddleStart"
+      "linkedName": "SourceB"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 4.922
       },
       "prevControl": {
-        "x": 5.71019443267824,
-        "y": 4.990457832232982
+        "x": 4.795081967213115,
+        "y": 5.727254098360657
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,7 +48,7 @@
   "folder": "ComponentPaths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -49.969740728110416
   },
   "useDefaultConstraints": true
 }

@@ -29,9 +29,9 @@ public class BotConstants {
             cfg.Slot0.kV=0;
             cfg.Slot0.kG=0;
             cfg.Slot0.kA=0;
-            cfg.MotionMagic.MotionMagicCruiseVelocity=30;
-            cfg.MotionMagic.MotionMagicAcceleration=20;
-            cfg.MotionMagic.MotionMagicJerk=100;
+            cfg.MotionMagic.MotionMagicCruiseVelocity=3;
+            cfg.MotionMagic.MotionMagicAcceleration=5;
+            cfg.MotionMagic.MotionMagicJerk=8;
             cfg.Feedback.SensorToMechanismRatio=0;
         }
 

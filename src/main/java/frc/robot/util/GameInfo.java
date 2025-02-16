@@ -39,7 +39,7 @@ public class GameInfo {
     }
 
     public static Pose2d[] getScoringPoses(){
-        return HumanControls.DriverStation.leftOrRight.getAsBoolean()?getFieldSide().left:getFieldSide().right;
+        return HumanControls.OperatorPanel2025.leftOrRight.getAsBoolean()?getFieldSide().left:getFieldSide().right;
     }
 
     static{
@@ -71,6 +71,7 @@ public class GameInfo {
     
         red.both=Stream.concat(Arrays.stream(red.left), Arrays.stream(red.right)).toArray(size->new Pose2d[size]);
 
+        // TODO: determine the real scoring heights
         L1=new CoralScoringPosition();
         L1.height=10;
         L1.rot=Degree.of(12.0);

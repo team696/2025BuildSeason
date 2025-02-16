@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.500249999999999,
-        "y": 5.0584999999999996
+        "x": 3.071038680859481,
+        "y": 5.479570082428542
       },
       "isLocked": false,
       "linkedName": "ReefBL"
@@ -20,8 +20,8 @@
         "y": 7.07675
       },
       "prevControl": {
-        "x": 0.4722500000000003,
-        "y": 7.07675
+        "x": 2.4611942558252036,
+        "y": 6.10867838534708
       },
       "nextControl": null,
       "isLocked": false,

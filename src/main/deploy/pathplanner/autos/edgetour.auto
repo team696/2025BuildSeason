@@ -51,6 +51,78 @@
           "data": {
             "pathName": "ReefARToSourceR"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceRToReefAL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ReefALToSourceR"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceRToReefFR"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ReefFRToSouceR"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceRToReefFL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ReefFLToSourceR"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceRToReefEL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ReefELToSourceR"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceRToReefEL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ReefELToSourceR"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceRToReefER"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ReefERToSourceR"
+          }
         }
       ]
     }

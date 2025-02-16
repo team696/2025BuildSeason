@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.PIDtoNearest;
 import frc.robot.commands.PIDtoPosition;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -73,6 +74,12 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("sim/pathfindToMiddle", new PrintCommand("s").andThen(AutoBuilder.pathfindToPose(new Pose2d(7,3,Rotation2d.fromDegrees(12)),new PathConstraints(1, 1, Math.PI,Math.PI))));
 
   }
+  public void putSwerveSysIDCalibrationButtons(){
+    SmartDashboard.putData("CTRESwerveCalibration/DynamicForward",CommandSwerveDrivetrain.get().sysIdDynamic(SysIdRoutine.Direction.kForward));
+    SmartDashboard.putData("CTRESwerveCalibration/DynamicReverse",CommandSwerveDrivetrain.get().sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    SmartDashboard.putData("CTRESwerveCalibration/QuasistaticForward",CommandSwerveDrivetrain.get().sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    SmartDashboard.putData("CTRESwerveCalibration/QuasistaticReverse",CommandSwerveDrivetrain.get().sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+  }
   private final SendableChooser<Command> autoChooser;
   public Robot() {
     
@@ -85,8 +92,6 @@ public class Robot extends TimedRobot {
     // Log Build information
     logBuildInfo();
 
-    //Auto.Initialize(CommandSwerveDrivetrain.get(), false, new NamedCommand("hi", new WaitCommand(3)));
-
     // TODO: Restore TeleopSwerve
     CommandSwerveDrivetrain.get().setDefaultCommand(CommandSwerveDrivetrain.get().applyRequest(
       ()->CommandSwerveDrivetrain.fcDriveReq.withVelocityX(
@@ -94,26 +99,8 @@ public class Robot extends TimedRobot {
         .withVelocityY(applyDeadband(HumanControls.DriverStation.leftJoyX.getAsDouble(), 0.07)*MaxSpeed)
         .withRotationalRate(applyDeadband(HumanControls.DriverStation.rightJoyX.getAsDouble(), 0.07)*MaxRotationalRate)));
         SmartDashboard.putData("Reset Gyro", Commands.runOnce(()->CommandSwerveDrivetrain.get().seedFieldCentric()));
+  
     NamedCommands.registerCommand("PIDtoNearest", new PIDtoNearest(true));
-    
-    SmartDashboard.putData("Drive Forward (Robot Relative)",
-    CommandSwerveDrivetrain.get().applyRequest(()->CommandSwerveDrivetrain.rcDriveReq.withSpeeds(new ChassisSpeeds(1, 0, 0))));
-
-    HumanControls.DriverStation.resetGyro.onTrue(Commands.runOnce(()->CommandSwerveDrivetrain.get().seedFieldCentric()));
-
-    HumanControls.DriverStation.test1.onTrue(
-      new PIDtoPosition(new Pose2d(13.61,2.65, Rotation2d.fromDegrees(32)))
-      .andThen(new PIDtoPosition(new Pose2d(13.34, 0.76, Rotation2d.fromDegrees(107))))
-      .repeatedly());
-      HumanControls.DriverStation.test2.whileTrue(
-        new PIDtoNearest()
-      );
-      putCommandButtons();
-
-    if(Robot.isSimulation()){
-
-
-    }
 
     // TODO: decide whether or not this will be a temporary fix
     autoChooser=AutoBuilder.buildAutoChooser();
@@ -124,6 +111,8 @@ public class Robot extends TimedRobot {
   }
 
   private void configureDriverStationBinds(){
+    HumanControls.DriverStation.resetGyro.onTrue(Commands.runOnce(()->CommandSwerveDrivetrain.get().seedFieldCentric()));
+    HumanControls.OperatorPanel2024.Ground.whileTrue(new PIDtoNearest(true));
   }
   @Override
   public void robotPeriodic() {
@@ -131,13 +120,14 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     long elapsed=RobotController.getTime()-start;
     BackupLogger.addToQueue("SchedulerTimeMS", elapsed);
-    // TODO: implement common library style vision controls
+    // TODO: implement common library style vision controls 
     updateVision();
     BackupLogger.logSystemInformation();
-    int i = 0;
+
+    /*int i = 0;
     for (SwerveModule<TalonFX, TalonFX, CANcoder> mod : CommandSwerveDrivetrain.get().getModules()) {
       SmartDashboard.putNumber("Encoder" + ++i, mod.getEncoder().getPosition().getValueAsDouble());
-    }
+    }*/
   }
 
   @Override
@@ -151,7 +141,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = autoChooser.getSelected();//Auto.PathFind(new Pose2d(10,1,Rotation2d.fromDegrees(0)));
+    m_autonomousCommand = autoChooser.getSelected();
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -181,9 +171,9 @@ public class Robot extends TimedRobot {
     LimelightHelpers.SetRobotOrientation("limelight-corner",heading,0.0,0.0,0.0,0.0,0.0);
     var measurement=LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-corner");
     if(measurement!=null){
-      if(measurement.tagCount>0&&measurement.rawFiducials[0].ambiguity<0.5&&measurement.rawFiducials[0].distToCamera<6){
+      if(measurement.tagCount>0&&measurement.rawFiducials[0].ambiguity<0.5&&measurement.rawFiducials[0].distToCamera<5){
         // Experimental
-        double trustMetric=(Math.pow(measurement.rawFiducials[0].distToCamera,2)*measurement.rawFiducials[0].ambiguity/40);
+        double trustMetric=(Math.pow(measurement.rawFiducials[0].distToCamera,2)*measurement.rawFiducials[0].ambiguity/35);
         CommandSwerveDrivetrain.get().setVisionMeasurementStdDevs(VecBuilder.fill(trustMetric,trustMetric,trustMetric));
         CommandSwerveDrivetrain.get().addVisionMeasurement(measurement.pose, Utils.fpgaToCurrentTime(measurement.timestampSeconds));
       }
