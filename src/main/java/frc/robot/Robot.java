@@ -30,13 +30,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.PIDtoNearest;
 import frc.robot.commands.PIDtoPosition;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Swerve;
 import frc.team696.lib.Camera.LimelightHelpers;
 import frc.team696.lib.Logging.BackupLogger;
+import frc.robot.HumanControls.OperatorPanel2025;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -44,6 +46,10 @@ public class Robot extends TimedRobot {
   private double MaxRotationalRate=RotationsPerSecond.of(3).in(RadiansPerSecond);
   private SwerveTelemetry m_SwerveTelemetry=new SwerveTelemetry(MaxSpeed);
 
+  private void configureBinds(){
+    OperatorPanel2025.gyro.onTrue(new InstantCommand(()->Swerve.get().seedFieldCentric()));
+    OperatorPanel2025.releaseCoral.onTrue(new InstantCommand());
+  }
 
   private void logBuildInfo(){
     BackupLogger.addToQueue("BuildConstants/ProjectName", BuildConstants.MAVEN_NAME);
@@ -75,10 +81,10 @@ public class Robot extends TimedRobot {
 
   }
   public void putSwerveSysIDCalibrationButtons(){
-    SmartDashboard.putData("CTRESwerveCalibration/DynamicForward",CommandSwerveDrivetrain.get().sysIdDynamic(SysIdRoutine.Direction.kForward));
-    SmartDashboard.putData("CTRESwerveCalibration/DynamicReverse",CommandSwerveDrivetrain.get().sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    SmartDashboard.putData("CTRESwerveCalibration/QuasistaticForward",CommandSwerveDrivetrain.get().sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    SmartDashboard.putData("CTRESwerveCalibration/QuasistaticReverse",CommandSwerveDrivetrain.get().sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    SmartDashboard.putData("CTRESwerveCalibration/DynamicForward",Swerve.get().sysIdDynamic(SysIdRoutine.Direction.kForward));
+    SmartDashboard.putData("CTRESwerveCalibration/DynamicReverse",Swerve.get().sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    SmartDashboard.putData("CTRESwerveCalibration/QuasistaticForward",Swerve.get().sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    SmartDashboard.putData("CTRESwerveCalibration/QuasistaticReverse",Swerve.get().sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
   }
   private final SendableChooser<Command> autoChooser;
   public Robot() {
@@ -87,18 +93,18 @@ public class Robot extends TimedRobot {
 
     configureDriverStationBinds();
 
-    CommandSwerveDrivetrain.get().registerTelemetry(m_SwerveTelemetry::telemeterize);
+    Swerve.get().registerTelemetry(m_SwerveTelemetry::telemeterize);
 
     // Log Build information
     logBuildInfo();
 
     // TODO: Restore TeleopSwerve
-    CommandSwerveDrivetrain.get().setDefaultCommand(CommandSwerveDrivetrain.get().applyRequest(
-      ()->CommandSwerveDrivetrain.fcDriveReq.withVelocityX(
+    Swerve.get().setDefaultCommand(Swerve.get().applyRequest(
+      ()->Swerve.fcDriveReq.withVelocityX(
         applyDeadband(HumanControls.DriverStation.leftJoyY.getAsDouble(), 0.07)*MaxSpeed)
         .withVelocityY(applyDeadband(HumanControls.DriverStation.leftJoyX.getAsDouble(), 0.07)*MaxSpeed)
         .withRotationalRate(applyDeadband(HumanControls.DriverStation.rightJoyX.getAsDouble(), 0.07)*MaxRotationalRate)));
-        SmartDashboard.putData("Reset Gyro", Commands.runOnce(()->CommandSwerveDrivetrain.get().seedFieldCentric()));
+        SmartDashboard.putData("Reset Gyro", Commands.runOnce(()->Swerve.get().seedFieldCentric()));
   
     NamedCommands.registerCommand("PIDtoNearest", new PIDtoNearest(true));
 
@@ -111,7 +117,7 @@ public class Robot extends TimedRobot {
   }
 
   private void configureDriverStationBinds(){
-    HumanControls.DriverStation.resetGyro.onTrue(Commands.runOnce(()->CommandSwerveDrivetrain.get().seedFieldCentric()));
+    HumanControls.DriverStation.resetGyro.onTrue(Commands.runOnce(()->Swerve.get().seedFieldCentric()));
     HumanControls.OperatorPanel2024.Ground.whileTrue(new PIDtoNearest(true));
   }
   @Override
@@ -166,7 +172,7 @@ public class Robot extends TimedRobot {
   }
 
   public void updateVision(){
-    double heading=CommandSwerveDrivetrain.get().getState().Pose.getRotation().getDegrees();
+    double heading=Swerve.get().getState().Pose.getRotation().getDegrees();
     
     LimelightHelpers.SetRobotOrientation("limelight-corner",heading,0.0,0.0,0.0,0.0,0.0);
     var measurement=LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-corner");
@@ -174,8 +180,8 @@ public class Robot extends TimedRobot {
       if(measurement.tagCount>0&&measurement.rawFiducials[0].ambiguity<0.5&&measurement.rawFiducials[0].distToCamera<5){
         // Experimental
         double trustMetric=(Math.pow(measurement.rawFiducials[0].distToCamera,2)*measurement.rawFiducials[0].ambiguity/35);
-        CommandSwerveDrivetrain.get().setVisionMeasurementStdDevs(VecBuilder.fill(trustMetric,trustMetric,trustMetric));
-        CommandSwerveDrivetrain.get().addVisionMeasurement(measurement.pose, Utils.fpgaToCurrentTime(measurement.timestampSeconds));
+        Swerve.get().setVisionMeasurementStdDevs(VecBuilder.fill(trustMetric,trustMetric,trustMetric));
+        Swerve.get().addVisionMeasurement(measurement.pose, Utils.fpgaToCurrentTime(measurement.timestampSeconds));
       }
     }
   }

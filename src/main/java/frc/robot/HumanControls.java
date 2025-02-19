@@ -40,11 +40,23 @@ public final class HumanControls {
         public static final JoystickButton Leftest = new JoystickButton(operatorPanelB, 8);
     }
     public final class OperatorPanel2025{
-        public static final JoystickButton lockScoringPose=null;
-        public static final JoystickButton scoreL1=null;
-        public static final JoystickButton scoreL2=null;
-        public static final JoystickButton scoreL3=null;
-        public static final JoystickButton scoreL4=null;
+        public static final JoystickButton L1=null;
+        public static final JoystickButton L2=null;
+        public static final JoystickButton L3=null;
+        public static final JoystickButton L4=null;
+        public static final JoystickButton F1=null;
+        public static final JoystickButton F2=null;
+        public static final JoystickButton F3=null;
+        public static final JoystickButton releaseCoral=null;
+        public static final JoystickButton pickupAlgae=null;
+        public static final JoystickButton gyro=null;
+        public static final JoystickButton Climb1=null;
+        public static final JoystickButton Climb2=null;
+        public static final JoystickButton SouceCoral=null;
+        public static final JoystickButton GroundCoral=null;
+        public static final JoystickButton Barge=null;
+        public static final JoystickButton Processor=null;
+
         public static final JoystickButton leftOrRight=null;
         // Use one of the switches on the driver station for this
         public static final BooleanSupplier manualOverride=null;

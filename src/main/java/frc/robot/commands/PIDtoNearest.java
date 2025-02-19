@@ -14,7 +14,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Swerve;
 import frc.robot.util.GameInfo;
 import frc.robot.util.PoseUtil;
 import frc.team696.lib.Logging.BackupLogger;
@@ -35,13 +35,13 @@ public class PIDtoNearest extends Command {
     this(false);
   }
   public PIDtoNearest(boolean ignoreLR){
-    addRequirements(CommandSwerveDrivetrain.get());
-    xController=new ProfiledPIDController(/*1.7*/3, 0.0, 0.0, new TrapezoidProfile.Constraints(1.0, 1.4));
-    yController=new ProfiledPIDController(/*1.7*/3, 0.0, 0.0, new TrapezoidProfile.Constraints(1.0, 1.4));
+    addRequirements(Swerve.get());
+    xController=new ProfiledPIDController(/*1.7*/3.5, 0.0, 0.0, new TrapezoidProfile.Constraints(1.0, 1.4));
+    yController=new ProfiledPIDController(/*1.7*/3.5, 0.0, 0.0, new TrapezoidProfile.Constraints(1.0, 1.4));
     xController.setTolerance(0.01);
     yController.setTolerance(0.01);
     
-    omegaController=new ProfiledPIDController(4 , /*1*/0, /*0.3*/0, new TrapezoidProfile.Constraints(1.6, 0.6));
+    omegaController=new ProfiledPIDController(4.8 , /*1*/0, /*0.3*/0, new TrapezoidProfile.Constraints(1.6, 0.6));
     omegaController.enableContinuousInput(-Math.PI, Math.PI);
     omegaController.setTolerance(0.09);
     this.ignoreLR=ignoreLR;
@@ -51,10 +51,10 @@ public class PIDtoNearest extends Command {
   @Override
   public void initialize() {
     if(ignoreLR)
-      goalPose=PoseUtil.findClosestPose(GameInfo.getFieldSide().both, CommandSwerveDrivetrain.get().getState().Pose);
+      goalPose=PoseUtil.findClosestPose(GameInfo.getFieldSide().both, Swerve.get().getState().Pose);
     else
-      goalPose=PoseUtil.findClosestPose(GameInfo.getFieldSide().left, CommandSwerveDrivetrain.get().getState().Pose);
-    Pose2d currPose=CommandSwerveDrivetrain.get().getState().Pose;
+      goalPose=PoseUtil.findClosestPose(GameInfo.getFieldSide().left, Swerve.get().getState().Pose);
+    Pose2d currPose=Swerve.get().getState().Pose;
     xController.reset(currPose.getX());
     yController.reset(currPose.getY());
     omegaController.reset(currPose.getRotation().getRadians());
@@ -66,10 +66,10 @@ public class PIDtoNearest extends Command {
   {
     BackupLogger.addToQueue("wantogo", goalPose);
 
-    Pose2d currPose=CommandSwerveDrivetrain.get().getState().Pose;
+    Pose2d currPose=Swerve.get().getState().Pose;
     BackupLogger.addToQueue("Error X", goalPose.getX()-currPose.getX());
     BackupLogger.addToQueue("Error Y", goalPose.getY()-currPose.getY());
-    CommandSwerveDrivetrain.get().Drive(new ChassisSpeeds(
+    Swerve.get().Drive(new ChassisSpeeds(
         xController.calculate(currPose.getX(),goalPose.getX()),
         yController.calculate(currPose.getY(),goalPose.getY()),
         omegaController.calculate(currPose.getRotation().getRadians(),goalPose.getRotation().getRadians())
@@ -80,17 +80,17 @@ public class PIDtoNearest extends Command {
   @Override
   public void end(boolean interrupted) {
     System.out.println("There!");
-    CommandSwerveDrivetrain.get().Drive(new ChassisSpeeds(0,0,0));
+    Swerve.get().Drive(new ChassisSpeeds(0,0,0));
   }
   public boolean atGoalPose(Pose2d goal, Pose2d curr){
     return 
-      (Math.abs(goal.getX()-curr.getX())<0.04)&&
-      (Math.abs(goal.getY()-curr.getY())<0.04)&&
-      (Math.abs(goal.getRotation().getDegrees()-curr.getRotation().getDegrees()))<7;
+      (Math.abs(goal.getX()-curr.getX())<0.03)&&
+      (Math.abs(goal.getY()-curr.getY())<0.03)&&
+      (Math.abs(goal.getRotation().getDegrees()-curr.getRotation().getDegrees()))<4;
   }
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return atGoalPose(goalPose, CommandSwerveDrivetrain.get().getState().Pose);    
+    return atGoalPose(goalPose, Swerve.get().getState().Pose);    
   }
 }

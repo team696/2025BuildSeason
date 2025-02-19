@@ -7,6 +7,7 @@ package frc.robot.util;
 import java.util.List;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
 /** Add your docs here. */
@@ -98,6 +99,7 @@ public class PoseUtil {
     public static Pose2d mirrorPoseX(Pose2d pose){
         double fieldX = 17.53; // Field length in meters; TODO: get the real number
         pose=new Pose2d(fieldX-pose.getX(), pose.getY(), pose.getRotation());
+        pose.rotateBy(Rotation2d.fromRotations(0.5));
         return pose;
     }
 }

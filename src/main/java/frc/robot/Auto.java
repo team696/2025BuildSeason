@@ -38,7 +38,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Swerve;
 import frc.team696.lib.Dashboards.ShuffleDashboard;
 import frc.team696.lib.Logging.BackupLogger;
 import frc.team696.lib.Logging.PLog;
@@ -72,14 +72,14 @@ public class Auto {
     }
 
     public static Auto _instance;
-    private CommandSwerveDrivetrain _swerve;
+    private Swerve _swerve;
 
     private SendableChooser<Command> _autoChooser;
 
     public SysIdRoutine _driveSysIdRoutine; 
     private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds().withSteerRequestType(SteerRequestType.MotionMagicExpo).withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-    private Auto (CommandSwerveDrivetrain swerve, boolean shouldUseGUIValues, NamedCommand... commandsToRegister) {
+    private Auto (Swerve swerve, boolean shouldUseGUIValues, NamedCommand... commandsToRegister) {
         _swerve = swerve;
 
         RobotConfig config = new RobotConfig(
@@ -143,7 +143,7 @@ public class Auto {
      * @param swerve The swerve subsystem
      * @param commandsToRegister each command to register for path planner
      */
-    public static void Initialize(CommandSwerveDrivetrain swerve, NamedCommand... commandsToRegister){
+    public static void Initialize(Swerve swerve, NamedCommand... commandsToRegister){
         if (_instance != null) throw new RuntimeException ("Don't Initialize Twice!");
         
         _instance = new Auto(swerve, false, commandsToRegister);
@@ -156,7 +156,7 @@ public class Auto {
      * @param shouldUseGUIValues Should Pathplanner fetch Robot Config from GUI?
      * @param commandsToRegister each command to register for path planner
      */
-    public static void Initialize(CommandSwerveDrivetrain swerve, boolean shouldUseGUIValues, NamedCommand... commandsToRegister){
+    public static void Initialize(Swerve swerve, boolean shouldUseGUIValues, NamedCommand... commandsToRegister){
         if (_instance != null) throw new RuntimeException ("Don't Initialize Twice!");
         
         _instance = new Auto(swerve, shouldUseGUIValues, commandsToRegister);
