@@ -6,6 +6,9 @@ package frc.robot;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
 /** Add your docs here. */
 public class BotConstants {
@@ -24,15 +27,19 @@ public class BotConstants {
         static{
             cfg=new TalonFXConfiguration();
             // TODO: determine all these constants (Feedback first, feedforward if needed)
-            cfg.Slot0.kP=0;
-            cfg.Slot0.kV=0;
-            cfg.Slot0.kV=0;
-            cfg.Slot0.kG=0;
-            cfg.Slot0.kA=0;
-            cfg.MotionMagic.MotionMagicCruiseVelocity=3;
-            cfg.MotionMagic.MotionMagicAcceleration=5;
-            cfg.MotionMagic.MotionMagicJerk=8;
-            cfg.Feedback.SensorToMechanismRatio=0;
+            cfg.Slot0.kP=1.0/20.0;
+            cfg.Slot0.kG=0.06;
+            cfg.Slot0.kS=0.02;
+            cfg.Slot0.GravityType=GravityTypeValue.Elevator_Static;
+            cfg.Slot0.StaticFeedforwardSign=StaticFeedforwardSignValue.UseVelocitySign;
+
+            cfg.MotionMagic.MotionMagicCruiseVelocity=4.;
+            cfg.MotionMagic.MotionMagicAcceleration=8.;
+            cfg.MotionMagic.MotionMagicJerk=5.;
+            cfg.MotorOutput.NeutralMode=NeutralModeValue.Coast;
+            cfg.CurrentLimits.StatorCurrentLimit=60.;
+            cfg.CurrentLimits.StatorCurrentLimitEnable=true;
+
         }
 
     }

@@ -76,13 +76,13 @@ public class GameInfo {
         L1.height=10;
         L1.rot=Degree.of(12.0);
         L2=new CoralScoringPosition();
-        L2.height=15;
+        L2.height=20;
         L2.rot=Degree.of(12.0);
         L3=new CoralScoringPosition();
-        L3.height=20;
+        L3.height=40;
         L3.rot=Degree.of(12.0);
         L4=new CoralScoringPosition();
-        L4.height=25;
+        L4.height=55;
         L4.rot=Degree.of(12.0);
     } 
 }

@@ -35,7 +35,9 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.PIDtoNearest;
 import frc.robot.commands.PIDtoPosition;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Swerve;
+import frc.robot.util.GameInfo;
 import frc.team696.lib.Camera.LimelightHelpers;
 import frc.team696.lib.Logging.BackupLogger;
 import frc.robot.HumanControls.OperatorPanel2025;
@@ -91,9 +93,10 @@ public class Robot extends TimedRobot {
     
     SmartDashboard.putData(CommandScheduler.getInstance());
 
-    configureDriverStationBinds();
-
     Swerve.get().registerTelemetry(m_SwerveTelemetry::telemeterize);
+    Elevator.get();
+
+    configureDriverStationBinds();
 
     // Log Build information
     logBuildInfo();
@@ -107,6 +110,11 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData("Reset Gyro", Commands.runOnce(()->Swerve.get().seedFieldCentric()));
   
     NamedCommands.registerCommand("PIDtoNearest", new PIDtoNearest(true));
+    NamedCommands.registerCommand("ScoreL4",Elevator.get().positionCommand(GameInfo.L4));
+    NamedCommands.registerCommand("ScoreL3",Elevator.get().positionCommand(GameInfo.L3));
+    NamedCommands.registerCommand("ScoreL2",Elevator.get().positionCommand(GameInfo.L2));
+    NamedCommands.registerCommand("ScoreL1",Elevator.get().positionCommand(GameInfo.L1));
+
 
     // TODO: decide whether or not this will be a temporary fix
     autoChooser=AutoBuilder.buildAutoChooser();

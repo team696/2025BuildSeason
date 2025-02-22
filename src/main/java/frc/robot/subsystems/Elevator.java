@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.BotConstants;
 import frc.robot.util.GameInfo;
 import frc.team696.lib.HardwareDevices.TalonFactory;
+import frc.team696.lib.Logging.BackupLogger;
 
 public class Elevator extends SubsystemBase {
   private static Elevator m_Elevator=null;
@@ -38,11 +39,11 @@ public class Elevator extends SubsystemBase {
 
   private Elevator() {
     m_master=new TalonFactory(BotConstants.Elevator.masterID, BotConstants.rioBus, BotConstants.Elevator.cfg, "Elevator Master");
-    m_slave=new TalonFactory(BotConstants.Elevator.slaveId,BotConstants.canivoreBus, BotConstants.Elevator.cfg, "Elevator Slave");
+    m_slave=new TalonFactory(BotConstants.Elevator.slaveId,BotConstants.rioBus, BotConstants.Elevator.cfg, "Elevator Slave");
     //m_angle=new TalonFactory();
-    m_slave.Follow(m_master, true);// TODO: determine of the slave needs to go in the same or in the opposite direction to the master
+    m_slave.Follow(m_master, false);// TODO: determine of the slave needs to go in the same or in the opposite direction to the master
     
-    positionReq=new MotionMagicVoltage(0);
+    positionReq=new MotionMagicVoltage(0).withSlot(0);
     
     identificationRoutine=new SysIdRoutine(new SysIdRoutine.Config(Volts.per(Second).of(0.5), Volts.of(0.4),Seconds.of(3)), 
     
@@ -75,8 +76,21 @@ public class Elevator extends SubsystemBase {
   public Command holdPosition(){
     return this.startEnd(()->m_master.setControl(positionReq.withPosition(m_master.getPosition())), ()->m_master.VoltageOut(Volts.of(0)));
   }
+  public void zeroPosition(){
+    resetPosition(0);
+  }
+  public void resetPosition(double newPosition){
+    m_master.setPosition(newPosition);
+    m_slave.setPosition(newPosition);
+  }
   @Override
   public void periodic() {
-    // TODO: log some data
+    BackupLogger.addToQueue("Elevator/MasterCurrent", m_master.getCurrent());
+    BackupLogger.addToQueue("Elevator/SlaveCurrent", m_slave.getCurrent());
+    BackupLogger.addToQueue("Elevator/MasterPosition", m_master.getPosition());
+    BackupLogger.addToQueue("Elevator/SlavePosition", m_slave.getPosition());
+    BackupLogger.addToQueue("Elevator/SlaveVelocity", m_slave.getVelocity());
+    BackupLogger.addToQueue("Elevator/MasterVelocity", m_master.getVelocity());
+    
   }
 }
