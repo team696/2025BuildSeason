@@ -51,7 +51,7 @@ public class Elevator extends SubsystemBase {
       log.motor(m_master.getName()).voltage(m_master.get().getMotorVoltage().getValue())
       .linearPosition(Meters.of(m_master.getPosition()))
       .linearVelocity(MetersPerSecond.of(m_master.getVelocity()));
-    }, m_Elevator));
+    }, this));
   }
 
   /**
@@ -91,6 +91,6 @@ public class Elevator extends SubsystemBase {
     BackupLogger.addToQueue("Elevator/SlavePosition", m_slave.getPosition());
     BackupLogger.addToQueue("Elevator/SlaveVelocity", m_slave.getVelocity());
     BackupLogger.addToQueue("Elevator/MasterVelocity", m_master.getVelocity());
-    
+
   }
 }

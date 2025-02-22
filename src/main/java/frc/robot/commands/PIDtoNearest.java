@@ -83,10 +83,12 @@ public class PIDtoNearest extends Command {
     Swerve.get().Drive(new ChassisSpeeds(0,0,0));
   }
   public boolean atGoalPose(Pose2d goal, Pose2d curr){
+    //System.out.println("no not finished yet "+Math.abs(goal.getX()-curr.getX())+" "+(Math.abs(goal.getY()-curr.getY())+" "+Math.abs(goal.getRotation().getDegrees()-curr.getRotation().getDegrees())));
+
     return 
       (Math.abs(goal.getX()-curr.getX())<0.03)&&
       (Math.abs(goal.getY()-curr.getY())<0.03)&&
-      (Math.abs(goal.getRotation().getDegrees()-curr.getRotation().getDegrees()))<4;
+      (Math.abs(goal.getRotation().minus(curr.getRotation()).getDegrees()))<4;
   }
   // Returns true when the command should end.
   @Override

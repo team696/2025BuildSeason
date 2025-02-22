@@ -79,7 +79,7 @@ public class PIDtoPosition extends Command {
     return 
       (Math.abs(goal.getX()-curr.getX())<0.04)&&
       (Math.abs(goal.getY()-curr.getY())<0.04)&&
-      (Math.abs(goal.getRotation().getDegrees()-curr.getRotation().getDegrees()))<7;
+      (Math.abs(goal.getRotation().minus(curr.getRotation()).getDegrees()))<4;
   }
   // Returns true when the command should end.
   @Override

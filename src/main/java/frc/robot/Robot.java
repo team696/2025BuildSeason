@@ -23,6 +23,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -92,9 +93,9 @@ public class Robot extends TimedRobot {
   public Robot() {
     
     SmartDashboard.putData(CommandScheduler.getInstance());
+    SmartDashboard.putData(Elevator.get());
 
     Swerve.get().registerTelemetry(m_SwerveTelemetry::telemeterize);
-    Elevator.get();
 
     configureDriverStationBinds();
 
@@ -110,10 +111,17 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData("Reset Gyro", Commands.runOnce(()->Swerve.get().seedFieldCentric()));
   
     NamedCommands.registerCommand("PIDtoNearest", new PIDtoNearest(true));
-    NamedCommands.registerCommand("ScoreL4",Elevator.get().positionCommand(GameInfo.L4));
+    NamedCommands.registerCommand("ScoreL4",new InstantCommand(
+      ()->
+      SmartDashboard.putBoolean("auto", true)
+      ).alongWith(Elevator.get().positionCommand(GameInfo.L4)));
     NamedCommands.registerCommand("ScoreL3",Elevator.get().positionCommand(GameInfo.L3));
     NamedCommands.registerCommand("ScoreL2",Elevator.get().positionCommand(GameInfo.L2));
     NamedCommands.registerCommand("ScoreL1",Elevator.get().positionCommand(GameInfo.L1));
+    NamedCommands.registerCommand("hello", new InstantCommand(
+      ()->
+      SmartDashboard.putBoolean("auto", true)
+      ));
 
 
     // TODO: decide whether or not this will be a temporary fix
@@ -126,7 +134,6 @@ public class Robot extends TimedRobot {
 
   private void configureDriverStationBinds(){
     HumanControls.DriverStation.resetGyro.onTrue(Commands.runOnce(()->Swerve.get().seedFieldCentric()));
-    HumanControls.OperatorPanel2024.Ground.whileTrue(new PIDtoNearest(true));
   }
   @Override
   public void robotPeriodic() {
@@ -135,7 +142,8 @@ public class Robot extends TimedRobot {
     long elapsed=RobotController.getTime()-start;
     BackupLogger.addToQueue("SchedulerTimeMS", elapsed);
     // TODO: implement common library style vision controls 
-    updateVision();
+    updateVision("limelight-corner");
+
     BackupLogger.logSystemInformation();
 
     /*int i = 0;
@@ -179,11 +187,11 @@ public class Robot extends TimedRobot {
     }
   }
 
-  public void updateVision(){
+  public void updateVision(String limelightName){
     double heading=Swerve.get().getState().Pose.getRotation().getDegrees();
     
-    LimelightHelpers.SetRobotOrientation("limelight-corner",heading,0.0,0.0,0.0,0.0,0.0);
-    var measurement=LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-corner");
+    LimelightHelpers.SetRobotOrientation(limelightName,heading,0.0,0.0,0.0,0.0,0.0);
+    var measurement=LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightName);
     if(measurement!=null){
       if(measurement.tagCount>0&&measurement.rawFiducials[0].ambiguity<0.5&&measurement.rawFiducials[0].distToCamera<5){
         // Experimental

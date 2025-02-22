@@ -57,6 +57,12 @@
           "data": {
             "pathName": "SourceRToReefAR"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "hello"
+          }
         }
       ]
     }
