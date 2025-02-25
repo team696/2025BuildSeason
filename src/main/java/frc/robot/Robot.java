@@ -144,9 +144,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     long elapsed=RobotController.getTime()-start;
     BackupLogger.addToQueue("SchedulerTimeMS", elapsed);
-    // TODO: implement common library style vision controls 
     updateVision("limelight-corner");
-    GameInfo.updateTestingValues();
     BackupLogger.logSystemInformation();
 
     /*int i = 0;

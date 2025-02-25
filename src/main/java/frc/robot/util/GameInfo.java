@@ -19,13 +19,17 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.HumanControls;
 
-/** Add your docs here. */
+/**
+ * Information related to scoring
+*/
 public class GameInfo {
     public static class CoralScoringPosition{
         public double height;
+        /*As measured from the vertical normal (arm facing up) */
         public Angle rot;
     }
     public static CoralScoringPosition L1, L2, L3, L4;
+    
     public static class FieldSide{
         public Pose2d[] left, right, both;
     }
@@ -39,10 +43,6 @@ public class GameInfo {
         return HumanControls.OperatorPanel2025.leftOrRight.getAsBoolean()?getFieldSide().left:getFieldSide().right;
     }
 
-    public static void updateTestingValues(){
-        DynamicNTVal.periodic();
-        DynamicNTDouble.periodic();
-    }
     static{
         blue=new FieldSide();
         // TODO: determine the real scoring poses
@@ -89,14 +89,14 @@ public class GameInfo {
         * this puts the values on networktables so scoring positions can be quickly changed
         * comment this out once the scoring positions are finalized
         */
-        new DynamicNTDouble("testing/L1/height", L1.height, height->L1.height=height).Register();
-        new DynamicNTDouble("testing/L2/height", L2.height, height->L2.height=height).Register();
-        new DynamicNTDouble("testing/L3/height", L3.height, height->L3.height=height).Register();
-        new DynamicNTDouble("testing/L4/height", L4.height, height->L4.height=height).Register();
-        new DynamicNTDouble("testing/L1/rot", L1.rot.in(Degree), rot->L1.rot=Degree.of(rot)).Register();
-        new DynamicNTDouble("testing/L2/rot", L2.rot.in(Degree), rot->L2.rot=Degree.of(rot)).Register();
-        new DynamicNTDouble("testing/L3/rot", L3.rot.in(Degree), rot->L3.rot=Degree.of(rot)).Register();
-        new DynamicNTDouble("testing/L4/rot", L4.rot.in(Degree), rot->L4.rot=Degree.of(rot)).Register();;
+        new TriggerNTDouble("testing/L1/height", L1.height, height->L1.height=height);
+        new TriggerNTDouble("testing/L2/height", L2.height, height->L2.height=height);
+        new TriggerNTDouble("testing/L3/height", L3.height, height->L3.height=height);
+        new TriggerNTDouble("testing/L4/height", L4.height, height->L4.height=height);
+        new TriggerNTDouble("testing/L1/rot", L1.rot.in(Degree), rot->L1.rot=Degree.of(rot));
+        new TriggerNTDouble("testing/L2/rot", L2.rot.in(Degree), rot->L2.rot=Degree.of(rot));
+        new TriggerNTDouble("testing/L3/rot", L3.rot.in(Degree), rot->L3.rot=Degree.of(rot));
+        new TriggerNTDouble("testing/L4/rot", L4.rot.in(Degree), rot->L4.rot=Degree.of(rot));
 
     } 
 

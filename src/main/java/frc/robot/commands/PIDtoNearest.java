@@ -43,7 +43,7 @@ public class PIDtoNearest extends Command {
     
     omegaController=new ProfiledPIDController(4.8 , /*1*/0, /*0.3*/0, new TrapezoidProfile.Constraints(1.6, 0.6));
     omegaController.enableContinuousInput(-Math.PI, Math.PI);
-    omegaController.setTolerance(0.09);
+    omegaController.setTolerance(0.08);
     this.ignoreLR=ignoreLR;
   }
 

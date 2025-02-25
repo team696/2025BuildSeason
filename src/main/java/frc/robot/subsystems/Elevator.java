@@ -52,6 +52,7 @@ public class Elevator extends SubsystemBase {
       .linearPosition(Meters.of(m_master.getPosition()))
       .linearVelocity(MetersPerSecond.of(m_master.getVelocity()));
     }, this));
+    this.setDefaultCommand(positionCommand(0));
   }
 
   /**
@@ -62,12 +63,15 @@ public class Elevator extends SubsystemBase {
   }
   /**
    * Moves to and holds a position
-   * @param position
-   * @return 
+   * @param position The scoring position to hold
+   * @return the command which holds the elevator at position (requires this subsystem)
    */
   public Command positionCommand(GameInfo.CoralScoringPosition position){
-    // TODO: unfuck this before we actually practice
     return this.startEnd(()->m_master.setControl(positionReq.withPosition(position.height)), ()->m_master.VoltageOut(Volts.of(0)));
+  }
+
+  public Command positionCommand(double position){
+    return this.startEnd(()->m_master.setControl(positionReq.withPosition(position)), ()->m_master.VoltageOut(Volts.of(0)));
   }
   /**
    * Holds the current position

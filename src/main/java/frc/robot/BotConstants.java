@@ -10,7 +10,9 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
-/** Add your docs here. */
+/**
+ * Constants for robot mechanisms unrelated to the drive train
+*/
 public class BotConstants {
     // The CAN Bus attached directly to the RoboRIO, used for devices controlling non-drivetrain mechanisms
     public static CANBus rioBus;
@@ -26,7 +28,6 @@ public class BotConstants {
         public static TalonFXConfiguration cfg;
         static{
             cfg=new TalonFXConfiguration();
-            // TODO: determine all these constants (Feedback first, feedforward if needed)
             cfg.Slot0.kP=1.0/20.0;
             cfg.Slot0.kG=0.06;
             cfg.Slot0.kS=0.02;
@@ -43,4 +44,12 @@ public class BotConstants {
         }
 
     }
+    public static class Arm{
+        public int motorID=13;
+        public static TalonFXConfiguration cfg;
+        static{
+
+        }
+    }
+
 }

@@ -38,7 +38,7 @@ public class PIDtoPosition extends Command {
     
     omegaController=new ProfiledPIDController(2 , /*1*/0, /*0.3*/0, new TrapezoidProfile.Constraints(1.6, 0.6));
     omegaController.enableContinuousInput(-Math.PI, Math.PI);
-    omegaController.setTolerance(0.09);
+    omegaController.setTolerance(0.08);
 
     this.goalPose=goalPose;
 
@@ -77,8 +77,8 @@ public class PIDtoPosition extends Command {
   }
   public boolean atGoalPose(Pose2d goal, Pose2d curr){
     return 
-      (Math.abs(goal.getX()-curr.getX())<0.04)&&
-      (Math.abs(goal.getY()-curr.getY())<0.04)&&
+      (Math.abs(goal.getX()-curr.getX())<0.03)&&
+      (Math.abs(goal.getY()-curr.getY())<0.03)&&
       (Math.abs(goal.getRotation().minus(curr.getRotation()).getDegrees()))<4;
   }
   // Returns true when the command should end.

@@ -25,8 +25,6 @@ public class TriggerNTDouble {
     private boolean hasChanged(){
         double prev=val;
         val=ntEntry.getAsDouble();
-        //System.out.println(prev!=val);
-        if(prev!=val) update.accept(val);
         return prev!=val;
     }
 
@@ -37,6 +35,6 @@ public class TriggerNTDouble {
         this.ntEntry=NetworkTableInstance.getDefault().getDoubleTopic(name).getEntry(0);
         this.ntEntry.set(val);
         trigger=new Trigger(()->hasChanged());
-        trigger.onTrue(new InstantCommand(()->{}));
+        trigger.onTrue(new InstantCommand(()->update.accept(val)).ignoringDisable(true));
     }
 }
