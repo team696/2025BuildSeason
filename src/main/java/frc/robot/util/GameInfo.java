@@ -11,6 +11,8 @@ import java.util.stream.Stream;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.networktables.DoubleEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -37,6 +39,10 @@ public class GameInfo {
         return HumanControls.OperatorPanel2025.leftOrRight.getAsBoolean()?getFieldSide().left:getFieldSide().right;
     }
 
+    public static void updateTestingValues(){
+        DynamicNTVal.periodic();
+        DynamicNTDouble.periodic();
+    }
     static{
         blue=new FieldSide();
         // TODO: determine the real scoring poses
@@ -79,5 +85,20 @@ public class GameInfo {
         L4=new CoralScoringPosition();
         L4.height=55;
         L4.rot=Degree.of(12.0);
+        /**
+        * this puts the values on networktables so scoring positions can be quickly changed
+        * comment this out once the scoring positions are finalized
+        */
+        new DynamicNTDouble("testing/L1/height", L1.height, height->L1.height=height).Register();
+        new DynamicNTDouble("testing/L2/height", L2.height, height->L2.height=height).Register();
+        new DynamicNTDouble("testing/L3/height", L3.height, height->L3.height=height).Register();
+        new DynamicNTDouble("testing/L4/height", L4.height, height->L4.height=height).Register();
+        new DynamicNTDouble("testing/L1/rot", L1.rot.in(Degree), rot->L1.rot=Degree.of(rot)).Register();
+        new DynamicNTDouble("testing/L2/rot", L2.rot.in(Degree), rot->L2.rot=Degree.of(rot)).Register();
+        new DynamicNTDouble("testing/L3/rot", L3.rot.in(Degree), rot->L3.rot=Degree.of(rot)).Register();
+        new DynamicNTDouble("testing/L4/rot", L4.rot.in(Degree), rot->L4.rot=Degree.of(rot)).Register();;
+
     } 
+
+
 }

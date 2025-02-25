@@ -23,6 +23,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -33,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.PIDtoNearest;
 import frc.robot.commands.PIDtoPosition;
@@ -97,6 +99,7 @@ public class Robot extends TimedRobot {
 
     Swerve.get().registerTelemetry(m_SwerveTelemetry::telemeterize);
 
+    DriverStation.silenceJoystickConnectionWarning(true);
     configureDriverStationBinds();
 
     // Log Build information
@@ -143,7 +146,7 @@ public class Robot extends TimedRobot {
     BackupLogger.addToQueue("SchedulerTimeMS", elapsed);
     // TODO: implement common library style vision controls 
     updateVision("limelight-corner");
-
+    GameInfo.updateTestingValues();
     BackupLogger.logSystemInformation();
 
     /*int i = 0;
