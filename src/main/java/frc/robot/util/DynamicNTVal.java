@@ -7,12 +7,8 @@ package frc.robot.util;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.DoubleConsumer;
-
-import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.NetworkTableType;
 
 /** Add your docs here. */
 public class DynamicNTVal<T> {

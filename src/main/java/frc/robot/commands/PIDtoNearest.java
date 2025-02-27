@@ -5,23 +5,22 @@
 
 package frc.robot.commands;
 
-import java.util.Arrays;
-
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.GameInfo;
 import frc.robot.util.PoseUtil;
 import frc.team696.lib.Logging.BackupLogger;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
+/**
+ * PIDToPosition but it takes goes to the nearest scoring pose defined in GameInfo.
+ * @see PIDToPosition
+ * @see GameInfo
+ */
 public class PIDtoNearest extends Command {
-  /** Creates a new goToPosition. */
   private ProfiledPIDController xController, yController, omegaController;
   private Pose2d goalPose;
   private boolean ignoreLR;
@@ -31,9 +30,14 @@ public class PIDtoNearest extends Command {
     double error=goal-measurement;
     return Math.abs(error)<tolerance?0:controller.calculate(measurement, goal);
   }
+
   public PIDtoNearest() {
     this(false);
   }
+  /**
+   * Creates a new PIDToNearest command
+   * @param ignoreLR If enabled, the robot will go to the nearest scoring pose regardless if the operator panel selected left or right. 
+   */
   public PIDtoNearest(boolean ignoreLR){
     addRequirements(Swerve.get());
     xController=new ProfiledPIDController(/*1.7*/3.5, 0.0, 0.0, new TrapezoidProfile.Constraints(1.0, 1.4));
@@ -79,7 +83,7 @@ public class PIDtoNearest extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("There!");
+    //System.out.println("There!");
     Swerve.get().Drive(new ChassisSpeeds(0,0,0));
   }
   public boolean atGoalPose(Pose2d goal, Pose2d curr){

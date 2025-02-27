@@ -8,12 +8,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
-import java.util.Arrays;
-
 import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.swerve.SwerveModule;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathfindingCommand;
@@ -22,9 +17,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -34,16 +27,13 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.PIDtoNearest;
-import frc.robot.commands.PIDtoPosition;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.GameInfo;
 import frc.team696.lib.Camera.LimelightHelpers;
 import frc.team696.lib.Logging.BackupLogger;
-import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ClimberIntake;
 import frc.robot.HumanControls.OperatorPanel2025;
 
@@ -99,7 +89,6 @@ public class Robot extends TimedRobot {
   }
   private final SendableChooser<Command> autoChooser;
   public Robot() {
-    
     SmartDashboard.putData(CommandScheduler.getInstance());
     SmartDashboard.putData(Elevator.get());
     SmartDashboard.putData(ClimberIntake.get());
@@ -153,7 +142,7 @@ public class Robot extends TimedRobot {
     long start=RobotController.getTime();
     CommandScheduler.getInstance().run();
     long elapsed=RobotController.getTime()-start;
-    BackupLogger.addToQueue("SchedulerTimeMS", elapsed);
+    BackupLogger.addToQueue("SchedulerTimeMS", elapsed); // Scheduler Time in Microseconds, anything over 20,000 should trigger the watchdog
     updateVision("limelight-corner");
     BackupLogger.logSystemInformation();
 

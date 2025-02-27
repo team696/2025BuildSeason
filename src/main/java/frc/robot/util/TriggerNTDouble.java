@@ -4,8 +4,6 @@
 
 package frc.robot.util;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.DoubleConsumer;
 
 import edu.wpi.first.networktables.DoubleEntry;

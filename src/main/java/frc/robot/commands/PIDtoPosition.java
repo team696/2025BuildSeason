@@ -5,19 +5,21 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Swerve;
-import frc.team696.lib.Logging.BackupLogger;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
+
+/***
+ * A Command which can move a swerve drive robot to a specific position on the field
+ * Internally, this is simply three PID controllers with trapezoid profiles, (omegaController is continuous), thus there is <strong> no mechanism to avoid field obstacles </strong>
+ * Use this to align to a position with high accuacy when the robot is <i>already near that position<i>
+ * @see ChassisSpeeds
+ */
 public class PIDtoPosition extends Command {
-  /** Creates a new goToPosition. */
   private ProfiledPIDController xController, yController, omegaController;
   private Pose2d goalPose;
 
@@ -57,11 +59,11 @@ public class PIDtoPosition extends Command {
   @Override
   public void execute() 
   {
-    BackupLogger.addToQueue("wantogo", goalPose);
+    //BackupLogger.addToQueue("wantogo", goalPose);
 
     Pose2d currPose=Swerve.get().getState().Pose;
-    BackupLogger.addToQueue("Error X", goalPose.getX()-currPose.getX());
-    BackupLogger.addToQueue("Error Y", goalPose.getY()-currPose.getY());
+    /*BackupLogger.addToQueue("Error X", goalPose.getX()-currPose.getX());
+    BackupLogger.addToQueue("Error Y", goalPose.getY()-currPose.getY());*/
     Swerve.get().Drive(new ChassisSpeeds(
         xController.calculate(currPose.getX(),goalPose.getX()),
         yController.calculate(currPose.getY(),goalPose.getY()),
