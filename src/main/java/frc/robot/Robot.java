@@ -43,6 +43,8 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.util.GameInfo;
 import frc.team696.lib.Camera.LimelightHelpers;
 import frc.team696.lib.Logging.BackupLogger;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.ClimberIntake;
 import frc.robot.HumanControls.OperatorPanel2025;
 
 public class Robot extends TimedRobot {
@@ -80,9 +82,13 @@ public class Robot extends TimedRobot {
     return Math.abs(x)<deadband?0:x;
   }
   public void putCommandButtons(){
-    SmartDashboard.putData("sim/pidToNearest", new PIDtoNearest());
-    SmartDashboard.putBoolean("pathfindingConfigured", AutoBuilder.isPathfindingConfigured());
+    //SmartDashboard.putData("sim/pidToNearest", new PIDtoNearest());
+    //SmartDashboard.putBoolean("pathfindingConfigured", AutoBuilder.isPathfindingConfigured());
     SmartDashboard.putData("sim/pathfindToMiddle", new PrintCommand("s").andThen(AutoBuilder.pathfindToPose(new Pose2d(7,3,Rotation2d.fromDegrees(12)),new PathConstraints(1, 1, Math.PI,Math.PI))));
+    SmartDashboard.putData("ScoreL4", Elevator.get().positionCommand(GameInfo.L4));
+    SmartDashboard.putData("ScoreL2", Elevator.get().positionCommand(GameInfo.L2));
+
+
 
   }
   public void putSwerveSysIDCalibrationButtons(){
@@ -96,6 +102,9 @@ public class Robot extends TimedRobot {
     
     SmartDashboard.putData(CommandScheduler.getInstance());
     SmartDashboard.putData(Elevator.get());
+    SmartDashboard.putData(ClimberIntake.get());
+    //SmartDashboard.putData(Arm.get());
+
 
     Swerve.get().registerTelemetry(m_SwerveTelemetry::telemeterize);
 
@@ -121,6 +130,7 @@ public class Robot extends TimedRobot {
     NamedCommands.registerCommand("ScoreL3",Elevator.get().positionCommand(GameInfo.L3));
     NamedCommands.registerCommand("ScoreL2",Elevator.get().positionCommand(GameInfo.L2));
     NamedCommands.registerCommand("ScoreL1",Elevator.get().positionCommand(GameInfo.L1));
+    putCommandButtons();
     NamedCommands.registerCommand("hello", new InstantCommand(
       ()->
       SmartDashboard.putBoolean("auto", true)

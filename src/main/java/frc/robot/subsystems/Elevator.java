@@ -10,12 +10,14 @@ import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
+import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.BotConstants;
@@ -32,7 +34,7 @@ public class Elevator extends SubsystemBase {
     return m_Elevator;
   }
   private TalonFactory m_master, m_slave;
-  private MotionMagicVoltage positionReq;
+  private MotionMagicDutyCycle positionReq;
   public SysIdRoutine identificationRoutine;
   // controls the angle of the scoring arm
   public TalonFactory m_angle;
@@ -41,9 +43,9 @@ public class Elevator extends SubsystemBase {
     m_master=new TalonFactory(BotConstants.Elevator.masterID, BotConstants.rioBus, BotConstants.Elevator.cfg, "Elevator Master");
     m_slave=new TalonFactory(BotConstants.Elevator.slaveId,BotConstants.rioBus, BotConstants.Elevator.cfg, "Elevator Slave");
 
-    m_slave.Follow(m_master, false);
+    m_slave.Follow(m_master, true);
     
-    positionReq=new MotionMagicVoltage(0).withSlot(0);
+    positionReq=new MotionMagicDutyCycle(0).withSlot(0);
     
     identificationRoutine=new SysIdRoutine(new SysIdRoutine.Config(Volts.per(Second).of(0.5), Volts.of(0.4),Seconds.of(3)), 
     
@@ -67,9 +69,11 @@ public class Elevator extends SubsystemBase {
    * @return the command which holds the elevator at position (requires this subsystem)
    */
   public Command positionCommand(GameInfo.CoralScoringPosition position){
-    return this.startEnd(()->m_master.setControl(positionReq.withPosition(position.height)), ()->m_master.VoltageOut(Volts.of(0)));
+    return this.runEnd(()->m_master.get().setControl(positionReq.withPosition(position.height)), ()->m_master.get().set(0));
   }
-
+  public Command positionCommandRun(GameInfo.CoralScoringPosition position){
+    return this.runEnd(()->m_master.setControl(positionReq.withPosition(position.height)), ()->m_master.VoltageOut(Volts.of(0)));
+  }
   public Command positionCommand(double position){
     return this.startEnd(()->m_master.setControl(positionReq.withPosition(position)), ()->m_master.VoltageOut(Volts.of(0)));
   }
