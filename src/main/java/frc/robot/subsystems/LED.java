@@ -36,8 +36,9 @@ public class LED extends SubsystemBase {
   }
 
   private Command Color(int r, int g, int b){
-    return this.startEnd(()->setColor(r,g,b), ()->setColor(0,0,0));
+    return this.startEnd(()->setColor(r,g,b), ()->setColor(0,0,0)).ignoringDisable(true);
   }
+
   /** Creates a new LED. */
   private LED() {
     CANdleConfiguration _candleConfiguration = new CANdleConfiguration();

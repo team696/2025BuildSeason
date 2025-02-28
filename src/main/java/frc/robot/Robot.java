@@ -35,6 +35,7 @@ import frc.robot.util.GameInfo;
 import frc.team696.lib.Camera.LimelightHelpers;
 import frc.team696.lib.Logging.BackupLogger;
 import frc.robot.subsystems.ClimberIntake;
+import frc.robot.subsystems.ArmAndWrist;
 import frc.robot.HumanControls.OperatorPanel2025;
 
 public class Robot extends TimedRobot {
@@ -76,13 +77,14 @@ public class Robot extends TimedRobot {
     //SmartDashboard.putBoolean("pathfindingConfigured", AutoBuilder.isPathfindingConfigured());
     SmartDashboard.putData("sim/pathfindToMiddle", new PrintCommand("s").andThen(AutoBuilder.pathfindToPose(new Pose2d(7,3,Rotation2d.fromDegrees(12)),new PathConstraints(1, 1, Math.PI,Math.PI))));
     SmartDashboard.putData("ScoreL4", Elevator.get().positionCommand(GameInfo.L4));
+    SmartDashboard.putData("ScoreL3", ArmAndWrist.get().Position(GameInfo.L3).alongWith(Elevator.get().positionCommand(GameInfo.L3))) ;
     SmartDashboard.putData("ScoreL2", Elevator.get().positionCommand(GameInfo.L2));
 
 
 
   }
   public void putSwerveSysIDCalibrationButtons(){
-    SmartDashboard.putData("CTRESwerveCalibration/DynamicForward",Swerve.get().sysIdDynamic(SysIdRoutine.Direction.kForward));
+    SmartDashboard.putData("CTRESwerveCalibrationc/DynamicForward",Swerve.get().sysIdDynamic(SysIdRoutine.Direction.kForward));
     SmartDashboard.putData("CTRESwerveCalibration/DynamicReverse",Swerve.get().sysIdDynamic(SysIdRoutine.Direction.kReverse));
     SmartDashboard.putData("CTRESwerveCalibration/QuasistaticForward",Swerve.get().sysIdQuasistatic(SysIdRoutine.Direction.kForward));
     SmartDashboard.putData("CTRESwerveCalibration/QuasistaticReverse",Swerve.get().sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
@@ -91,8 +93,8 @@ public class Robot extends TimedRobot {
   public Robot() {
     SmartDashboard.putData(CommandScheduler.getInstance());
     SmartDashboard.putData(Elevator.get());
-    SmartDashboard.putData(ClimberIntake.get());
-    //SmartDashboard.putData(Arm.get());
+    //SmartDashboard.putData(ClimberIntake.get());
+    SmartDashboard.putData(ArmAndWrist.get());
 
 
     Swerve.get().registerTelemetry(m_SwerveTelemetry::telemeterize);
@@ -106,17 +108,15 @@ public class Robot extends TimedRobot {
     // TODO: Restore TeleopSwerve
     Swerve.get().setDefaultCommand(Swerve.get().applyRequest(
       ()->Swerve.fcDriveReq.withVelocityX(
-        applyDeadband(HumanControls.DriverStation.leftJoyY.getAsDouble(), 0.07)*MaxSpeed)
-        .withVelocityY(applyDeadband(HumanControls.DriverStation.leftJoyX.getAsDouble(), 0.07)*MaxSpeed)
-        .withRotationalRate(applyDeadband(HumanControls.DriverStation.rightJoyX.getAsDouble(), 0.07)*MaxRotationalRate)));
+        applyDeadband(HumanControls.DriverPanel.leftJoyY.getAsDouble(), 0.07)*MaxSpeed)
+        .withVelocityY(applyDeadband(HumanControls.DriverPanel.leftJoyX.getAsDouble(), 0.07)*MaxSpeed)
+        .withRotationalRate(applyDeadband(HumanControls.DriverPanel.rightJoyX.getAsDouble(), 0.07)*MaxRotationalRate)));
         SmartDashboard.putData("Reset Gyro", Commands.runOnce(()->Swerve.get().seedFieldCentric()));
   
     NamedCommands.registerCommand("PIDtoNearest", new PIDtoNearest(true));
-    NamedCommands.registerCommand("ScoreL4",new InstantCommand(
-      ()->
-      SmartDashboard.putBoolean("auto", true)
-      ).alongWith(Elevator.get().positionCommand(GameInfo.L4)));
-    NamedCommands.registerCommand("ScoreL3",Elevator.get().positionCommand(GameInfo.L3));
+    NamedCommands.registerCommand("ScoreL4",
+    Elevator.get().positionCommand(GameInfo.L4));
+    NamedCommands.registerCommand("ScoreL3",ArmAndWrist.get().Position(GameInfo.L3).alongWith(Elevator.get().positionCommand(GameInfo.L3)));
     NamedCommands.registerCommand("ScoreL2",Elevator.get().positionCommand(GameInfo.L2));
     NamedCommands.registerCommand("ScoreL1",Elevator.get().positionCommand(GameInfo.L1));
     putCommandButtons();
@@ -135,7 +135,12 @@ public class Robot extends TimedRobot {
   }
 
   private void configureDriverStationBinds(){
-    HumanControls.DriverStation.resetGyro.onTrue(Commands.runOnce(()->Swerve.get().seedFieldCentric()));
+    HumanControls.DriverPanel.resetGyro.onTrue(Commands.runOnce(()->Swerve.get().seedFieldCentric()));
+    //HumanControls.OperatorPanel2025.L1.whileTrue(Elevator.get().positionCommand(GameInfo.L1));
+    //HumanControls.OperatorPanel2025.L2.whileTrue(Elevator.get().positionCommand(GameInfo.L2));
+    //HumanControls.OperatorPanel2025.L3.whileTrue(Elevator.get().positionCommand(GameInfo.L3));
+    //HumanControls.OperatorPanel2025.L4.whileTrue(Elevator.get().positionCommand(GameInfo.L4));
+
   }
   @Override
   public void robotPeriodic() {

@@ -38,7 +38,7 @@ public class BotConstants {
             cfg.MotionMagic.MotionMagicAcceleration=128.;
             cfg.MotionMagic.MotionMagicJerk=128.;
             cfg.MotorOutput.NeutralMode=NeutralModeValue.Coast;
-            cfg.CurrentLimits.StatorCurrentLimit=60.;
+            cfg.CurrentLimits.StatorCurrentLimit=120.;
             cfg.CurrentLimits.StatorCurrentLimitEnable=true;
 
         }
@@ -52,13 +52,25 @@ public class BotConstants {
             cfg.Slot0.GravityType=GravityTypeValue.Arm_Cosine;
             cfg.Slot0.kP=1/10;
             cfg.CurrentLimits.StatorCurrentLimitEnable=true;
-            cfg.CurrentLimits.StatorCurrentLimit=120;
+            cfg.CurrentLimits.StatorCurrentLimit=80;
             cfg.MotionMagic.MotionMagicCruiseVelocity=0;
             cfg.MotionMagic.MotionMagicAcceleration=0;
             cfg.MotionMagic.MotionMagicJerk=0;
             // TODO: figure out the ratios   
         }
     }
+    public static class Wrist{
+        public static int motorID=14;
+        public static TalonFXConfiguration cfg=new TalonFXConfiguration();
+        static{
+            
+        }
+
+    }
+    public static class CoralRollers{
+
+    }
+
     public static class ClimberIntake{
         public static int masterID=0;
         public static int slaveID=1;

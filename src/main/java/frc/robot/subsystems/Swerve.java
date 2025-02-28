@@ -253,7 +253,6 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
                 () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
                 this // Subsystem for requirements
             );
-            PathPlannerLogging.setLogActivePathCallback((List<Pose2d> poses)->BackupLogger.addToQueue("poseq",poses.toArray()));
         } catch (Exception ex) {
             DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
         }

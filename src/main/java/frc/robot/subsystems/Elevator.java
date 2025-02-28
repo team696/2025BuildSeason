@@ -36,8 +36,7 @@ public class Elevator extends SubsystemBase {
   private TalonFactory m_master, m_slave;
   private MotionMagicDutyCycle positionReq;
   public SysIdRoutine identificationRoutine;
-  // controls the angle of the scoring arm
-  public TalonFactory m_angle;
+
 
   private Elevator() {
     m_master=new TalonFactory(BotConstants.Elevator.masterID, BotConstants.rioBus, BotConstants.Elevator.cfg, "Elevator Master");

@@ -15,8 +15,7 @@ import frc.team696.lib.Swerve.Commands.TeleopSwerve;
 
 /** Add your docs here. */
 public final class HumanControls {
-    // comment out or remove this class when the 2025 operator panel comes out
-    public final class OperatorPanel2024{
+    /*public final class OperatorPanel2024{
         public static final Joystick operatorPanel = new Joystick(1);
         public static final Joystick operatorPanelB = new Joystick(2);
 
@@ -38,7 +37,7 @@ public final class HumanControls {
         public static final JoystickButton Left = new JoystickButton(operatorPanelB, 6);
         public static final JoystickButton Gyro = new JoystickButton(operatorPanelB, 7);
         public static final JoystickButton Leftest = new JoystickButton(operatorPanelB, 8);
-    }
+    }*/
     public final class OperatorPanel2025{
         public static final JoystickButton L1=null;
         public static final JoystickButton L2=null;
@@ -61,7 +60,7 @@ public final class HumanControls {
         // Use one of the switches on the driver station for this
         public static final BooleanSupplier manualOverride=null;
     }
-    public final class DriverStation{
+    public final class DriverPanel{
         public static final Joystick DriverPanel=new Joystick(0);
         public static final Joystick OperatorPanelA=new Joystick(1);
         public static final Joystick OperatorPanelB=new Joystick(2);
