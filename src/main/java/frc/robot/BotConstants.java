@@ -37,7 +37,7 @@ public class BotConstants {
             cfg.MotionMagic.MotionMagicCruiseVelocity=128.;
             cfg.MotionMagic.MotionMagicAcceleration=128.;
             cfg.MotionMagic.MotionMagicJerk=128.;
-            cfg.MotorOutput.NeutralMode=NeutralModeValue.Coast;
+            cfg.MotorOutput.NeutralMode=NeutralModeValue.Brake;
             cfg.CurrentLimits.StatorCurrentLimit=120.;
             cfg.CurrentLimits.StatorCurrentLimitEnable=true;
 

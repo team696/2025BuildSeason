@@ -33,6 +33,6 @@ public class TriggerNTDouble {
         this.ntEntry=NetworkTableInstance.getDefault().getDoubleTopic(name).getEntry(0);
         this.ntEntry.set(val);
         trigger=new Trigger(()->hasChanged());
-        trigger.onTrue(new InstantCommand(()->update.accept(val)).ignoringDisable(true));
+        trigger.onTrue(new InstantCommand(()->update.accept(this.val)).ignoringDisable(true));
     }
 }
