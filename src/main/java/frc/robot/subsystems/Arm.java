@@ -83,7 +83,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void goToPosition(GameInfo.CoralScoringPosition position) {
-    armMotor.setControl(ArmPositionRequest.withPosition(position.rot.in(Rotations)));
+    armMotor.setControl(ArmPositionRequest.withPosition(position.armRot.in(Rotations)));
   }
 
   public Command Position(DoubleSupplier position) {
@@ -92,7 +92,7 @@ public class Arm extends SubsystemBase {
   }
 
   public Command Position(GameInfo.CoralScoringPosition position) {
-    return this.startEnd(() -> armMotor.setControl(ArmPositionRequest.withPosition(position.rot.in(Rotations))),
+    return this.startEnd(() -> armMotor.setControl(ArmPositionRequest.withPosition(position.armRot.in(Rotations))),
         () -> armMotor.set(0));
   }
 

@@ -92,8 +92,7 @@ public class EndEffector extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    BackupLogger.addToQueue("EndEffector/VelocityRpsSquared",
-        velocitySignal.refresh().getValue().in(RotationsPerSecond));
+    BackupLogger.addToQueue("EndEffector/VelocityRpsSquared", velocitySignal.refresh().getValue().in(RotationsPerSecond));
     BackupLogger.addToQueue("EndEffector/CurrentAmps", currentSignal.refresh().getValue().in(Amps));
     BackupLogger.addToQueue("EndEffector/VoltageVolts", voltageSignal.refresh().getValue().in(Volts));
     BackupLogger.addToQueue("EndEffector/PositionRot", positionSignal.refresh().getValue().in(Rotations));

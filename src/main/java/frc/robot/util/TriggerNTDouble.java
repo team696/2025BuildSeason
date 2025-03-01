@@ -19,20 +19,19 @@ public class TriggerNTDouble {
     DoubleEntry ntEntry;
     DoubleConsumer update;
 
-    
-    private boolean hasChanged(){
-        double prev=val;
-        val=ntEntry.getAsDouble();
-        return prev!=val;
+    private boolean hasChanged() {
+        double prev = val;
+        val = ntEntry.getAsDouble();
+        return prev != val;
     }
 
-    public TriggerNTDouble(String name, double val, DoubleConsumer update){
-        this.name=name;
-        this.val=val;
-        this.update=update;
-        this.ntEntry=NetworkTableInstance.getDefault().getDoubleTopic(name).getEntry(0);
+    public TriggerNTDouble(String name, double val, DoubleConsumer update) {
+        this.name = name;
+        this.val = val;
+        this.update = update;
+        this.ntEntry = NetworkTableInstance.getDefault().getDoubleTopic(name).getEntry(0);
         this.ntEntry.set(val);
-        trigger=new Trigger(()->hasChanged());
-        trigger.onTrue(new InstantCommand(()->update.accept(this.val)).ignoringDisable(true));
+        trigger = new Trigger(() -> hasChanged());
+        trigger.onTrue(new InstantCommand(() -> update.accept(this.val)).ignoringDisable(true));
     }
 }
