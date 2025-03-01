@@ -24,6 +24,7 @@ public class GameInfo {
         public double height;
         /*As measured from the vertical normal (arm facing up) */
         public Angle rot;
+        public Angle wristRot;
     }
     public static CoralScoringPosition L1, L2, L3, L4;
     

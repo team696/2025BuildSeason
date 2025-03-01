@@ -10,6 +10,8 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
+import frc.robot.util.TriggerNTDouble;
+
 /**
  * Constants for robot mechanisms unrelated to the drive train
 */
@@ -50,7 +52,7 @@ public class BotConstants {
         static{
             cfg.MotorOutput.NeutralMode=NeutralModeValue.Brake;
             cfg.Slot0.GravityType=GravityTypeValue.Arm_Cosine;
-            cfg.Slot0.kP=1/10;
+            cfg.Slot0.kP=1.0/10.0;
             cfg.CurrentLimits.StatorCurrentLimitEnable=true;
             cfg.CurrentLimits.StatorCurrentLimit=80;
             cfg.MotionMagic.MotionMagicCruiseVelocity=0;
@@ -63,12 +65,19 @@ public class BotConstants {
         public static int motorID=14;
         public static TalonFXConfiguration cfg=new TalonFXConfiguration();
         static{
-            
+            cfg.Slot0.kP=1.0/10.0;
+            cfg.CurrentLimits.StatorCurrentLimitEnable=true;
+            cfg.CurrentLimits.StatorCurrentLimit=80;
         }
 
     }
-    public static class CoralRollers{
-
+    public static class EndEffector{
+        public static int motorID=15;
+        public static TalonFXConfiguration cfg=new TalonFXConfiguration();
+        static{
+            cfg.CurrentLimits.StatorCurrentLimitEnable=true;
+            cfg.CurrentLimits.StatorCurrentLimit=80;
+        }
     }
 
     public static class ClimberIntake{

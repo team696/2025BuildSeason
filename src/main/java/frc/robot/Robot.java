@@ -17,7 +17,9 @@ import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -36,6 +38,7 @@ import frc.team696.lib.Camera.LimelightHelpers;
 import frc.team696.lib.Logging.BackupLogger;
 import frc.robot.subsystems.ClimberIntake;
 import frc.robot.subsystems.ArmAndWrist;
+import frc.robot.subsystems.EndEffector;
 import frc.robot.HumanControls.OperatorPanel2025;
 
 public class Robot extends TimedRobot {
@@ -89,12 +92,18 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("CTRESwerveCalibration/QuasistaticForward",Swerve.get().sysIdQuasistatic(SysIdRoutine.Direction.kForward));
     SmartDashboard.putData("CTRESwerveCalibration/QuasistaticReverse",Swerve.get().sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
   }
+
   private final SendableChooser<Command> autoChooser;
   public Robot() {
+
+    // For remote layout downloading
+    WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
+
     SmartDashboard.putData(CommandScheduler.getInstance());
     SmartDashboard.putData(Elevator.get());
     //SmartDashboard.putData(ClimberIntake.get());
     SmartDashboard.putData(ArmAndWrist.get());
+    SmartDashboard.putData(EndEffector.get());
 
 
     Swerve.get().registerTelemetry(m_SwerveTelemetry::telemeterize);

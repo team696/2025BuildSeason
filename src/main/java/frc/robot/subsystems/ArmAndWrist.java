@@ -73,7 +73,7 @@ public class ArmAndWrist extends SubsystemBase {
     return this.runEnd(()->armMotor.setControl(positionRequest.withPosition(position.getAsDouble())), ()->armMotor.set(0));
   }
   public Command Position(GameInfo.CoralScoringPosition position){
-    return this.runOnce(()->System.out.println("going to "+GameInfo.L3.rot.in(Rotations))).andThen(this.startEnd(()->armMotor.setControl(positionRequest.withPosition(position.rot.in(Rotations))), ()->armMotor.set(0)));
+    return this.runOnce(()->System.out.println("going to "+position.rot.in(Rotations))).andThen(this.startEnd(()->armMotor.setControl(positionRequest.withPosition(position.rot.in(Rotations))), ()->armMotor.set(0)));
   }
 
   /**
