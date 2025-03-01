@@ -80,15 +80,11 @@ public class Robot extends TimedRobot {
   }
 
   public void putCommandButtons() {
-    // SmartDashboard.putData("sim/pidToNearest", new PIDtoNearest());
-    // SmartDashboard.putBoolean("pathfindingConfigured",
-    // AutoBuilder.isPathfindingConfigured());
-    SmartDashboard.putData("sim/pathfindToMiddle", new PrintCommand("s").andThen(AutoBuilder
-        .pathfindToPose(new Pose2d(7, 3, Rotation2d.fromDegrees(12)), new PathConstraints(1, 1, Math.PI, Math.PI))));
-    SmartDashboard.putData("ScoreL4", Elevator.get().positionCommand(GameInfo.L4));
-    SmartDashboard.putData("ScoreL3",
-        Arm.get().Position(GameInfo.L3).alongWith(Elevator.get().positionCommand(GameInfo.L3)));
-    SmartDashboard.putData("ScoreL2", Elevator.get().positionCommand(GameInfo.L2));
+    SmartDashboard.putData("pathfindToMiddle", new PrintCommand("s").andThen(
+      AutoBuilder.pathfindToPose(new Pose2d(7, 3, Rotation2d.fromDegrees(12)), new PathConstraints(1, 1, Math.PI, Math.PI))));
+    SmartDashboard.putData("ScoreL4", new MoveSuperStructure(GameInfo.L4,0.6));
+    SmartDashboard.putData("ScoreL3", new MoveSuperStructure(GameInfo.L3, 0.6));
+    SmartDashboard.putData("ScoreL2", new MoveSuperStructure(GameInfo.L2, 0.6));
 
   }
 

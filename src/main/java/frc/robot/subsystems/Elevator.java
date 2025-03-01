@@ -97,7 +97,7 @@ public class Elevator extends SubsystemBase {
   public Command holdPosition(){
     return this.startEnd(()->master.setControl(positionReq.withPosition(master.getPosition())), ()->master.VoltageOut(Volts.of(0)));
   }
-  public void zeroPosition(){
+  public void zero(){
     resetPosition(0);
   }
   public void resetPosition(double newPosition){
