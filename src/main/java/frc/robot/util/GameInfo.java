@@ -5,6 +5,7 @@
 package frc.robot.util;
 
 import static edu.wpi.first.units.Units.Degree;
+import static edu.wpi.first.units.Units.Rotation;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
@@ -21,6 +22,14 @@ import frc.robot.HumanControls;
 */
 public class GameInfo {
     public static class CoralScoringPosition{
+        public CoralScoringPosition(double height, double armRotDeg, double wristRotDeg){
+            this.height=height;
+            this.rot=Rotation.of(armRotDeg);
+            this.wristRot=Rotation.of(wristRotDeg);
+        }
+        public CoralScoringPosition(){
+
+        }
         public double height;
         /*As measured from the vertical normal (arm facing up) */
         public Angle rot;

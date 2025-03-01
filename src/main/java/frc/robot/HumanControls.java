@@ -66,6 +66,7 @@ public final class HumanControls {
         public static final Joystick OperatorPanelB=new Joystick(2);
         public static final Joystick OperatorPanelC=new Joystick(3);
         public static final JoystickButton resetGyro=new JoystickButton(DriverPanel, 1);
+        public static final JoystickButton OtherButton=new JoystickButton(DriverPanel,2);
 
         public static final DoubleSupplier leftJoyY = ()->-DriverPanel.getRawAxis(1);
         public static final DoubleSupplier leftJoyX = ()->DriverPanel.getRawAxis(0);

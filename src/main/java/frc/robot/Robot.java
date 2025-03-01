@@ -30,10 +30,12 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.MoveSuperStructure;
 import frc.robot.commands.PIDtoNearest;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.GameInfo;
+import frc.robot.util.GameInfo.CoralScoringPosition;
 import frc.team696.lib.Camera.LimelightHelpers;
 import frc.team696.lib.Logging.BackupLogger;
 import frc.robot.subsystems.ClimberIntake;
@@ -117,9 +119,9 @@ public class Robot extends TimedRobot {
     // TODO: Restore TeleopSwerve
     Swerve.get().setDefaultCommand(Swerve.get().applyRequest(
       ()->Swerve.fcDriveReq.withVelocityX(
-        applyDeadband(HumanControls.DriverPanel.leftJoyY.getAsDouble(), 0.07)*MaxSpeed)
-        .withVelocityY(applyDeadband(HumanControls.DriverPanel.leftJoyX.getAsDouble(), 0.07)*MaxSpeed)
-        .withRotationalRate(applyDeadband(HumanControls.DriverPanel.rightJoyX.getAsDouble(), 0.07)*MaxRotationalRate)));
+        applyDeadband(HumanControls.DriverPanel.leftJoyY.getAsDouble(), 0.1)*MaxSpeed)
+        .withVelocityY(applyDeadband(HumanControls.DriverPanel.leftJoyX.getAsDouble(), 0.1)*MaxSpeed)
+        .withRotationalRate(applyDeadband(HumanControls.DriverPanel.rightJoyX.getAsDouble(), 0.1)*MaxRotationalRate)));
         SmartDashboard.putData("Reset Gyro", Commands.runOnce(()->Swerve.get().seedFieldCentric()));
   
     NamedCommands.registerCommand("PIDtoNearest", new PIDtoNearest(true));
@@ -144,13 +146,16 @@ public class Robot extends TimedRobot {
   }
 
   private void configureDriverStationBinds(){
-    HumanControls.DriverPanel.resetGyro.onTrue(Commands.runOnce(()->Swerve.get().seedFieldCentric()));
+    //HumanControls.DriverPanel.resetGyro.onTrue(Commands.runOnce(()->Swerve.get().seedFieldCentric()));
     //HumanControls.OperatorPanel2025.L1.whileTrue(Elevator.get().positionCommand(GameInfo.L1));
     //HumanControls.OperatorPanel2025.L2.whileTrue(Elevator.get().positionCommand(GameInfo.L2));
     //HumanControls.OperatorPanel2025.L3.whileTrue(Elevator.get().positionCommand(GameInfo.L3));
     //HumanControls.OperatorPanel2025.L4.whileTrue(Elevator.get().positionCommand(GameInfo.L4));
 
+    HumanControls.DriverPanel.OtherButton.whileTrue(new MoveSuperStructure(new CoralScoringPosition(0, 9., 0), 0.6));
+    HumanControls.DriverPanel.resetGyro.whileTrue(new MoveSuperStructure(new CoralScoringPosition(32., -4., -3.), 0.6));
   }
+  
   @Override
   public void robotPeriodic() {
     long start=RobotController.getTime();

@@ -30,7 +30,7 @@ public class BotConstants {
         public static TalonFXConfiguration cfg;
         static{
             cfg=new TalonFXConfiguration();
-            cfg.Slot0.kP=(1.0/20.0)*20;
+            cfg.Slot0.kP=3.;
             cfg.Slot0.kG=0.05;
             cfg.Slot0.kS=0.02;
             cfg.Slot0.GravityType=GravityTypeValue.Elevator_Static;
@@ -52,12 +52,15 @@ public class BotConstants {
         static{
             cfg.MotorOutput.NeutralMode=NeutralModeValue.Brake;
             cfg.Slot0.GravityType=GravityTypeValue.Arm_Cosine;
-            cfg.Slot0.kP=1.0/10.0;
+            cfg.Slot0.kP=30.;
             cfg.CurrentLimits.StatorCurrentLimitEnable=true;
-            cfg.CurrentLimits.StatorCurrentLimit=80;
-            cfg.MotionMagic.MotionMagicCruiseVelocity=0;
-            cfg.MotionMagic.MotionMagicAcceleration=0;
-            cfg.MotionMagic.MotionMagicJerk=0;
+            cfg.CurrentLimits.StatorCurrentLimit=120.;
+            cfg.MotionMagic.MotionMagicCruiseVelocity=150.;
+            cfg.MotionMagic.MotionMagicAcceleration=130.;
+            cfg.MotionMagic.MotionMagicJerk=100.;
+
+            cfg.Slot0.kG = 0;
+            
             // TODO: figure out the ratios   
         }
     }
@@ -65,7 +68,11 @@ public class BotConstants {
         public static int motorID=14;
         public static TalonFXConfiguration cfg=new TalonFXConfiguration();
         static{
-            cfg.Slot0.kP=1.0/10.0;
+            cfg.Slot0.kP=4.;
+        
+            cfg.MotionMagic.MotionMagicAcceleration=20.;
+            cfg.MotionMagic.MotionMagicCruiseVelocity=10.;
+            cfg.MotionMagic.MotionMagicJerk=10.;
             cfg.CurrentLimits.StatorCurrentLimitEnable=true;
             cfg.CurrentLimits.StatorCurrentLimit=80;
         }

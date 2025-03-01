@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.BotConstants;
 import frc.robot.util.GameInfo;
+import frc.robot.util.TriggerNTDouble;
 import frc.team696.lib.HardwareDevices.TalonFactory;
 import frc.team696.lib.Logging.BackupLogger;
 
@@ -36,7 +37,6 @@ public class Elevator extends SubsystemBase {
   private TalonFactory m_master, m_slave;
   private MotionMagicDutyCycle positionReq;
   public SysIdRoutine identificationRoutine;
-
 
   private Elevator() {
     m_master=new TalonFactory(BotConstants.Elevator.masterID, BotConstants.rioBus, BotConstants.Elevator.cfg, "Elevator Master");
@@ -56,13 +56,27 @@ public class Elevator extends SubsystemBase {
     this.setDefaultCommand(positionCommand(0));
   }
 
+  public void stop() {
+    m_master.stop();
+    m_slave.stop();
+  }
   /**
+   *
    * Use ONLY for SysID. Sets the elevator motors to a specific voltage
    */
   public void DriveVoltage(Voltage v){
     m_master.VoltageOut(v);
   }
+
+  public void goToPosition(GameInfo.CoralScoringPosition position) {
+    m_master.get().setControl(positionReq.withPosition(position.height));
+  } 
+
+  public double getPosition() {
+    return m_master.getPosition();
+  }
   /**
+   * 
    * Moves to and holds a position
    * @param position The scoring position to hold
    * @return the command which holds the elevator at position (requires this subsystem)

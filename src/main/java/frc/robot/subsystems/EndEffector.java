@@ -41,7 +41,7 @@ public class EndEffector extends SubsystemBase {
    * <p> Creates a new EndEffector. </p>
   */
   TalonFX motor=new TalonFX(BotConstants.EndEffector.motorID, BotConstants.rioBus);
-  VoltageOut output=new VoltageOut(0);
+  VoltageOut VoltageRequest=new VoltageOut(0);
   MotionMagicVelocityVoltage velocityOut=new MotionMagicVelocityVoltage(0);
   StatusSignal<AngularVelocity> velocitySignal;
   StatusSignal<Angle> positionSignal;
@@ -54,8 +54,16 @@ public class EndEffector extends SubsystemBase {
     positionSignal=motor.getPosition();
     voltageSignal=motor.getMotorVoltage();
     currentSignal=motor.getStatorCurrent();
-    SmartDashboard.putData("Intake", spin(0.1));
-    SmartDashboard.putData("Eject", spin(-0.1));
+    SmartDashboard.putData("Intake", spin(0.6));
+    SmartDashboard.putData("Eject", spin(-0.6));
+  }
+
+  public void stop() {
+    motor.stopMotor();
+  }
+
+  public void run(double output){
+    motor.setControl(VoltageRequest.withOutput(output * 12));
   }
 
   /**
@@ -64,16 +72,16 @@ public class EndEffector extends SubsystemBase {
    * @return the command 
    */
   public Command spin(double power){
-    return this.startEnd(()->motor.setControl(output.withOutput(power*12)), ()->motor.set(0));
+    return this.startEnd(()->motor.setControl(VoltageRequest.withOutput(power*12)), ()->motor.set(0));
   }
 
   public Command spin(DoubleSupplier power){
-    return this.runEnd(()->motor.setControl(output.withOutput(power.getAsDouble()*12)), ()->motor.set(0));
+    return this.runEnd(()->motor.setControl(VoltageRequest.withOutput(power.getAsDouble()*12)), ()->motor.set(0));
   }
   public Command spinVelocity(double velocity){
     return this.startEnd(()->motor.setControl(velocityOut.withVelocity(velocity)), ()->motor.set(0));
   }
-  
+
 
 
   @Override
@@ -82,6 +90,6 @@ public class EndEffector extends SubsystemBase {
     BackupLogger.addToQueue("EndEffector/VelocityRpsSquared", velocitySignal.refresh().getValue().in(RotationsPerSecond));
     BackupLogger.addToQueue("EndEffector/CurrentAmps", currentSignal.refresh().getValue().in(Amps));
     BackupLogger.addToQueue("EndEffector/VoltageVolts", voltageSignal.refresh().getValue().in(Volts));
-    BackupLogger.addToQueue("EndEffector/PositionRot", positionSignal.getValue().in(Rotations));
+    BackupLogger.addToQueue("EndEffector/PositionRot", positionSignal.refresh().getValue().in(Rotations));
   }
 }

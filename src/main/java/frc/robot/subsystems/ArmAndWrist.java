@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.BotConstants;
 import frc.robot.util.GameInfo;
+import frc.robot.util.TriggerNTDouble;
 import frc.team696.lib.Logging.BackupLogger;
 
 public class ArmAndWrist extends SubsystemBase {
@@ -48,9 +49,12 @@ public class ArmAndWrist extends SubsystemBase {
   StatusSignal<Angle> wristPositionSignal;
   StatusSignal<Voltage> wristVoltageSignal;
   StatusSignal<Current> wristCurrentSignal;
-  MotionMagicVoltage positionRequest=new MotionMagicVoltage(0);
-  VoltageOut voltageRequest=new VoltageOut(0);
-  
+  MotionMagicVoltage ArmPositionRequest=new MotionMagicVoltage(0);
+  VoltageOut ArmVoltageRequest=new VoltageOut(0);
+  MotionMagicVoltage WristPoistionRequest=new MotionMagicVoltage(0);
+  VoltageOut WristVoltageRequest=new VoltageOut(0);
+  double ntpos=0;
+  double ntwrist=0;
   /** Creates a new Arm. */
   private ArmAndWrist() {
     armMotor.getConfigurator().apply(BotConstants.Arm.cfg);
@@ -64,26 +68,72 @@ public class ArmAndWrist extends SubsystemBase {
     wristPositionSignal=wristMotor.getPosition();
     wristVoltageSignal=wristMotor.getMotorVoltage();
     wristCurrentSignal=wristMotor.getStatorCurrent();
+    zeroArm();
+    zeroWrist();
+    //this.setDefaultCommand(Position(()->0));
+    this.setDefaultCommand(ArmWithNTPosition());
+    new TriggerNTDouble("testing/armAngle", ntpos, (ev)->ntpos=ev);
+    new TriggerNTDouble("testing/wristAngle", ntwrist, (ev)->ntwrist=ev);
+
     SmartDashboard.putData("ArmPlus", Spin(0.1));
     SmartDashboard.putData("ArmMinus", Spin(-0.1));
+    SmartDashboard.putData("ZeroArm", this.runOnce(()->zeroArm()).ignoringDisable(true));
+    SmartDashboard.putData("ZeroWrist", this.runOnce(()->zeroWrist()).ignoringDisable(true));
   }
 
+  public void stop() {
+    wristMotor.stopMotor();
+    armMotor.stopMotor();
+  }
+
+  public void resetWristPosition(double newPosition){
+    wristMotor.setPosition(newPosition);
+  }
+  public void resetArmPosition(double newPosition){
+    armMotor.setPosition(newPosition);
+  }
+  public void zeroWrist(){
+    resetWristPosition(0);
+  }
+  public void zeroArm(){
+    resetArmPosition(0);
+  }
+
+  public void goToPosition(GameInfo.CoralScoringPosition position) {
+    armMotor.setControl(ArmPositionRequest.withPosition(position.rot.in(Rotations)));
+  }
+
+  public void wristGoToPosition(GameInfo.CoralScoringPosition postion) {
+    wristMotor.setControl(WristPoistionRequest.withPosition(postion.wristRot.in(Rotations)));
+  }
 
   public Command Position(DoubleSupplier position){
-    return this.runEnd(()->armMotor.setControl(positionRequest.withPosition(position.getAsDouble())), ()->armMotor.set(0));
+    return this.runEnd(()->armMotor.setControl(ArmPositionRequest.withPosition(position.getAsDouble())), ()->armMotor.set(0));
   }
   public Command Position(GameInfo.CoralScoringPosition position){
-    return this.runOnce(()->System.out.println("going to "+position.rot.in(Rotations))).andThen(this.startEnd(()->armMotor.setControl(positionRequest.withPosition(position.rot.in(Rotations))), ()->armMotor.set(0)));
+    return this.startEnd(()->armMotor.setControl(ArmPositionRequest.withPosition(position.rot.in(Rotations))), ()->armMotor.set(0));
   }
 
+  public double getArmPosition() {
+    return armMotor.getPosition().getValueAsDouble();
+  }
+
+  public double getWristPosition() {
+    return wristMotor.getPosition().getValueAsDouble();
+  }
+
+  public Command ArmWithNTPosition(){
+    return this.runEnd(()->{armMotor.setControl(ArmPositionRequest.withPosition(ntpos));wristMotor.setControl(WristPoistionRequest.withPosition(ntwrist));}, ()->{armMotor.set(0);wristMotor.set(0.0);});
+  }
   /**
    * Spins the arm at a certain fraction of the motors
    * @param speed [-1, 1] 
    * @return the command that spins the arm 
    */
   public Command Spin(double speed){
-    return this.runEnd(()->armMotor.setControl(voltageRequest.withOutput(speed*12)), ()->armMotor.set(0));
+    return this.runEnd(()->armMotor.setControl(ArmVoltageRequest.withOutput(speed*12)), ()->armMotor.set(0));
   }
+
 
   @Override
   public void periodic() {
@@ -91,11 +141,11 @@ public class ArmAndWrist extends SubsystemBase {
     BackupLogger.addToQueue("Arm/VelocityRpsSquared", armVelocitySignal.refresh().getValue().in(RotationsPerSecond));
     BackupLogger.addToQueue("Arm/CurrentAmps", armCurrentSignal.refresh().getValue().in(Amps));
     BackupLogger.addToQueue("Arm/VoltageVolts", armVoltageSignal.refresh().getValue().in(Volts));
-    BackupLogger.addToQueue("Arm/PositionRot", armPositionSignal.getValue().in(Rotations));
+    BackupLogger.addToQueue("Arm/PositionRot", armPositionSignal.refresh().getValue().in(Rotations));
 
     BackupLogger.addToQueue("Wrist/VelocityRpsSquared", wristVelocitySignal.refresh().getValue().in(RotationsPerSecond));
     BackupLogger.addToQueue("Wrist/CurrentAmps", wristCurrentSignal.refresh().getValue().in(Amps));
     BackupLogger.addToQueue("Wrist/VoltageVolts", wristVoltageSignal.refresh().getValue().in(Volts));
-    BackupLogger.addToQueue("Wrist/PositionRot", wristPositionSignal.getValue().in(Rotations));
+    BackupLogger.addToQueue("Wrist/PositionRot", wristPositionSignal.refresh().getValue().in(Rotations));
   }
 }
