@@ -41,24 +41,24 @@ public class Arm extends SubsystemBase {
     return arm;
   }
 
-  TalonFX armMotor = new TalonFX(BotConstants.Arm.motorID, BotConstants.rioBus);
-  StatusSignal<AngularVelocity> armVelocitySignal;
-  StatusSignal<Angle> armPositionSignal;
-  StatusSignal<Voltage> armVoltageSignal;
-  StatusSignal<Current> armCurrentSignal;
+  TalonFX motor = new TalonFX(BotConstants.Arm.motorID, BotConstants.rioBus);
+  StatusSignal<AngularVelocity> velocitySignal;
+  StatusSignal<Angle> positionSignal;
+  StatusSignal<Voltage> voltageSignal;
+  StatusSignal<Current> currentSignal;
 
-  MotionMagicVoltage ArmPositionRequest = new MotionMagicVoltage(0);
-  VoltageOut ArmVoltageRequest = new VoltageOut(0);
+  MotionMagicVoltage positionRequest = new MotionMagicVoltage(0);
+  VoltageOut voltageRequest = new VoltageOut(0);
 
   double ntpos = 0;
 
   /** Creates a new Arm. */
   private Arm() {
-    armMotor.getConfigurator().apply(BotConstants.Arm.cfg);
-    armVelocitySignal = armMotor.getVelocity();
-    armPositionSignal = armMotor.getPosition();
-    armVoltageSignal = armMotor.getMotorVoltage();
-    armCurrentSignal = armMotor.getStatorCurrent();
+    motor.getConfigurator().apply(BotConstants.Arm.cfg);
+    velocitySignal = motor.getVelocity();
+    positionSignal = motor.getPosition();
+    voltageSignal = motor.getMotorVoltage();
+    currentSignal = motor.getStatorCurrent();
 
     zeroArm();
     // this.setDefaultCommand(Position(()->0));
@@ -71,11 +71,11 @@ public class Arm extends SubsystemBase {
   }
 
   public void stop() {
-    armMotor.stopMotor();
+    motor.stopMotor();
   }
 
   public void resetArmPosition(double newPosition) {
-    armMotor.setPosition(newPosition);
+    motor.setPosition(newPosition);
   }
 
   public void zeroArm() {
@@ -83,25 +83,25 @@ public class Arm extends SubsystemBase {
   }
 
   public void goToPosition(GameInfo.CoralScoringPosition position) {
-    armMotor.setControl(ArmPositionRequest.withPosition(position.armRot.in(Rotations)));
+    motor.setControl(positionRequest.withPosition(position.armRot.in(Rotations)));
   }
 
   public Command Position(DoubleSupplier position) {
-    return this.runEnd(() -> armMotor.setControl(ArmPositionRequest.withPosition(position.getAsDouble())),
-        () -> armMotor.set(0));
+    return this.runEnd(() -> motor.setControl(positionRequest.withPosition(position.getAsDouble())),
+        () -> motor.set(0));
   }
 
   public Command Position(GameInfo.CoralScoringPosition position) {
-    return this.startEnd(() -> armMotor.setControl(ArmPositionRequest.withPosition(position.armRot.in(Rotations))),
-        () -> armMotor.set(0));
+    return this.startEnd(() -> motor.setControl(positionRequest.withPosition(position.armRot.in(Rotations))),
+        () -> motor.set(0));
   }
 
-  public double getArmPosition() {
-    return armMotor.getPosition().getValueAsDouble();
+  public double getPosition() {
+    return motor.getPosition().getValueAsDouble();
   }
 
   public Command ArmWithNTPosition() {
-    return this.runEnd(() -> armMotor.setControl(ArmPositionRequest.withPosition(ntpos)), () -> armMotor.stopMotor());
+    return this.runEnd(() -> motor.setControl(positionRequest.withPosition(ntpos)), () -> motor.stopMotor());
   }
 
   /**
@@ -111,15 +111,15 @@ public class Arm extends SubsystemBase {
    * @return the command that spins the arm
    */
   public Command Spin(double speed) {
-    return this.runEnd(() -> armMotor.setControl(ArmVoltageRequest.withOutput(speed * 12)), () -> armMotor.set(0));
+    return this.runEnd(() -> motor.setControl(voltageRequest.withOutput(speed * 12)), () -> motor.set(0));
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    BackupLogger.addToQueue("Arm/VelocityRpsSquared", armVelocitySignal.refresh().getValue().in(RotationsPerSecond));
-    BackupLogger.addToQueue("Arm/CurrentAmps", armCurrentSignal.refresh().getValue().in(Amps));
-    BackupLogger.addToQueue("Arm/VoltageVolts", armVoltageSignal.refresh().getValue().in(Volts));
-    BackupLogger.addToQueue("Arm/PositionRot", armPositionSignal.refresh().getValue().in(Rotations));
+    BackupLogger.addToQueue("Arm/VelocityRpsSquared", velocitySignal.refresh().getValue().in(RotationsPerSecond));
+    BackupLogger.addToQueue("Arm/CurrentAmps", currentSignal.refresh().getValue().in(Amps));
+    BackupLogger.addToQueue("Arm/VoltageVolts", voltageSignal.refresh().getValue().in(Volts));
+    BackupLogger.addToQueue("Arm/PositionRot", positionSignal.refresh().getValue().in(Rotations));
   }
 }

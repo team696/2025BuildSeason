@@ -37,7 +37,7 @@ public class MoveSuperStructure extends Command {
     Wrist.get().goToPosition(position);
     Elevator.get().goToPosition(position);
 
-    if (Math.abs(Wrist.get().getPosition() - position.wristRot.in(Units.Rotation)) < 2 && Math.abs(Arm.get().getArmPosition() - position.armRot.in(Units.Rotation)) < 2 && Math.abs(Elevator.get().getPosition() - position.height) < 2 )
+    if (Math.abs(Wrist.get().getPosition() - position.wristRot.in(Units.Rotation)) < 2 && Math.abs(Arm.get().getPosition() - position.armRot.in(Units.Rotation)) < 2 && Math.abs(Elevator.get().getPosition() - position.height) < 2 )
       EndEffector.get().run(runRollers);
     else  
       EndEffector.get().stop();

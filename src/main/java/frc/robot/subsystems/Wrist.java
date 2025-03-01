@@ -52,7 +52,7 @@ public class Wrist extends SubsystemBase {
     positionSignal = motor.getPosition();
     voltageSignal = motor.getMotorVoltage();
     currentSignal = motor.getStatorCurrent();
-    SmartDashboard.putData("ZeroWrist", this.runOnce(() -> zero()).ignoringDisable(true));
+    SmartDashboard.putData("Zero Wrist", this.runOnce(() -> zero()).ignoringDisable(true));
   }
 
   public void resetPosition(double newPosition) {
