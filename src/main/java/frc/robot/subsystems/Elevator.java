@@ -34,46 +34,46 @@ public class Elevator extends SubsystemBase {
     }
     return m_Elevator;
   }
-  private TalonFactory m_master, m_slave;
+  private TalonFactory master, slave;
   private MotionMagicDutyCycle positionReq;
   public SysIdRoutine identificationRoutine;
 
   private Elevator() {
-    m_master=new TalonFactory(BotConstants.Elevator.masterID, BotConstants.rioBus, BotConstants.Elevator.cfg, "Elevator Master");
-    m_slave=new TalonFactory(BotConstants.Elevator.slaveId,BotConstants.rioBus, BotConstants.Elevator.cfg, "Elevator Slave");
+    master=new TalonFactory(BotConstants.Elevator.masterID, BotConstants.rioBus, BotConstants.Elevator.cfg, "Elevator Master");
+    slave=new TalonFactory(BotConstants.Elevator.slaveId,BotConstants.rioBus, BotConstants.Elevator.cfg, "Elevator Slave");
 
-    m_slave.Follow(m_master, true);
+    slave.Follow(master, true);
     
     positionReq=new MotionMagicDutyCycle(0).withSlot(0);
     
     identificationRoutine=new SysIdRoutine(new SysIdRoutine.Config(Volts.per(Second).of(0.5), Volts.of(0.4),Seconds.of(3)), 
     
     new SysIdRoutine.Mechanism(this::DriveVoltage, (log)->{
-      log.motor(m_master.getName()).voltage(m_master.get().getMotorVoltage().getValue())
-      .linearPosition(Meters.of(m_master.getPosition()))
-      .linearVelocity(MetersPerSecond.of(m_master.getVelocity()));
+      log.motor(master.getName()).voltage(master.get().getMotorVoltage().getValue())
+      .linearPosition(Meters.of(master.getPosition()))
+      .linearVelocity(MetersPerSecond.of(master.getVelocity()));
     }, this));
     this.setDefaultCommand(positionCommand(0));
   }
 
   public void stop() {
-    m_master.stop();
-    m_slave.stop();
+    master.stop();
+    slave.stop();
   }
   /**
    *
    * Use ONLY for SysID. Sets the elevator motors to a specific voltage
    */
   public void DriveVoltage(Voltage v){
-    m_master.VoltageOut(v);
+    master.VoltageOut(v);
   }
 
   public void goToPosition(GameInfo.CoralScoringPosition position) {
-    m_master.get().setControl(positionReq.withPosition(position.height));
+    master.get().setControl(positionReq.withPosition(position.height));
   } 
 
   public double getPosition() {
-    return m_master.getPosition();
+    return master.getPosition();
   }
   /**
    * 
@@ -82,36 +82,36 @@ public class Elevator extends SubsystemBase {
    * @return the command which holds the elevator at position (requires this subsystem)
    */
   public Command positionCommand(GameInfo.CoralScoringPosition position){
-    return this.runEnd(()->m_master.get().setControl(positionReq.withPosition(position.height)), ()->m_master.get().set(0));
+    return this.runEnd(()->master.get().setControl(positionReq.withPosition(position.height)), ()->master.get().set(0));
   }
   public Command positionCommandRun(GameInfo.CoralScoringPosition position){
-    return this.runEnd(()->m_master.setControl(positionReq.withPosition(position.height)), ()->m_master.VoltageOut(Volts.of(0)));
+    return this.runEnd(()->master.setControl(positionReq.withPosition(position.height)), ()->master.VoltageOut(Volts.of(0)));
   }
   public Command positionCommand(double position){
-    return this.startEnd(()->m_master.setControl(positionReq.withPosition(position)), ()->m_master.VoltageOut(Volts.of(0)));
+    return this.startEnd(()->master.setControl(positionReq.withPosition(position)), ()->master.VoltageOut(Volts.of(0)));
   }
   /**
    * Holds the current position
    * @return a command that holds the elevator at the position it was in at schedluing time
    */
   public Command holdPosition(){
-    return this.startEnd(()->m_master.setControl(positionReq.withPosition(m_master.getPosition())), ()->m_master.VoltageOut(Volts.of(0)));
+    return this.startEnd(()->master.setControl(positionReq.withPosition(master.getPosition())), ()->master.VoltageOut(Volts.of(0)));
   }
   public void zeroPosition(){
     resetPosition(0);
   }
   public void resetPosition(double newPosition){
-    m_master.setPosition(newPosition);
-    m_slave.setPosition(newPosition);
+    master.setPosition(newPosition);
+    slave.setPosition(newPosition);
   }
   @Override
   public void periodic() {
-    BackupLogger.addToQueue("Elevator/MasterCurrent", m_master.getCurrent());
-    BackupLogger.addToQueue("Elevator/SlaveCurrent", m_slave.getCurrent());
-    BackupLogger.addToQueue("Elevator/MasterPosition", m_master.getPosition());
-    BackupLogger.addToQueue("Elevator/SlavePosition", m_slave.getPosition());
-    BackupLogger.addToQueue("Elevator/SlaveVelocity", m_slave.getVelocity());
-    BackupLogger.addToQueue("Elevator/MasterVelocity", m_master.getVelocity());
+    BackupLogger.addToQueue("Elevator/MasterCurrent", master.getCurrent());
+    BackupLogger.addToQueue("Elevator/SlaveCurrent", slave.getCurrent());
+    BackupLogger.addToQueue("Elevator/MasterPosition", master.getPosition());
+    BackupLogger.addToQueue("Elevator/SlavePosition", slave.getPosition());
+    BackupLogger.addToQueue("Elevator/SlaveVelocity", slave.getVelocity());
+    BackupLogger.addToQueue("Elevator/MasterVelocity", master.getVelocity());
 
   }
 }

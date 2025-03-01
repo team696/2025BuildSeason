@@ -6,7 +6,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ArmAndWrist;
+import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.EndEffector;
 import frc.robot.util.GameInfo.CoralScoringPosition;
@@ -22,7 +23,7 @@ public class MoveSuperStructure extends Command {
 
     this.runRollers = runRollers;
 
-    addRequirements(ArmAndWrist.get(), Elevator.get(), EndEffector.get());
+    addRequirements(Arm.get(), Elevator.get(), EndEffector.get());
   }
 
   // Called when the command is initially scheduled.
@@ -32,11 +33,11 @@ public class MoveSuperStructure extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    ArmAndWrist.get().goToPosition(position);
-    ArmAndWrist.get().wristGoToPosition(position);
+    Arm.get().goToPosition(position);
+    Wrist.get().goToPosition(position);
     Elevator.get().goToPosition(position);
 
-    if (Math.abs(ArmAndWrist.get().getWristPosition() - position.wristRot.in(Units.Rotation)) < 2 && Math.abs(ArmAndWrist.get().getArmPosition() - position.rot.in(Units.Rotation)) < 2 && Math.abs(Elevator.get().getPosition() - position.height) < 2 )
+    if (Math.abs(Wrist.get().getPosition() - position.wristRot.in(Units.Rotation)) < 2 && Math.abs(Arm.get().getArmPosition() - position.rot.in(Units.Rotation)) < 2 && Math.abs(Elevator.get().getPosition() - position.height) < 2 )
       EndEffector.get().run(runRollers);
     else  
       EndEffector.get().stop();
@@ -45,7 +46,8 @@ public class MoveSuperStructure extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    ArmAndWrist.get().stop();
+    Arm.get().stop();
+    Wrist.get().stop();
     Elevator.get().stop();
     EndEffector.get().stop();
   }
