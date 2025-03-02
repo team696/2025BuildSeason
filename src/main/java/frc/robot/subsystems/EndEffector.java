@@ -67,7 +67,7 @@ public class EndEffector extends SubsystemBase {
   }
 
   public void run(double output) {
-    motor.setControl(VoltageRequest.withOutput(output * 12));
+    //motor.setControl(VoltageRequest.withOutput(output * 12));
   }
 
   /**

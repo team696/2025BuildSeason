@@ -19,6 +19,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.BotConstants;
 import frc.robot.util.GameInfo.CoralScoringPosition;
@@ -47,11 +48,12 @@ public class Wrist extends SubsystemBase {
   /** Creates a new Wrist. */
   private Wrist() {
     motor.getConfigurator().apply(BotConstants.Wrist.cfg);
-
+    zero();
     velocitySignal = motor.getVelocity();
     positionSignal = motor.getPosition();
     voltageSignal = motor.getMotorVoltage();
     currentSignal = motor.getStatorCurrent();
+    this.setDefaultCommand(Position(0));
     SmartDashboard.putData("Zero Wrist", this.runOnce(() -> zero()).ignoringDisable(true));
   }
 
@@ -70,10 +72,14 @@ public class Wrist extends SubsystemBase {
   public double getPosition() {
     return positionSignal.getValueAsDouble();
   }
+  public Command Position(double position){
+    return this.startEnd(()->motor.setControl(WristPoistionRequest.withPosition(position)), ()->motor.set(0.0));
+  }
 
   public void goToPosition(CoralScoringPosition position){
     motor.setControl(WristPoistionRequest.withPosition(position.wristRot.in(Rotation)));
   }
+
 
   @Override
   public void periodic() {

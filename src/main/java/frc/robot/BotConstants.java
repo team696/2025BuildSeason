@@ -33,14 +33,14 @@ public class BotConstants {
         static {
             cfg = new TalonFXConfiguration();
             cfg.Slot0.kP = 3.;
-            cfg.Slot0.kG = 0.05;
-            cfg.Slot0.kS = 0.02;
+            //cfg.Slot0.kG = 0.05;
+            //cfg.Slot0.kS = 0.02;
             cfg.Slot0.GravityType = GravityTypeValue.Elevator_Static;
             cfg.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseVelocitySign;
 
-            cfg.MotionMagic.MotionMagicCruiseVelocity = 128.;
-            cfg.MotionMagic.MotionMagicAcceleration = 128.;
-            cfg.MotionMagic.MotionMagicJerk = 128.;
+            cfg.MotionMagic.MotionMagicCruiseVelocity = 40.;
+            cfg.MotionMagic.MotionMagicAcceleration = 40.;
+            cfg.MotionMagic.MotionMagicJerk = 40.;
             cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
             cfg.CurrentLimits.StatorCurrentLimit = 120.;
             cfg.CurrentLimits.StatorCurrentLimitEnable = true;
@@ -50,7 +50,8 @@ public class BotConstants {
     }
 
     public static class Arm {
-        public static int motorID = 13;
+        public static int masterID = 13;
+        public static int slaveID=16;
         public static TalonFXConfiguration cfg = new TalonFXConfiguration();
         static {
             cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -72,12 +73,13 @@ public class BotConstants {
         public static int motorID = 14;
         public static TalonFXConfiguration cfg = new TalonFXConfiguration();
         static {
-            cfg.Slot0.kP = 4.;
+            cfg.Slot0.kP = 2.;
 
             cfg.MotionMagic.MotionMagicAcceleration = 20.;
-            cfg.MotionMagic.MotionMagicCruiseVelocity = 10.;
+            cfg.MotionMagic.MotionMagicCruiseVelocity = 20.;
             cfg.MotionMagic.MotionMagicJerk = 10.;
-            cfg.CurrentLimits.StatorCurrentLimitEnable = true;
+            cfg.CurrentLimits.StatorCurrentLimitEnable = false;
+            cfg.CurrentLimits.SupplyCurrentLimitEnable=false;
             cfg.CurrentLimits.StatorCurrentLimit = 80.;
         }
 

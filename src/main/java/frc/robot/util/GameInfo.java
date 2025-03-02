@@ -37,17 +37,13 @@ public class GameInfo {
             this.wristRot = Rotation.of(wristRot);
         }
 
-        public CoralScoringPosition() {
-
-        }
-
         public double height;
         /* As measured from the vertical normal (arm facing up) */
         public Angle armRot;
         public Angle wristRot;
     }
 
-    public static CoralScoringPosition L1, L2, L3, L4;
+    public static CoralScoringPosition L1, L2, L3, L4, ground, ClimbUp, ClimbDown;
 
     public static class FieldSide {
         public Pose2d[] left, right, both;
@@ -93,11 +89,14 @@ public class GameInfo {
 
         red.both = Stream.concat(Arrays.stream(red.left), Arrays.stream(red.right)).toArray(size -> new Pose2d[size]);
 
-        // TODO: determine the real scoring heights
-        L1 = new CoralScoringPosition(10., -4., -3.);
-        L2 = new CoralScoringPosition(20., -4., -3.);
-        L3 = new CoralScoringPosition(40., -4., -3.);
-        L4 = new CoralScoringPosition(55., -4., -3.);
+        L1 = new CoralScoringPosition(0., -2., -2);
+        L2 = new CoralScoringPosition(8., -2, -1);
+        L3 = new CoralScoringPosition(34., -2., -2);
+        L4 = new CoralScoringPosition(67., -3., 2);
+        ClimbUp=new CoralScoringPosition(27, -8., 0);
+        ClimbDown=new CoralScoringPosition(2, -8., 0);
+
+        ground=new CoralScoringPosition(0, 9.5, -3.);
         /**
          * this puts the values on networktables so scoring positions can be quickly
          * changed
@@ -107,14 +106,19 @@ public class GameInfo {
         new TriggerNTDouble("testing/L2/height", L2.height, height -> L2.height = height);
         new TriggerNTDouble("testing/L3/height", L3.height, height -> L3.height = height);
         new TriggerNTDouble("testing/L4/height", L4.height, height -> L4.height = height);
+        new TriggerNTDouble("testing/ground/height", ground.height, height -> ground.height = height);
+
         new TriggerNTDouble("testing/L1/armRot", L1.armRot.in(Rotation), rot -> L1.armRot = Rotation.of(rot));
         new TriggerNTDouble("testing/L2/armRot", L2.armRot.in(Rotation), rot -> L2.armRot = Rotation.of(rot));
         new TriggerNTDouble("testing/L3/armRot", L3.armRot.in(Rotation), rot -> L3.armRot = Rotation.of(rot));
         new TriggerNTDouble("testing/L4/armRot", L4.armRot.in(Rotation), rot -> L4.armRot = Rotation.of(rot));
+        new TriggerNTDouble("testing/ground/armRot", ground.armRot.in(Rotation), rot -> ground.armRot = Rotation.of(rot));
+
         new TriggerNTDouble("testing/L1/wristRot", L1.wristRot.in(Rotation), rot -> L1.wristRot = Rotation.of(rot));
         new TriggerNTDouble("testing/L2/wristRot", L2.wristRot.in(Rotation), rot -> L2.wristRot = Rotation.of(rot));
         new TriggerNTDouble("testing/L3/wristRot", L3.wristRot.in(Rotation), rot -> L3.wristRot = Rotation.of(rot));
         new TriggerNTDouble("testing/L4/wristRot", L4.wristRot.in(Rotation), rot -> L4.wristRot = Rotation.of(rot));
+        new TriggerNTDouble("testing/ground/wristRot", ground.wristRot.in(Rotation), rot -> ground.wristRot = Rotation.of(rot));
 
     }
 

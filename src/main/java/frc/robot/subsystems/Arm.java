@@ -13,6 +13,7 @@ import static edu.wpi.first.units.Units.Volts;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -41,7 +42,8 @@ public class Arm extends SubsystemBase {
     return arm;
   }
 
-  TalonFX motor = new TalonFX(BotConstants.Arm.motorID, BotConstants.rioBus);
+  TalonFX master = new TalonFX(BotConstants.Arm.masterID, BotConstants.rioBus);
+  TalonFX slave = new TalonFX(BotConstants.Arm.slaveID, BotConstants.rioBus);
   StatusSignal<AngularVelocity> velocitySignal;
   StatusSignal<Angle> positionSignal;
   StatusSignal<Voltage> voltageSignal;
@@ -54,11 +56,14 @@ public class Arm extends SubsystemBase {
 
   /** Creates a new Arm. */
   private Arm() {
-    motor.getConfigurator().apply(BotConstants.Arm.cfg);
-    velocitySignal = motor.getVelocity();
-    positionSignal = motor.getPosition();
-    voltageSignal = motor.getMotorVoltage();
-    currentSignal = motor.getStatorCurrent();
+    master.getConfigurator().apply(BotConstants.Arm.cfg);
+    slave.getConfigurator().apply(BotConstants.Arm.cfg);
+    velocitySignal = master.getVelocity();
+    positionSignal = master.getPosition();
+    voltageSignal = master.getMotorVoltage();
+    currentSignal = master.getStatorCurrent();
+
+    slave.setControl(new Follower(master.getDeviceID(), false));
 
     zeroArm();
     // this.setDefaultCommand(Position(()->0));
@@ -71,11 +76,11 @@ public class Arm extends SubsystemBase {
   }
 
   public void stop() {
-    motor.stopMotor();
+    master.stopMotor();
   }
 
   public void resetArmPosition(double newPosition) {
-    motor.setPosition(newPosition);
+    master.setPosition(newPosition);
   }
 
   public void zeroArm() {
@@ -83,25 +88,25 @@ public class Arm extends SubsystemBase {
   }
 
   public void goToPosition(GameInfo.CoralScoringPosition position) {
-    motor.setControl(positionRequest.withPosition(position.armRot.in(Rotations)));
+    master.setControl(positionRequest.withPosition(position.armRot.in(Rotations)));
   }
 
   public Command Position(DoubleSupplier position) {
-    return this.runEnd(() -> motor.setControl(positionRequest.withPosition(position.getAsDouble())),
-        () -> motor.set(0));
+    return this.runEnd(() -> master.setControl(positionRequest.withPosition(position.getAsDouble())),
+        () -> master.set(0));
   }
 
   public Command Position(GameInfo.CoralScoringPosition position) {
-    return this.startEnd(() -> motor.setControl(positionRequest.withPosition(position.armRot.in(Rotations))),
-        () -> motor.set(0));
+    return this.startEnd(() -> master.setControl(positionRequest.withPosition(position.armRot.in(Rotations))),
+        () -> master.set(0));
   }
 
   public double getPosition() {
-    return motor.getPosition().getValueAsDouble();
+    return master.getPosition().getValueAsDouble();
   }
 
   public Command ArmWithNTPosition() {
-    return this.runEnd(() -> motor.setControl(positionRequest.withPosition(ntpos)), () -> motor.stopMotor());
+    return this.runEnd(() -> master.setControl(positionRequest.withPosition(ntpos)), () -> master.stopMotor());
   }
 
   /**
@@ -111,7 +116,7 @@ public class Arm extends SubsystemBase {
    * @return the command that spins the arm
    */
   public Command Spin(double speed) {
-    return this.runEnd(() -> motor.setControl(voltageRequest.withOutput(speed * 12)), () -> motor.set(0));
+    return this.runEnd(() -> master.setControl(voltageRequest.withOutput(speed * 12)), () -> master.set(0));
   }
 
   @Override

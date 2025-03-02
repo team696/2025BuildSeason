@@ -12,10 +12,12 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -35,7 +37,7 @@ public class Elevator extends SubsystemBase {
     return m_Elevator;
   }
   private TalonFactory master, slave;
-  private MotionMagicDutyCycle positionReq;
+  private MotionMagicVoltage positionReq;
   public SysIdRoutine identificationRoutine;
 
   private Elevator() {
@@ -44,21 +46,20 @@ public class Elevator extends SubsystemBase {
 
     slave.Follow(master, true);
     
-    positionReq=new MotionMagicDutyCycle(0).withSlot(0);
-    
+    positionReq=new MotionMagicVoltage(0).withSlot(0);
+    zero();
     identificationRoutine=new SysIdRoutine(new SysIdRoutine.Config(Volts.per(Second).of(0.5), Volts.of(0.4),Seconds.of(3)), 
-    
     new SysIdRoutine.Mechanism(this::DriveVoltage, (log)->{
       log.motor(master.getName()).voltage(master.get().getMotorVoltage().getValue())
       .linearPosition(Meters.of(master.getPosition()))
       .linearVelocity(MetersPerSecond.of(master.getVelocity()));
     }, this));
     this.setDefaultCommand(positionCommand(0));
+    SmartDashboard.putData("Elevator duty cycle up", runDutyCycle());
   }
 
   public void stop() {
     master.stop();
-    slave.stop();
   }
   /**
    *
@@ -96,6 +97,9 @@ public class Elevator extends SubsystemBase {
    */
   public Command holdPosition(){
     return this.startEnd(()->master.setControl(positionReq.withPosition(master.getPosition())), ()->master.VoltageOut(Volts.of(0)));
+  }
+  public Command runDutyCycle(){
+    return this.startEnd(()->master.PercentOutput(.4), ()->master.stop());
   }
   public void zero(){
     resetPosition(0);

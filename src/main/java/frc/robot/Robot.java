@@ -85,6 +85,9 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("ScoreL4", new MoveSuperStructure(GameInfo.L4,0.6));
     SmartDashboard.putData("ScoreL3", new MoveSuperStructure(GameInfo.L3, 0.6));
     SmartDashboard.putData("ScoreL2", new MoveSuperStructure(GameInfo.L2, 0.6));
+    SmartDashboard.putData("ScoreL1", new MoveSuperStructure(GameInfo.L1, 0.6));
+    SmartDashboard.putData("Climb Up", new MoveSuperStructure(GameInfo.ClimbUp, 0));
+    SmartDashboard.putData("Climb Down", new MoveSuperStructure(GameInfo.ClimbDown, 0));
 
   }
 
@@ -156,8 +159,8 @@ public class Robot extends TimedRobot {
     // HumanControls.OperatorPanel2025.L3.whileTrue(Elevator.get().positionCommand(GameInfo.L3));
     // HumanControls.OperatorPanel2025.L4.whileTrue(Elevator.get().positionCommand(GameInfo.L4));
 
-    HumanControls.DriverPanel.OtherButton.whileTrue(new MoveSuperStructure(new CoralScoringPosition(0, 9., 0), 0.6));
-    HumanControls.DriverPanel.resetGyro.whileTrue(new MoveSuperStructure(new CoralScoringPosition(32., -4., -3.), 0.6));
+    HumanControls.DriverPanel.OtherButton.whileTrue(new MoveSuperStructure(GameInfo.ground, 0.6));
+    HumanControls.DriverPanel.resetGyro.whileTrue(new MoveSuperStructure(GameInfo.L3, 0.6));
   }
 
   @Override
