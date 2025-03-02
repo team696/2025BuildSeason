@@ -73,11 +73,11 @@ public class BotConstants {
         public static int motorID = 14;
         public static TalonFXConfiguration cfg = new TalonFXConfiguration();
         static {
-            cfg.Slot0.kP = 2.;
+            cfg.Slot0.kP = 32.;
 
-            cfg.MotionMagic.MotionMagicAcceleration = 20.;
-            cfg.MotionMagic.MotionMagicCruiseVelocity = 20.;
-            cfg.MotionMagic.MotionMagicJerk = 10.;
+            cfg.MotionMagic.MotionMagicAcceleration = 4.;
+            cfg.MotionMagic.MotionMagicCruiseVelocity = 6.;
+            cfg.MotionMagic.MotionMagicJerk = 6.;
             cfg.CurrentLimits.StatorCurrentLimitEnable = false;
             cfg.CurrentLimits.SupplyCurrentLimitEnable=false;
             cfg.CurrentLimits.StatorCurrentLimit = 80.;

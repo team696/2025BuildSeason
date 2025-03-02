@@ -89,10 +89,10 @@ public class GameInfo {
 
         red.both = Stream.concat(Arrays.stream(red.left), Arrays.stream(red.right)).toArray(size -> new Pose2d[size]);
 
-        L1 = new CoralScoringPosition(0., -2., -2);
+        L1 = new CoralScoringPosition(0., -2., -1);
         L2 = new CoralScoringPosition(8., -2, -1);
-        L3 = new CoralScoringPosition(34., -2., -2);
-        L4 = new CoralScoringPosition(67., -3., 2);
+        L3 = new CoralScoringPosition(34., -2., -1);
+        L4 = new CoralScoringPosition(60., -2.3, -1);
         ClimbUp=new CoralScoringPosition(27, -8., 0);
         ClimbDown=new CoralScoringPosition(2, -8., 0);
 
