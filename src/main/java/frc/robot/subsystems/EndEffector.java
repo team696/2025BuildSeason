@@ -58,8 +58,6 @@ public class EndEffector extends SubsystemBase {
     positionSignal = motor.getPosition();
     voltageSignal = motor.getMotorVoltage();
     currentSignal = motor.getStatorCurrent();
-    SmartDashboard.putData("Intake", spin(0.6));
-    SmartDashboard.putData("Eject", spin(-0.6));
   }
 
   public void stop() {
@@ -67,11 +65,11 @@ public class EndEffector extends SubsystemBase {
   }
 
   public void run(double output) {
-    //motor.setControl(VoltageRequest.withOutput(output * 12));
+    motor.setControl(VoltageRequest.withOutput(output * 12));
   }
 
   /**
-   * spins the roller at a fraction of it's power <i> power </i?
+   * spins the roller at a fraction of it's power <i> power </i>?
    * 
    * @param power [-1,1] the fraction of the power that the roller can exert at
    *              12V
