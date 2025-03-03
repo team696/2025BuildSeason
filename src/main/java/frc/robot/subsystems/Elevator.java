@@ -10,6 +10,7 @@ import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
@@ -38,6 +39,7 @@ public class Elevator extends SubsystemBase {
   }
   private TalonFactory master, slave;
   private MotionMagicVoltage positionReq;
+  private StatusSignal<Voltage> masterVoltage, slaveVoltage;
   public SysIdRoutine identificationRoutine;
 
   private Elevator() {
@@ -46,6 +48,9 @@ public class Elevator extends SubsystemBase {
 
     slave.Follow(master, true);
     
+    masterVoltage=master.get().getMotorVoltage();
+    slaveVoltage=slave.get().getMotorVoltage();
+
     positionReq=new MotionMagicVoltage(0).withSlot(0);
     zero();
     identificationRoutine=new SysIdRoutine(new SysIdRoutine.Config(Volts.per(Second).of(0.5), Volts.of(0.4),Seconds.of(3)), 
@@ -116,6 +121,8 @@ public class Elevator extends SubsystemBase {
     BackupLogger.addToQueue("Elevator/SlavePosition", slave.getPosition());
     BackupLogger.addToQueue("Elevator/SlaveVelocity", slave.getVelocity());
     BackupLogger.addToQueue("Elevator/MasterVelocity", master.getVelocity());
+    BackupLogger.addToQueue("Elevator/MasterVoltage", masterVoltage.refresh().getValueAsDouble());
+    BackupLogger.addToQueue("Elevator/SlaveVoltage", slaveVoltage.refresh().getValueAsDouble());
 
   }
 }
