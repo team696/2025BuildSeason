@@ -43,7 +43,7 @@ public class GameInfo {
         public Angle wristRot;
     }
 
-    public static CoralScoringPosition L1, L2, L3, L4, ground, ClimbUp, ClimbDown;
+    public static CoralScoringPosition L1, L2, L3, L4, Net, Intake, ground, ClimbUp, ClimbDown;
 
     public static class FieldSide {
         public Pose2d[] left, right, both;
@@ -89,19 +89,20 @@ public class GameInfo {
 
         red.both = Stream.concat(Arrays.stream(red.left), Arrays.stream(red.right)).toArray(size -> new Pose2d[size]);
 
-        L1 = new CoralScoringPosition(0., -2., -1);
-        L2 = new CoralScoringPosition(8., -2, -1);
-        L3 = new CoralScoringPosition(34., -2., -1);
-        L4 = new CoralScoringPosition(60., -2.3, -1);
+        L1 = new CoralScoringPosition(0., 1.75, 0.45);
+        L2 = new CoralScoringPosition(8., 1.75, 0.45);
+        L3 = new CoralScoringPosition(30., 1.75, .45);
+        L4 = new CoralScoringPosition(67., 0.7, .65);
+        Net = new CoralScoringPosition(67., 0., 2.5);
         ClimbUp=new CoralScoringPosition(27, -8., 0);
         ClimbDown=new CoralScoringPosition(2, -8., 0);
-
-        ground=new CoralScoringPosition(0, 9.5, -3.);
+        Intake = new CoralScoringPosition(0, -1.75, 3.6);
+        ground=new CoralScoringPosition(5., 8.2, 4.3);
         /**
          * this puts the values on networktables so scoring positions can be quickly
          * changed
          * comment this out once the scoring positions are finalized
-         */
+         
         new TriggerNTDouble("testing/L1/height", L1.height, height -> L1.height = height);
         new TriggerNTDouble("testing/L2/height", L2.height, height -> L2.height = height);
         new TriggerNTDouble("testing/L3/height", L3.height, height -> L3.height = height);
@@ -119,7 +120,7 @@ public class GameInfo {
         new TriggerNTDouble("testing/L3/wristRot", L3.wristRot.in(Rotation), rot -> L3.wristRot = Rotation.of(rot));
         new TriggerNTDouble("testing/L4/wristRot", L4.wristRot.in(Rotation), rot -> L4.wristRot = Rotation.of(rot));
         new TriggerNTDouble("testing/ground/wristRot", ground.wristRot.in(Rotation), rot -> ground.wristRot = Rotation.of(rot));
-
+        */
     }
 
 }

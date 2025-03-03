@@ -32,15 +32,14 @@ public class BotConstants {
         public static TalonFXConfiguration cfg;
         static {
             cfg = new TalonFXConfiguration();
-            cfg.Slot0.kP = 3.;
+            cfg.Slot0.kP = 6.;
             //cfg.Slot0.kG = 0.05;
             //cfg.Slot0.kS = 0.02;
             cfg.Slot0.GravityType = GravityTypeValue.Elevator_Static;
             cfg.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseVelocitySign;
 
-            cfg.MotionMagic.MotionMagicCruiseVelocity = 40.;
-            cfg.MotionMagic.MotionMagicAcceleration = 40.;
-            cfg.MotionMagic.MotionMagicJerk = 40.;
+            cfg.MotionMagic.MotionMagicCruiseVelocity = 100.;
+            cfg.MotionMagic.MotionMagicAcceleration = 75.;
             cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
             cfg.CurrentLimits.StatorCurrentLimit = 120.;
             cfg.CurrentLimits.StatorCurrentLimitEnable = true;
@@ -56,16 +55,13 @@ public class BotConstants {
         static {
             cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
             cfg.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-            cfg.Slot0.kP = 30.;
+            cfg.Slot0.kP = 8.;
             cfg.CurrentLimits.StatorCurrentLimitEnable = true;
             cfg.CurrentLimits.StatorCurrentLimit = 120.;
-            cfg.MotionMagic.MotionMagicCruiseVelocity = 150.;
-            cfg.MotionMagic.MotionMagicAcceleration = 130.;
-            cfg.MotionMagic.MotionMagicJerk = 100.;
+            cfg.MotionMagic.MotionMagicCruiseVelocity = 80.;
+            cfg.MotionMagic.MotionMagicAcceleration = 80.;
 
             cfg.Slot0.kG = 0;
-
-            // TODO: figure out the ratios
         }
     }
 
@@ -75,9 +71,8 @@ public class BotConstants {
         static {
             cfg.Slot0.kP = 32.;
 
-            cfg.MotionMagic.MotionMagicAcceleration = 4.;
-            cfg.MotionMagic.MotionMagicCruiseVelocity = 6.;
-            cfg.MotionMagic.MotionMagicJerk = 6.;
+            cfg.MotionMagic.MotionMagicAcceleration = 16.;
+            cfg.MotionMagic.MotionMagicCruiseVelocity = 10.;
             cfg.CurrentLimits.StatorCurrentLimitEnable = false;
             cfg.CurrentLimits.SupplyCurrentLimitEnable=false;
             cfg.CurrentLimits.StatorCurrentLimit = 80.;
@@ -90,7 +85,7 @@ public class BotConstants {
         public static TalonFXConfiguration cfg = new TalonFXConfiguration();
         static {
             cfg.CurrentLimits.StatorCurrentLimitEnable = true;
-            cfg.CurrentLimits.StatorCurrentLimit = 80.;
+            cfg.CurrentLimits.StatorCurrentLimit = 120.;
         }
     }
 
