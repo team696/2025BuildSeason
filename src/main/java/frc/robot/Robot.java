@@ -39,7 +39,6 @@ import frc.robot.util.GameInfo;
 import frc.robot.util.GameInfo.CoralScoringPosition;
 import frc.team696.lib.Camera.LimelightHelpers;
 import frc.team696.lib.Logging.BackupLogger;
-import frc.robot.subsystems.ClimberIntake;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.EndEffector;
 import frc.robot.HumanControls.OperatorPanel2025;
@@ -82,10 +81,15 @@ public class Robot extends TimedRobot {
   public void putCommandButtons() {
     SmartDashboard.putData("pathfindToMiddle", new PrintCommand("s").andThen(
       AutoBuilder.pathfindToPose(new Pose2d(7, 3, Rotation2d.fromDegrees(12)), new PathConstraints(1, 1, Math.PI, Math.PI))));
+    SmartDashboard.putData("ScoreNet", new MoveSuperStructure(GameInfo.Net, 0));
     SmartDashboard.putData("ScoreL4", new MoveSuperStructure(GameInfo.L4,0.6));
     SmartDashboard.putData("ScoreL3", new MoveSuperStructure(GameInfo.L3, 0.6));
     SmartDashboard.putData("ScoreL2", new MoveSuperStructure(GameInfo.L2, 0.6));
     SmartDashboard.putData("ScoreL1", new MoveSuperStructure(GameInfo.L1, 0.6));
+    SmartDashboard.putData("Ground", new MoveSuperStructure(GameInfo.ground, 0));
+    SmartDashboard.putData("Spin Rollers Forward", EndEffector.get().spin(0.6));
+    SmartDashboard.putData("Spin Rollers Reverse", EndEffector.get().spin(-0.6));
+    SmartDashboard.putData("IntakeSource", new MoveSuperStructure(GameInfo.Intake, 0.0));
     SmartDashboard.putData("Climb Up", new MoveSuperStructure(GameInfo.ClimbUp, 0));
     SmartDashboard.putData("Climb Down", new MoveSuperStructure(GameInfo.ClimbDown, 0));
 
