@@ -43,7 +43,7 @@ public class GameInfo {
         public Angle wristRot;
     }
 
-    public static CoralScoringPosition L1, L2, L3, L4, Net, Intake, ground, ClimbUp, ClimbDown;
+    public static CoralScoringPosition L1, L2, L3, L4, Net, Source, ground, ClimbUp, ClimbDown, Processor;
 
     public static class FieldSide {
         public Pose2d[] left, right, both;
@@ -96,8 +96,9 @@ public class GameInfo {
         Net = new CoralScoringPosition(67., 0., 2.5);
         ClimbUp=new CoralScoringPosition(27, -8., 0);
         ClimbDown=new CoralScoringPosition(2, -8., 0);
-        Intake = new CoralScoringPosition(0, -1.75, 3.6);
+        Source = new CoralScoringPosition(0, -1.75, 3.6);
         ground=new CoralScoringPosition(5., 8.2, 4.3);
+        Processor=new CoralScoringPosition(0, 0, 0);
         /**
          * this puts the values on networktables so scoring positions can be quickly
          * changed

@@ -32,14 +32,14 @@ public class BotConstants {
         public static TalonFXConfiguration cfg;
         static {
             cfg = new TalonFXConfiguration();
-            cfg.Slot0.kP = 6.;
+            cfg.Slot0.kP = 9.;
             //cfg.Slot0.kG = 0.05;
             //cfg.Slot0.kS = 0.02;
             cfg.Slot0.GravityType = GravityTypeValue.Elevator_Static;
             cfg.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseVelocitySign;
 
             cfg.MotionMagic.MotionMagicCruiseVelocity = 100.;
-            cfg.MotionMagic.MotionMagicAcceleration = 75.;
+            cfg.MotionMagic.MotionMagicAcceleration = 115.;//75.;
             cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
             cfg.CurrentLimits.StatorCurrentLimit = 120.;
             cfg.CurrentLimits.StatorCurrentLimitEnable = true;

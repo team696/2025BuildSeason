@@ -39,32 +39,33 @@ public final class HumanControls {
         public static final JoystickButton Leftest = new JoystickButton(operatorPanelB, 8);
     }*/
     public final class OperatorPanel2025{
-        public static final JoystickButton L1=null;
-        public static final JoystickButton L2=null;
-        public static final JoystickButton L3=null;
-        public static final JoystickButton L4=null;
-        public static final JoystickButton F1=null;
-        public static final JoystickButton F2=null;
-        public static final JoystickButton F3=null;
-        public static final JoystickButton releaseCoral=null;
-        public static final JoystickButton pickupAlgae=null;
-        public static final JoystickButton gyro=null;
-        public static final JoystickButton Climb1=null;
-        public static final JoystickButton Climb2=null;
-        public static final JoystickButton SouceCoral=null;
-        public static final JoystickButton GroundCoral=null;
-        public static final JoystickButton Barge=null;
-        public static final JoystickButton Processor=null;
-
-        public static final JoystickButton leftOrRight=null;
-        // Use one of the switches on the driver station for this
-        public static final BooleanSupplier manualOverride=null;
-    }
-    public final class DriverPanel{
-        public static final Joystick DriverPanel=new Joystick(0);
         public static final Joystick OperatorPanelA=new Joystick(1);
         public static final Joystick OperatorPanelB=new Joystick(2);
         public static final Joystick OperatorPanelC=new Joystick(3);
+    
+        public static final JoystickButton L1=new JoystickButton(OperatorPanelB, 8);
+        public static final JoystickButton L2=new JoystickButton(OperatorPanelB, 11);
+        public static final JoystickButton L3=new JoystickButton(OperatorPanelB, 10);
+        public static final JoystickButton L4=new JoystickButton(OperatorPanelB, 6);
+        //public static final JoystickButton F1=new JoystickButton(null, 0);
+        //public static final JoystickButton F2=null;
+        //public static final JoystickButton F3=null;
+        public static final JoystickButton releaseCoral=new JoystickButton(OperatorPanelB, 7);
+        public static final JoystickButton pickupAlgae=new JoystickButton(OperatorPanelA, 9);
+        public static final JoystickButton gyro=new JoystickButton(OperatorPanelA, 7);
+        public static final JoystickButton Climb1=new JoystickButton(OperatorPanelA, 4);
+        public static final JoystickButton Climb2=new JoystickButton(OperatorPanelA, 3);
+        public static final JoystickButton SouceCoral=new JoystickButton(OperatorPanelA, 6);
+        //public static final JoystickButton GroundCoral=new JoystickButton(OperatorPanelA, 0);
+        public static final JoystickButton Barge=new JoystickButton(OperatorPanelA,2);
+        public static final JoystickButton Processor=new JoystickButton(OperatorPanelA, 5);
+
+        public static final JoystickButton leftOrRight=new JoystickButton(OperatorPanelA, 8);
+        // Use one of the switches on the driver station for this
+        //public static final BooleanSupplier manualOverride=new JoystickButton(null, 0);
+    }
+    public final class DriverPanel{
+        public static final Joystick DriverPanel=new Joystick(0);
         public static final JoystickButton resetGyro=new JoystickButton(DriverPanel, 1);
         public static final JoystickButton OtherButton=new JoystickButton(DriverPanel,2);
 

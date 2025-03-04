@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -79,6 +80,7 @@ public class Robot extends TimedRobot {
   }
 
   public void putCommandButtons() {
+    SmartDashboard.putData("Reset Gyro", Commands.runOnce(() -> Swerve.get().seedFieldCentric()).ignoringDisable(true));
     SmartDashboard.putData("pathfindToMiddle", new PrintCommand("s").andThen(
       AutoBuilder.pathfindToPose(new Pose2d(7, 3, Rotation2d.fromDegrees(12)), new PathConstraints(1, 1, Math.PI, Math.PI))));
     SmartDashboard.putData("ScoreNet", new MoveSuperStructure(GameInfo.Net, 0));
@@ -89,7 +91,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Ground", new MoveSuperStructure(GameInfo.ground, 0));
     SmartDashboard.putData("Spin Rollers Forward", EndEffector.get().spin(0.6));
     SmartDashboard.putData("Spin Rollers Reverse", EndEffector.get().spin(-0.6));
-    SmartDashboard.putData("IntakeSource", new MoveSuperStructure(GameInfo.Intake, 0.0));
+    SmartDashboard.putData("Source", new MoveSuperStructure(GameInfo.Source, 0.0));
     SmartDashboard.putData("Climb Up", new MoveSuperStructure(GameInfo.ClimbUp, 0));
     SmartDashboard.putData("Climb Down", new MoveSuperStructure(GameInfo.ClimbDown, 0));
 
@@ -115,7 +117,6 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putData(CommandScheduler.getInstance());
     SmartDashboard.putData(Elevator.get());
-    // SmartDashboard.putData(ClimberIntake.get());
     SmartDashboard.putData(Arm.get());
     SmartDashboard.putData(EndEffector.get());
     SmartDashboard.putData(Wrist.get());
@@ -128,18 +129,16 @@ public class Robot extends TimedRobot {
     // Log Build information
     logBuildInfo();
 
-    // TODO: Restore TeleopSwerve
     Swerve.get().setDefaultCommand(Swerve.get().applyRequest(
         () -> Swerve.fcDriveReq.withVelocityX(
             applyDeadband(HumanControls.DriverPanel.leftJoyY.getAsDouble(), 0.1) * MaxSpeed)
             .withVelocityY(applyDeadband(HumanControls.DriverPanel.leftJoyX.getAsDouble(), 0.1) * MaxSpeed)
             .withRotationalRate(
                 applyDeadband(HumanControls.DriverPanel.rightJoyX.getAsDouble(), 0.1) * MaxRotationalRate)));
-    SmartDashboard.putData("Reset Gyro", Commands.runOnce(() -> Swerve.get().seedFieldCentric()));
 
     NamedCommands.registerCommand("PIDtoNearest", new PIDtoNearest(true));
     NamedCommands.registerCommand("ScoreL4",
-        Elevator.get().positionCommand(GameInfo.L4));
+        new MoveSuperStructure(GameInfo.L4, 0.6));
     NamedCommands.registerCommand("ScoreL3",
         Arm.get().Position(GameInfo.L3).alongWith(Elevator.get().positionCommand(GameInfo.L3)));
     NamedCommands.registerCommand("ScoreL2", Elevator.get().positionCommand(GameInfo.L2));
@@ -157,14 +156,19 @@ public class Robot extends TimedRobot {
   }
 
   private void configureDriverStationBinds() {
-    // HumanControls.DriverPanel.resetGyro.onTrue(Commands.runOnce(()->Swerve.get().seedFieldCentric()));
-    // HumanControls.OperatorPanel2025.L1.whileTrue(Elevator.get().positionCommand(GameInfo.L1));
-    // HumanControls.OperatorPanel2025.L2.whileTrue(Elevator.get().positionCommand(GameInfo.L2));
-    // HumanControls.OperatorPanel2025.L3.whileTrue(Elevator.get().positionCommand(GameInfo.L3));
-    // HumanControls.OperatorPanel2025.L4.whileTrue(Elevator.get().positionCommand(GameInfo.L4));
+    HumanControls.DriverPanel.resetGyro.onTrue(Commands.runOnce(()->Swerve.get().seedFieldCentric()).ignoringDisable(true));
+    HumanControls.OperatorPanel2025.gyro.onTrue(new PrintCommand("Resetting Gyro").andThen(Commands.runOnce(()->Swerve.get().seedFieldCentric()).ignoringDisable(true)));
 
-    HumanControls.DriverPanel.OtherButton.whileTrue(new MoveSuperStructure(GameInfo.ground, 0.6));
-    HumanControls.DriverPanel.resetGyro.whileTrue(new MoveSuperStructure(GameInfo.L3, 0.6));
+    HumanControls.OperatorPanel2025.L1.whileTrue(new PrintCommand("L1").andThen(new MoveSuperStructure(GameInfo.L1, 0.6)));
+    HumanControls.OperatorPanel2025.L2.whileTrue(new PrintCommand("L2").andThen(new MoveSuperStructure(GameInfo.L2, 0.6)));
+    HumanControls.OperatorPanel2025.L3.whileTrue(new PrintCommand("L3").andThen(new MoveSuperStructure(GameInfo.L3, 0.6)));
+    HumanControls.OperatorPanel2025.L4.whileTrue(new MoveSuperStructure(GameInfo.L4, 0.6));
+    HumanControls.OperatorPanel2025.SouceCoral.whileTrue(new MoveSuperStructure(GameInfo.Source, -0.6));
+    HumanControls.OperatorPanel2025.Barge.whileTrue(new MoveSuperStructure(GameInfo.Net, 0.6));
+    HumanControls.OperatorPanel2025.Climb1.whileTrue(new MoveSuperStructure(GameInfo.ClimbUp, 0));
+    HumanControls.OperatorPanel2025.Climb2.whileTrue(new MoveSuperStructure(GameInfo.ClimbDown, 0));
+    HumanControls.OperatorPanel2025.Processor.whileTrue(new MoveSuperStructure(GameInfo.Processor, 0));
+    HumanControls.OperatorPanel2025.pickupAlgae.whileTrue(new ConditionalCommand(EndEffector.get().spin(-0.6), new MoveSuperStructure(GameInfo.ground, -0.6), ()->(HumanControls.OperatorPanel2025.L2.getAsBoolean()||HumanControls.OperatorPanel2025.L2.getAsBoolean())));
   }
 
   @Override
