@@ -31,7 +31,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.MoveSuperStructure;
-import frc.robot.commands.PIDtoNearest;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Wrist;
@@ -135,9 +134,23 @@ public class Robot extends TimedRobot {
             .withVelocityY(applyDeadband(HumanControls.DriverPanel.leftJoyX.getAsDouble(), 0.1) * MaxSpeed)
             .withRotationalRate(
                 applyDeadband(HumanControls.DriverPanel.rightJoyX.getAsDouble(), 0.1) * MaxRotationalRate)));
+
+    SmartDashboard.putData("Face Hex", Swerve.get().applyRequest(
+      () -> Swerve.fcDriveReq.withVelocityX(
+          applyDeadband(HumanControls.DriverPanel.leftJoyY.getAsDouble(), 0.1) * MaxSpeed)
+          .withVelocityY(applyDeadband(HumanControls.DriverPanel.leftJoyX.getAsDouble(), 0.1) * MaxSpeed)
+          .withRotationalRate(
+              (Swerve.get().getPose().getRotation().minus(Swerve.get().FaceHexFace())).getDegrees() / 30 * MaxRotationalRate)));
+
+    SmartDashboard.putData("Face Net", Swerve.get().applyRequest(
+      () -> Swerve.fcDriveReq.withVelocityX(
+          applyDeadband(HumanControls.DriverPanel.leftJoyY.getAsDouble(), 0.1) * MaxSpeed)
+          .withVelocityY(applyDeadband(HumanControls.DriverPanel.leftJoyX.getAsDouble(), 0.1) * MaxSpeed)
+          .withRotationalRate(
+            (Swerve.get().getPose().getRotation().minus(Swerve.get().FaceNet())).getDegrees() / 30 * MaxRotationalRate)));
+
     SmartDashboard.putData("Reset Gyro", Commands.runOnce(() -> Swerve.get().seedFieldCentric()));
 
-    NamedCommands.registerCommand("PIDtoNearest", new PIDtoNearest(true));
     NamedCommands.registerCommand("ScoreL4",
         Elevator.get().positionCommand(GameInfo.L4));
     NamedCommands.registerCommand("ScoreL3",

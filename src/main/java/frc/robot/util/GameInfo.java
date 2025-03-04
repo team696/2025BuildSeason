@@ -5,14 +5,23 @@
 package frc.robot.util;
 
 import static edu.wpi.first.units.Units.Degree;
+import static edu.wpi.first.units.Units.Feet;
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Rotation;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Unit;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.HumanControls;
@@ -38,56 +47,74 @@ public class GameInfo {
         }
 
         public double height;
-        /* As measured from the vertical normal (arm facing up) */
-        public Angle armRot;
+        // Rotations of the Motor, Im too lazy to change off angle now
+        public Angle armRot; 
         public Angle wristRot;
     }
 
     public static CoralScoringPosition L1, L2, L3, L4, Net, Intake, ground, ClimbUp, ClimbDown;
 
-    public static class FieldSide {
-        public Pose2d[] left, right, both;
+
+    /* Looking at the Index Dead On */
+    public enum Side {
+        Right,
+        Left
     }
 
-    public static FieldSide red, blue;
-
-    public static FieldSide getFieldSide() {
-        return DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? blue : red;
+    /*  Starts from 3 O'clock on field render */
+    public enum Index {
+        One, 
+        Two, 
+        Three,
+        Four,
+        Five, 
+        Six
     }
 
-    public static Pose2d[] getScoringPoses() {
-        return HumanControls.OperatorPanel2025.leftOrRight.getAsBoolean() ? getFieldSide().left : getFieldSide().right;
-    }
+    public final static Distance fieldLengthMeters = Feet.of(57.53);
 
+    public static Translation2d mirrorTranslation(Translation2d starting) {
+        return new Translation2d(fieldLengthMeters.in(Meters) - starting.getY(), starting.getY());
+    } 
+
+    public final static Translation2d blueReef = new Translation2d(4.5,4.);
+
+    public final static Map<Index, Map<Side, Translation2d>> ScoringPosesBlue;
+    
     static {
-        blue = new FieldSide();
-        // TODO: determine the real scoring poses
-        blue.left = new Pose2d[] {
-                new Pose2d(3.539, 4.912, Rotation2d.fromDegrees(-60 + 180)),
-                new Pose2d(3.179, 3.752, Rotation2d.fromDegrees(0 + 180)),
-                new Pose2d(4.056, 2.689, Rotation2d.fromDegrees(60 + 180)),
-                new Pose2d(5.450, 2.992, Rotation2d.fromDegrees(120 + 180)),
-                new Pose2d(5.850, 4.376, Rotation2d.fromDegrees(180 + 180)),
-                new Pose2d(4.924, 5.351, Rotation2d.fromDegrees(-120 + 180))
-        };
-        blue.right = new Pose2d[] {
-                new Pose2d(4.046, 5.322, Rotation2d.fromDegrees(-60 + 180)),
-                new Pose2d(3.188, 4.473, Rotation2d.fromDegrees(0 + 180)),
-                new Pose2d(3.481, 3.050, Rotation2d.fromDegrees(60 + 180)),
-                new Pose2d(4.836, 2.679, Rotation2d.fromDegrees(120 + 180)),
-                new Pose2d(5.821, 3.762, Rotation2d.fromDegrees(180 + 180)),
-                new Pose2d(5.489, 4.932, Rotation2d.fromDegrees(-120 + 180))
-        };
-        blue.both = Stream.concat(Arrays.stream(blue.left), Arrays.stream(blue.right))
-                .toArray(size -> new Pose2d[size]);
+        ScoringPosesBlue = Map.of(
+            Index.One, Map.of(
+                Side.Right, new Translation2d(4.046, 5.322),
+                Side.Left, new Translation2d(3.539, 4.912)
+            ),
+            
+            Index.Two, Map.of(
+                Side.Right, new Translation2d(3.188, 4.473),
+                Side.Left, new Translation2d(3.179, 3.752)
+            ),
+            
+            Index.Three, Map.of(
+                Side.Right, new Translation2d(3.481, 3.050),
+                Side.Left, new Translation2d(4.056, 2.689)
+            ),
+            
+            Index.Four, Map.of(
+                Side.Right, new Translation2d(4.836, 2.679),
+                Side.Left, new Translation2d(5.450, 2.992)
+            ),
+            
+            Index.Five, Map.of(
+                Side.Right, new Translation2d(5.821, 3.762),
+                Side.Left, new Translation2d(5.850, 4.376)
+            ),
+            
+            Index.Six, Map.of(
+                Side.Right, new Translation2d(5.489, 4.932),
+                Side.Left, new Translation2d(4.924, 5.351)
+            )
+        );
 
-        // The red poses are mirrored from the blue scoring poses
-        red = new FieldSide();
-        red.left = Arrays.stream(blue.left).map(pose -> PoseUtil.mirrorPoseX(pose)).toArray(size -> new Pose2d[size]);
 
-        red.right = Arrays.stream(blue.right).map(pose -> PoseUtil.mirrorPoseX(pose)).toArray(size -> new Pose2d[size]);
-
-        red.both = Stream.concat(Arrays.stream(red.left), Arrays.stream(red.right)).toArray(size -> new Pose2d[size]);
 
         L1 = new CoralScoringPosition(0., 1.75, 0.45);
         L2 = new CoralScoringPosition(8., 1.75, 0.45);
@@ -98,29 +125,6 @@ public class GameInfo {
         ClimbDown=new CoralScoringPosition(2, -8., 0);
         Intake = new CoralScoringPosition(0, -1.75, 3.6);
         ground=new CoralScoringPosition(5., 8.2, 4.3);
-        /**
-         * this puts the values on networktables so scoring positions can be quickly
-         * changed
-         * comment this out once the scoring positions are finalized
-         
-        new TriggerNTDouble("testing/L1/height", L1.height, height -> L1.height = height);
-        new TriggerNTDouble("testing/L2/height", L2.height, height -> L2.height = height);
-        new TriggerNTDouble("testing/L3/height", L3.height, height -> L3.height = height);
-        new TriggerNTDouble("testing/L4/height", L4.height, height -> L4.height = height);
-        new TriggerNTDouble("testing/ground/height", ground.height, height -> ground.height = height);
-
-        new TriggerNTDouble("testing/L1/armRot", L1.armRot.in(Rotation), rot -> L1.armRot = Rotation.of(rot));
-        new TriggerNTDouble("testing/L2/armRot", L2.armRot.in(Rotation), rot -> L2.armRot = Rotation.of(rot));
-        new TriggerNTDouble("testing/L3/armRot", L3.armRot.in(Rotation), rot -> L3.armRot = Rotation.of(rot));
-        new TriggerNTDouble("testing/L4/armRot", L4.armRot.in(Rotation), rot -> L4.armRot = Rotation.of(rot));
-        new TriggerNTDouble("testing/ground/armRot", ground.armRot.in(Rotation), rot -> ground.armRot = Rotation.of(rot));
-
-        new TriggerNTDouble("testing/L1/wristRot", L1.wristRot.in(Rotation), rot -> L1.wristRot = Rotation.of(rot));
-        new TriggerNTDouble("testing/L2/wristRot", L2.wristRot.in(Rotation), rot -> L2.wristRot = Rotation.of(rot));
-        new TriggerNTDouble("testing/L3/wristRot", L3.wristRot.in(Rotation), rot -> L3.wristRot = Rotation.of(rot));
-        new TriggerNTDouble("testing/L4/wristRot", L4.wristRot.in(Rotation), rot -> L4.wristRot = Rotation.of(rot));
-        new TriggerNTDouble("testing/ground/wristRot", ground.wristRot.in(Rotation), rot -> ground.wristRot = Rotation.of(rot));
-        */
     }
 
 }
