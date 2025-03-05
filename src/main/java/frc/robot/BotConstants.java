@@ -88,19 +88,4 @@ public class BotConstants {
             cfg.CurrentLimits.StatorCurrentLimit = 120.;
         }
     }
-
-    public static class ClimberIntake {
-        public static int masterID = 0;
-        public static int slaveID = 1;
-        public static TalonFXConfiguration cfg = new TalonFXConfiguration();
-        static {
-            cfg.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-            cfg.CurrentLimits.StatorCurrentLimitEnable = true;
-            cfg.CurrentLimits.StatorCurrentLimit = 120.;
-            cfg.MotionMagic.MotionMagicCruiseVelocity = 20.;
-            cfg.MotionMagic.MotionMagicAcceleration = 15.;
-            cfg.MotionMagic.MotionMagicJerk = 30.;
-        }
-    }
-
 }
