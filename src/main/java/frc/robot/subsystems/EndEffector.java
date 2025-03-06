@@ -20,7 +20,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.BotConstants;
@@ -51,6 +51,9 @@ public class EndEffector extends SubsystemBase {
   StatusSignal<Angle> positionSignal;
   StatusSignal<Voltage> voltageSignal;
   StatusSignal<Current> currentSignal;
+
+  // TODO: find the  pin number
+  DigitalInput beambreak=new DigitalInput(0);
 
   public EndEffector() {
     motor.getConfigurator().apply(BotConstants.EndEffector.cfg);
@@ -85,6 +88,17 @@ public class EndEffector extends SubsystemBase {
 
   public Command spinVelocity(double velocity) {
     return this.startEnd(() -> motor.setControl(velocityOut.withVelocity(velocity)), () -> motor.set(0));
+  }
+
+  public double getCurrentAmps(){
+    return currentSignal.getValue().in(Amps);
+  }
+  public boolean isStalling(){
+    return getCurrentAmps()>=BotConstants.EndEffector.cfg.CurrentLimits.StatorCurrentLimit-4;
+  }
+
+  public boolean hasCoral(){
+    return !beambreak.get();
   }
 
   @Override

@@ -96,7 +96,9 @@ public class GameInfo {
         Net = new CoralScoringPosition(67., 0., 2.5);
         ClimbUp=new CoralScoringPosition(27, -8., 0);
         ClimbDown=new CoralScoringPosition(2, -8., 0);
-        Source = new CoralScoringPosition(0, -1.75, 3.6);
+        // TODO: actually configure this position
+        Source = new CoralScoringPosition(0, -1.75, .65);
+        
         ground=new CoralScoringPosition(5., 8.2, 4.3);
         Processor=new CoralScoringPosition(0, 0, 0);
         /**

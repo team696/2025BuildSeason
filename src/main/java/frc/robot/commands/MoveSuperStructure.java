@@ -10,6 +10,7 @@ import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.EndEffector;
+import frc.robot.util.GameInfo;
 import frc.robot.util.GameInfo.CoralScoringPosition;
 
 public class MoveSuperStructure extends Command {
@@ -18,10 +19,8 @@ public class MoveSuperStructure extends Command {
 
   double runRollers = 0;
 
-  public MoveSuperStructure(CoralScoringPosition position, double runRollers) {
+  public MoveSuperStructure(CoralScoringPosition position) {
     this.position = position;
-
-    this.runRollers = runRollers;
 
     addRequirements(Arm.get(), Elevator.get(), Wrist.get());
   }
@@ -49,6 +48,7 @@ public class MoveSuperStructure extends Command {
     Arm.get().stop();
     Wrist.get().stop();
     Elevator.get().stop();
+    
     //EndEffector.get().stop();
   }
 
@@ -56,5 +56,15 @@ public class MoveSuperStructure extends Command {
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+  public static boolean atPosition(CoralScoringPosition position){
+    return Math.abs(Wrist.get().getPosition() - position.wristRot.in(Units.Rotation)) < 2 && Math.abs(Arm.get().getPosition() - position.armRot.in(Units.Rotation)) < 2 && Math.abs(Elevator.get().getPosition() - position.height) < 2 ;
+  }
+  public static Command autoScore(CoralScoringPosition position){
+    return new MoveSuperStructure(position).andThen((new MoveSuperStructure(position).alongWith(EndEffector.get().spin(0.6)).withTimeout(1)));
+  }
+  public static Command autoSource(){
+    return new MoveSuperStructure(GameInfo.Source).alongWith(EndEffector.get().spin(-0.6)).unless(EndEffector.get()::isStalling);
   }
 }

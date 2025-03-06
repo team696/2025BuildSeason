@@ -10,8 +10,6 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
-import frc.robot.util.TriggerNTDouble;
-
 /**
  * Constants for robot mechanisms unrelated to the drive train
  */
@@ -87,5 +85,20 @@ public class BotConstants {
             cfg.CurrentLimits.StatorCurrentLimitEnable = true;
             cfg.CurrentLimits.StatorCurrentLimit = 120.;
         }
+    }
+    public static class GroundCoral{
+        public static int angleId=17;
+        public static int rollerId=18;
+        public static TalonFXConfiguration angleCfg=new TalonFXConfiguration();
+        public static TalonFXConfiguration rollerCfg=new TalonFXConfiguration();
+        static{
+            angleCfg.Slot0.kP=10;
+            angleCfg.CurrentLimits.StatorCurrentLimit=120;
+            angleCfg.CurrentLimits.StatorCurrentLimitEnable=true;
+
+            rollerCfg.CurrentLimits.StatorCurrentLimit=80;
+            rollerCfg.CurrentLimits.StatorCurrentLimitEnable=true;
+        }
+
     }
 }

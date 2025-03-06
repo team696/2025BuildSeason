@@ -42,6 +42,7 @@ import frc.team696.lib.Camera.LimelightHelpers;
 import frc.team696.lib.Logging.BackupLogger;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.EndEffector;
+import frc.robot.subsystems.GroundCoral;
 import frc.robot.HumanControls.OperatorPanel2025;
 
 public class Robot extends TimedRobot {
@@ -54,7 +55,7 @@ public class Robot extends TimedRobot {
     OperatorPanel2025.gyro.onTrue(new InstantCommand(() -> Swerve.get().seedFieldCentric()));
     OperatorPanel2025.releaseCoral.onTrue(new InstantCommand());
   }
-
+  
   private void logBuildInfo() {
     BackupLogger.addToQueue("BuildConstants/ProjectName", BuildConstants.MAVEN_NAME);
     BackupLogger.addToQueue("BuildConstants/BuildDate", BuildConstants.BUILD_DATE);
@@ -83,17 +84,17 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Reset Gyro", Commands.runOnce(() -> Swerve.get().seedFieldCentric()).ignoringDisable(true));
     SmartDashboard.putData("pathfindToMiddle", new PrintCommand("s").andThen(
       AutoBuilder.pathfindToPose(new Pose2d(7, 3, Rotation2d.fromDegrees(12)), new PathConstraints(1, 1, Math.PI, Math.PI))));
-    SmartDashboard.putData("ScoreNet", new MoveSuperStructure(GameInfo.Net, 0));
-    SmartDashboard.putData("ScoreL4", new MoveSuperStructure(GameInfo.L4,0.6));
-    SmartDashboard.putData("ScoreL3", new MoveSuperStructure(GameInfo.L3, 0.6));
-    SmartDashboard.putData("ScoreL2", new MoveSuperStructure(GameInfo.L2, 0.6));
-    SmartDashboard.putData("ScoreL1", new MoveSuperStructure(GameInfo.L1, 0.6));
-    SmartDashboard.putData("Ground", new MoveSuperStructure(GameInfo.ground, 0));
+    SmartDashboard.putData("ScoreNet", new MoveSuperStructure(GameInfo.Net));
+    SmartDashboard.putData("ScoreL4", new MoveSuperStructure(GameInfo.L4));
+    SmartDashboard.putData("ScoreL3", new MoveSuperStructure(GameInfo.L3));
+    SmartDashboard.putData("ScoreL2", new MoveSuperStructure(GameInfo.L2));
+    SmartDashboard.putData("ScoreL1", new MoveSuperStructure(GameInfo.L1));
+    SmartDashboard.putData("Ground", new MoveSuperStructure(GameInfo.ground));
     SmartDashboard.putData("Spin Rollers Forward", EndEffector.get().spin(0.6));
     SmartDashboard.putData("Spin Rollers Reverse", EndEffector.get().spin(-0.6));
-    SmartDashboard.putData("Source", new MoveSuperStructure(GameInfo.Source, 0.0));
-    SmartDashboard.putData("Climb Up", new MoveSuperStructure(GameInfo.ClimbUp, 0));
-    SmartDashboard.putData("Climb Down", new MoveSuperStructure(GameInfo.ClimbDown, 0));
+    SmartDashboard.putData("Source", new MoveSuperStructure(GameInfo.Source));
+    SmartDashboard.putData("Climb Up", new MoveSuperStructure(GameInfo.ClimbUp));
+    SmartDashboard.putData("Climb Down", new MoveSuperStructure(GameInfo.ClimbDown));
 
   }
 
@@ -112,7 +113,7 @@ public class Robot extends TimedRobot {
 
   public Robot() {
 
-    // For remote layout downloading
+    // For remote layout downloading (Elastic)
     WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
 
     SmartDashboard.putData(CommandScheduler.getInstance());
@@ -120,9 +121,11 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData(Arm.get());
     SmartDashboard.putData(EndEffector.get());
     SmartDashboard.putData(Wrist.get());
+    SmartDashboard.putData(GroundCoral.get());
 
     Swerve.get().registerTelemetry(m_SwerveTelemetry::telemeterize);
 
+    //
     DriverStation.silenceJoystickConnectionWarning(true);
     configureDriverStationBinds();
 
@@ -138,11 +141,11 @@ public class Robot extends TimedRobot {
 
     NamedCommands.registerCommand("PIDtoNearest", new PIDtoNearest(true));
     NamedCommands.registerCommand("ScoreL4",
-        new MoveSuperStructure(GameInfo.L4, 0.6));
+        MoveSuperStructure.autoScore(GameInfo.L4));
     NamedCommands.registerCommand("ScoreL3",
-        Arm.get().Position(GameInfo.L3).alongWith(Elevator.get().positionCommand(GameInfo.L3)));
-    NamedCommands.registerCommand("ScoreL2", Elevator.get().positionCommand(GameInfo.L2));
-    NamedCommands.registerCommand("ScoreL1", Elevator.get().positionCommand(GameInfo.L1));
+        Arm.get().Position(GameInfo.L3).alongWith(MoveSuperStructure.autoScore(GameInfo.L3)));
+    NamedCommands.registerCommand("ScoreL2", MoveSuperStructure.autoScore(GameInfo.L2));
+    NamedCommands.registerCommand("ScoreL1", MoveSuperStructure.autoScore(GameInfo.L1));
     putCommandButtons();
     NamedCommands.registerCommand("hello", new InstantCommand(
         () -> SmartDashboard.putBoolean("auto", true)));
@@ -159,16 +162,18 @@ public class Robot extends TimedRobot {
     HumanControls.DriverPanel.resetGyro.onTrue(Commands.runOnce(()->Swerve.get().seedFieldCentric()).ignoringDisable(true));
     HumanControls.OperatorPanel2025.gyro.onTrue(new PrintCommand("Resetting Gyro").andThen(Commands.runOnce(()->Swerve.get().seedFieldCentric()).ignoringDisable(true)));
 
-    HumanControls.OperatorPanel2025.L1.whileTrue(new PrintCommand("L1").andThen(new MoveSuperStructure(GameInfo.L1, 0.6)));
-    HumanControls.OperatorPanel2025.L2.whileTrue(new PrintCommand("L2").andThen(new MoveSuperStructure(GameInfo.L2, 0.6)));
-    HumanControls.OperatorPanel2025.L3.whileTrue(new PrintCommand("L3").andThen(new MoveSuperStructure(GameInfo.L3, 0.6)));
-    HumanControls.OperatorPanel2025.L4.whileTrue(new MoveSuperStructure(GameInfo.L4, 0.6));
-    HumanControls.OperatorPanel2025.SouceCoral.whileTrue(new MoveSuperStructure(GameInfo.Source, -0.6));
-    HumanControls.OperatorPanel2025.Barge.whileTrue(new MoveSuperStructure(GameInfo.Net, 0.6));
-    HumanControls.OperatorPanel2025.Climb1.whileTrue(new MoveSuperStructure(GameInfo.ClimbUp, 0));
-    HumanControls.OperatorPanel2025.Climb2.whileTrue(new MoveSuperStructure(GameInfo.ClimbDown, 0));
-    HumanControls.OperatorPanel2025.Processor.whileTrue(new MoveSuperStructure(GameInfo.Processor, 0));
-    HumanControls.OperatorPanel2025.pickupAlgae.whileTrue(new ConditionalCommand(EndEffector.get().spin(-0.6), new MoveSuperStructure(GameInfo.ground, -0.6), ()->(HumanControls.OperatorPanel2025.L2.getAsBoolean()||HumanControls.OperatorPanel2025.L2.getAsBoolean())));
+    HumanControls.OperatorPanel2025.L1.whileTrue(new PrintCommand("L1").andThen(new MoveSuperStructure(GameInfo.L1)));
+    HumanControls.OperatorPanel2025.L2.whileTrue(new PrintCommand("L2").andThen(new MoveSuperStructure(GameInfo.L2)));
+    HumanControls.OperatorPanel2025.L3.whileTrue(new PrintCommand("L3").andThen(new MoveSuperStructure(GameInfo.L3)));
+    HumanControls.OperatorPanel2025.L4.whileTrue(new MoveSuperStructure(GameInfo.L4));
+    HumanControls.OperatorPanel2025.releaseCoral.whileTrue(EndEffector.get().spin(0.6));
+    HumanControls.OperatorPanel2025.SouceCoral.whileTrue(new MoveSuperStructure(GameInfo.Source));
+    HumanControls.OperatorPanel2025.GroundCoral.whileTrue(GroundCoral.get().Intake());
+    HumanControls.OperatorPanel2025.Barge.whileTrue(new MoveSuperStructure(GameInfo.Net));
+    HumanControls.OperatorPanel2025.Climb1.whileTrue(new MoveSuperStructure(GameInfo.ClimbUp));
+    HumanControls.OperatorPanel2025.Climb2.whileTrue(new MoveSuperStructure(GameInfo.ClimbDown));
+    HumanControls.OperatorPanel2025.Processor.whileTrue(new MoveSuperStructure(GameInfo.Processor));
+    HumanControls.OperatorPanel2025.pickupAlgae.whileTrue(new ConditionalCommand(EndEffector.get().spin(-0.6), new MoveSuperStructure(GameInfo.ground), ()->(HumanControls.OperatorPanel2025.L2.getAsBoolean()||HumanControls.OperatorPanel2025.L2.getAsBoolean())));
   }
 
   @Override
@@ -176,8 +181,7 @@ public class Robot extends TimedRobot {
     long start = RobotController.getTime();
     CommandScheduler.getInstance().run();
     long elapsed = RobotController.getTime() - start;
-    BackupLogger.addToQueue("SchedulerTimeMS", elapsed); // Scheduler Time in Microseconds, anything over 20,000 should
-                                                         // trigger the watchdog
+    BackupLogger.addToQueue("SchedulerTimeMS", elapsed); // Scheduler Time in Microseconds, anything over 20,000 should trigger the watchdog
     updateVision("limelight-corner");
     BackupLogger.logSystemInformation();
 

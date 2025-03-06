@@ -4,14 +4,12 @@
 
 package frc.robot;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.team696.lib.Swerve.Commands.TeleopSwerve;
 
 /** Add your docs here. */
 public final class HumanControls {
@@ -55,7 +53,7 @@ public final class HumanControls {
         public static final JoystickButton Climb1=new JoystickButton(OperatorPanel, 4);
         public static final JoystickButton Climb2=new JoystickButton(OperatorPanel, 3);
         public static final JoystickButton SouceCoral=new JoystickButton(OperatorPanel, 6);
-        //public static final JoystickButton GroundCoral=new JoystickButton(OperatorPanelA, 0);
+        public static final JoystickButton GroundCoral=new JoystickButton(OperatorPanel, 0);
         public static final JoystickButton Barge=new JoystickButton(OperatorPanel,2);
         public static final JoystickButton Processor=new JoystickButton(OperatorPanel, 1);
 
