@@ -7,10 +7,10 @@ package frc.robot.commands;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Wrist;
+import frc.robot.HumanControls;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.EndEffector;
-import frc.robot.util.GameInfo;
 import frc.robot.util.GameInfo.CoralScoringPosition;
 
 public class MoveSuperStructure extends Command {
@@ -19,10 +19,26 @@ public class MoveSuperStructure extends Command {
 
   double runRollers = 0;
 
-  public MoveSuperStructure(CoralScoringPosition position) {
+  double postRollerState = 0;
+
+  boolean requirePress = true;
+
+  public MoveSuperStructure(CoralScoringPosition position, double runRollers, boolean requirePress, double postRollerState) {
     this.position = position;
 
-    addRequirements(Arm.get(), Elevator.get(), Wrist.get());
+    this.runRollers = runRollers;
+
+    this.postRollerState = postRollerState;
+
+    this.requirePress = requirePress;
+
+    addRequirements(Arm.get(), Elevator.get(), Wrist.get(), EndEffector.get());
+  }
+
+
+
+  public MoveSuperStructure(CoralScoringPosition position, double runRollers) {
+    this(position, runRollers, true, 0.);
   }
 
   // Called when the command is initially scheduled.
@@ -36,10 +52,10 @@ public class MoveSuperStructure extends Command {
     Wrist.get().goToPosition(position);
     Elevator.get().goToPosition(position);
 
-    //if (Math.abs(Wrist.get().getPosition() - position.wristRot.in(Units.Rotation)) < 2 && Math.abs(Arm.get().getPosition() - position.armRot.in(Units.Rotation)) < 2 && Math.abs(Elevator.get().getPosition() - position.height) < 2 )
-    //  EndEffector.get().run(runRollers);
-    //else  
-    //  EndEffector.get().stop();
+    if ((!requirePress || HumanControls.OperatorPanel2025.releaseCoral.getAsBoolean()) && Math.abs(Wrist.get().getPosition() - position.wristRot.in(Units.Rotation)) < .5 && Math.abs(Arm.get().getPosition() - position.armRot.in(Units.Rotation)) < .5 && Math.abs(Elevator.get().getPosition() - position.height) < .5 )
+      EndEffector.get().run(runRollers);
+    else   
+      EndEffector.get().run(EndEffector.get().idlePower);
   }
 
   // Called once the command ends or is interrupted.
@@ -48,23 +64,12 @@ public class MoveSuperStructure extends Command {
     Arm.get().stop();
     Wrist.get().stop();
     Elevator.get().stop();
-    
-    //EndEffector.get().stop();
+    EndEffector.get().idlePower = postRollerState;
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;
-  }
-
-  public static boolean atPosition(CoralScoringPosition position){
-    return Math.abs(Wrist.get().getPosition() - position.wristRot.in(Units.Rotation)) < 2 && Math.abs(Arm.get().getPosition() - position.armRot.in(Units.Rotation)) < 2 && Math.abs(Elevator.get().getPosition() - position.height) < 2 ;
-  }
-  public static Command autoScore(CoralScoringPosition position){
-    return new MoveSuperStructure(position).andThen((new MoveSuperStructure(position).alongWith(EndEffector.get().spin(0.6)).withTimeout(1)));
-  }
-  public static Command autoSource(){
-    return new MoveSuperStructure(GameInfo.Source).alongWith(EndEffector.get().spin(-0.6)).unless(EndEffector.get()::isStalling);
   }
 }

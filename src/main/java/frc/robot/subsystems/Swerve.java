@@ -342,6 +342,16 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
         return rot;
     }
 
+        /**
+     * @param robot Robot's current position
+     * @param position Position to angle to
+     * @return Angle to Position
+     */
+    public Rotation2d angleTo(Translation2d robot, Translation2d goal) {
+        Translation2d delta = robot.minus(goal);
+        Rotation2d rot = Rotation2d.fromRadians(Math.atan2(delta.getY(), delta.getX()));
+        return rot;
+    }
     /**
      * 
      * @param position Position for angle to

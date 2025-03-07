@@ -7,12 +7,16 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.HumanControls.OperatorPanel2025;
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.GameInfo;
 import frc.robot.util.PoseUtil;
+import frc.robot.util.GameInfo.ReefSide;
 import frc.team696.lib.Logging.BackupLogger;
 
 /**
@@ -51,13 +55,20 @@ public class PIDtoNearest extends Command {
     this.ignoreLR=ignoreLR;
   }
 
+  public Pose2d getGoalPose(){
+    Translation2d goalTranslation;
+    if(ignoreLR)
+      goalTranslation=GameInfo.findClosestTranslation(Swerve.get().getState().Pose);
+    else
+      goalTranslation=GameInfo.findClosestTranslation(Swerve.get().getState().Pose, OperatorPanel2025.leftOrRight.getAsBoolean()?ReefSide.Left:ReefSide.Right);
+    Rotation2d goalRot=Swerve.get().angleTo(goalTranslation, GameInfo.blueReef);
+    return new Pose2d(goalTranslation, goalRot);
+  }
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if(ignoreLR)
-      goalPose=PoseUtil.findClosestPose(GameInfo.getFieldSide().both, Swerve.get().getState().Pose);
-    else
-      goalPose=PoseUtil.findClosestPose(GameInfo.getFieldSide().left, Swerve.get().getState().Pose);
+    goalPose=getGoalPose();
     Pose2d currPose=Swerve.get().getState().Pose;
     xController.reset(currPose.getX());
     yController.reset(currPose.getY());
@@ -98,5 +109,5 @@ public class PIDtoNearest extends Command {
   @Override
   public boolean isFinished() {
     return atGoalPose(goalPose, Swerve.get().getState().Pose);    
-  }
+  }    
 }

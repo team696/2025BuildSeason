@@ -4,22 +4,20 @@
 
 package frc.robot.util;
 
-import static edu.wpi.first.units.Units.Degree;
+import static edu.wpi.first.units.Units.Feet;
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Rotation;
 
-import java.util.Arrays;
-import java.util.stream.Stream;
+import java.util.Map;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.HumanControls;
+import edu.wpi.first.units.measure.Distance;
 
 /**
- * A class contianing all the positions needed to move the superstructure into a
- * scoring position
+ * A class which contains all the positions needed for actions related to the
+ * game
  */
 public class GameInfo {
     public static class CoralScoringPosition {
@@ -38,92 +36,164 @@ public class GameInfo {
         }
 
         public double height;
-        /* As measured from the vertical normal (arm facing up) */
+        // Rotations of the Motor, Im too lazy to change off angle now
         public Angle armRot;
         public Angle wristRot;
     }
 
-    public static CoralScoringPosition L1, L2, L3, L4, Net, Source, ground, ClimbUp, ClimbDown, Processor;
+    public static CoralScoringPosition Net, ground, Processor, ClimbUp, ClimbDown, L2Algae, L3Algae;
 
-    public static class FieldSide {
-        public Pose2d[] left, right, both;
+    /* Looking at the Index Dead On */
+    public enum ReefSide {
+        Right,
+        Left
     }
 
-    public static FieldSide red, blue;
-
-    public static FieldSide getFieldSide() {
-        return DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? blue : red;
+    /* Labels For Blue Side Of Field, Relative To Center Of Hex */
+    public enum Index {
+        One, // -X
+        Two, // -X, +Y
+        Three, // +X, +Y
+        Four, // +X
+        Five, // +X, -Y
+        Six // -X, -Y
     }
 
-    public static Pose2d[] getScoringPoses() {
-        return HumanControls.OperatorPanel2025.leftOrRight.getAsBoolean() ? getFieldSide().left : getFieldSide().right;
+    public final static Distance fieldLengthMeters = Feet.of(57.53);
+    public final static Distance fieldWidthMeters = Feet.of(26.75);
+
+    public static Translation2d mirrorTranslation(Translation2d starting) {
+        return new Translation2d(fieldLengthMeters.in(Meters) - starting.getY(), starting.getY());
     }
+
+    public final static Translation2d blueReef = new Translation2d(4.5, 4.);
+
+    public final static Map<Index, Map<ReefSide, Translation2d>> ScoringPosesBlue;
+    public final static Map<Index, Map<ReefSide, Translation2d>> ScoringPosesRed=null;
+    public enum Position {
+        L1,
+        L2,
+        L3,
+        L4,
+        Intake
+    }
+
+    public enum RobotSide {
+        Front,
+        Back
+    }
+
+    public final static Map<Position, Map<RobotSide, CoralScoringPosition>> ScoringPositions;
 
     static {
-        blue = new FieldSide();
-        // TODO: determine the real scoring poses
-        blue.left = new Pose2d[] {
-                new Pose2d(3.539, 4.912, Rotation2d.fromDegrees(-60 + 180)),
-                new Pose2d(3.179, 3.752, Rotation2d.fromDegrees(0 + 180)),
-                new Pose2d(4.056, 2.689, Rotation2d.fromDegrees(60 + 180)),
-                new Pose2d(5.450, 2.992, Rotation2d.fromDegrees(120 + 180)),
-                new Pose2d(5.850, 4.376, Rotation2d.fromDegrees(180 + 180)),
-                new Pose2d(4.924, 5.351, Rotation2d.fromDegrees(-120 + 180))
-        };
-        blue.right = new Pose2d[] {
-                new Pose2d(4.046, 5.322, Rotation2d.fromDegrees(-60 + 180)),
-                new Pose2d(3.188, 4.473, Rotation2d.fromDegrees(0 + 180)),
-                new Pose2d(3.481, 3.050, Rotation2d.fromDegrees(60 + 180)),
-                new Pose2d(4.836, 2.679, Rotation2d.fromDegrees(120 + 180)),
-                new Pose2d(5.821, 3.762, Rotation2d.fromDegrees(180 + 180)),
-                new Pose2d(5.489, 4.932, Rotation2d.fromDegrees(-120 + 180))
-        };
-        blue.both = Stream.concat(Arrays.stream(blue.left), Arrays.stream(blue.right))
-                .toArray(size -> new Pose2d[size]);
+        ScoringPosesBlue = Map.of(
+                Index.One, Map.of(
+                        ReefSide.Right, new Translation2d(4.046, 5.322),
+                        ReefSide.Left, new Translation2d(3.539, 4.912)),
 
-        // The red poses are mirrored from the blue scoring poses
-        red = new FieldSide();
-        red.left = Arrays.stream(blue.left).map(pose -> PoseUtil.mirrorPoseX(pose)).toArray(size -> new Pose2d[size]);
+                Index.Two, Map.of(
+                        ReefSide.Right, new Translation2d(3.188, 4.473),
+                        ReefSide.Left, new Translation2d(3.179, 3.752)),
 
-        red.right = Arrays.stream(blue.right).map(pose -> PoseUtil.mirrorPoseX(pose)).toArray(size -> new Pose2d[size]);
+                Index.Three, Map.of(
+                        ReefSide.Right, new Translation2d(3.481, 3.050),
+                        ReefSide.Left, new Translation2d(4.056, 2.689)),
 
-        red.both = Stream.concat(Arrays.stream(red.left), Arrays.stream(red.right)).toArray(size -> new Pose2d[size]);
+                Index.Four, Map.of(
+                        ReefSide.Right, new Translation2d(4.836, 2.679),
+                        ReefSide.Left, new Translation2d(5.450, 2.992)),
 
-        L1 = new CoralScoringPosition(0., 1.75, 0.45);
-        L2 = new CoralScoringPosition(8., 1.75, 0.45);
-        L3 = new CoralScoringPosition(30., 1.75, .45);
-        L4 = new CoralScoringPosition(67., 0.7, .65);
-        Net = new CoralScoringPosition(67., 0., 2.5);
-        ClimbUp=new CoralScoringPosition(27, -8., 0);
-        ClimbDown=new CoralScoringPosition(2, -8., 0);
-        // TODO: actually configure this position
-        Source = new CoralScoringPosition(0, -1.75, .65);
-        
-        ground=new CoralScoringPosition(5., 8.2, 4.3);
-        Processor=new CoralScoringPosition(0, 0, 0);
-        /**
-         * this puts the values on networktables so scoring positions can be quickly
-         * changed
-         * comment this out once the scoring positions are finalized
-         
-        new TriggerNTDouble("testing/L1/height", L1.height, height -> L1.height = height);
-        new TriggerNTDouble("testing/L2/height", L2.height, height -> L2.height = height);
-        new TriggerNTDouble("testing/L3/height", L3.height, height -> L3.height = height);
-        new TriggerNTDouble("testing/L4/height", L4.height, height -> L4.height = height);
-        new TriggerNTDouble("testing/ground/height", ground.height, height -> ground.height = height);
+                Index.Five, Map.of(
+                        ReefSide.Right, new Translation2d(5.821, 3.762),
+                        ReefSide.Left, new Translation2d(5.850, 4.376)),
 
-        new TriggerNTDouble("testing/L1/armRot", L1.armRot.in(Rotation), rot -> L1.armRot = Rotation.of(rot));
-        new TriggerNTDouble("testing/L2/armRot", L2.armRot.in(Rotation), rot -> L2.armRot = Rotation.of(rot));
-        new TriggerNTDouble("testing/L3/armRot", L3.armRot.in(Rotation), rot -> L3.armRot = Rotation.of(rot));
-        new TriggerNTDouble("testing/L4/armRot", L4.armRot.in(Rotation), rot -> L4.armRot = Rotation.of(rot));
-        new TriggerNTDouble("testing/ground/armRot", ground.armRot.in(Rotation), rot -> ground.armRot = Rotation.of(rot));
+                Index.Six, Map.of(
+                        ReefSide.Right, new Translation2d(5.489, 4.932),
+                        ReefSide.Left, new Translation2d(4.924, 5.351)));
 
-        new TriggerNTDouble("testing/L1/wristRot", L1.wristRot.in(Rotation), rot -> L1.wristRot = Rotation.of(rot));
-        new TriggerNTDouble("testing/L2/wristRot", L2.wristRot.in(Rotation), rot -> L2.wristRot = Rotation.of(rot));
-        new TriggerNTDouble("testing/L3/wristRot", L3.wristRot.in(Rotation), rot -> L3.wristRot = Rotation.of(rot));
-        new TriggerNTDouble("testing/L4/wristRot", L4.wristRot.in(Rotation), rot -> L4.wristRot = Rotation.of(rot));
-        new TriggerNTDouble("testing/ground/wristRot", ground.wristRot.in(Rotation), rot -> ground.wristRot = Rotation.of(rot));
-        */
+        ScoringPositions = Map.of(
+                Position.L1, Map.of(
+                        RobotSide.Front, new CoralScoringPosition(0., 1.75, 1.1),
+                        RobotSide.Back, new CoralScoringPosition(0, -1., -8.)),
+                Position.L2, Map.of(
+                        RobotSide.Front, new CoralScoringPosition(14., 1.75, 1.56),
+                        RobotSide.Back, new CoralScoringPosition(7., -1., -7.6)),
+                Position.L3, Map.of(
+                        RobotSide.Front, new CoralScoringPosition(33., 1.75, 1.1),
+                        RobotSide.Back, new CoralScoringPosition(25., -1., -7.9)),
+                Position.L4, Map.of(
+                        RobotSide.Front, new CoralScoringPosition(67., 0.7, 1.6),
+                        RobotSide.Back, new CoralScoringPosition(62, -1.1, -8.3)),
+                Position.Intake, Map.of(
+                        RobotSide.Front, new CoralScoringPosition(6., 1., -0.9),
+                        RobotSide.Back, new CoralScoringPosition(0, 0, 0))
+
+        );
+
+        L2Algae = new CoralScoringPosition(18., -3., 1.);
+        L3Algae = new CoralScoringPosition(44., -3., 1.);
+
+        Net = new CoralScoringPosition(67., 0., 5.8);
+        ClimbUp = new CoralScoringPosition(27, 0, 0);
+        ClimbDown = new CoralScoringPosition(2, 0, 0);
+        ground = new CoralScoringPosition(5., -6.3, -.5);
+        Processor = new CoralScoringPosition(0, 7., 11.9);
     }
+
+    /**
+     * Finds the closest scoring pose
+     *
+     * @param referencePose The Pose2d to find the closest Pose2d to. Must not be
+     *                      null.
+     * @return The Pose2d that is closest to the referencePose.
+     * @throws IllegalArgumentException if referenceose is null.
+     */
+    public static Translation2d findClosestTranslation(Pose2d referencePose) {
+        if (referencePose == null) {
+            throw new IllegalArgumentException("referencePose cannot be null");
+        }
+
+        Translation2d closestPose = null;
+        double minDistance = Double.MAX_VALUE; // Initialize with a very large value
+
+        for (var entry : ScoringPosesBlue.entrySet()) {
+            // Calculate the squared Euclidean distance between the translations
+            for (var poseEntry : entry.getValue().entrySet()) {
+                Translation2d pose = poseEntry.getValue();
+                Translation2d referenceTranslation = referencePose.getTranslation();
+                double distance = referenceTranslation.getDistance(pose);
+
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestPose = pose;
+                }
+            }
+        }
+
+        return closestPose;
+    }
+    public static Translation2d findClosestTranslation(Pose2d referencePose, ReefSide side) {
+        if (referencePose == null) {
+            throw new IllegalArgumentException("referencePose cannot be null");
+        }
+
+        Translation2d closestPose = null;
+        double minDistance = Double.MAX_VALUE; // Initialize with a very large value
+
+            // Calculate the squared Euclidean distance between the translations
+            for (var poseEntry : ScoringPosesBlue.get(side).entrySet()) {
+                Translation2d pose = poseEntry.getValue();
+                Translation2d referenceTranslation = referencePose.getTranslation();
+                double distance = referenceTranslation.getDistance(pose);
+
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestPose = pose;
+                }
+            }
+
+        return closestPose;
+    }
+
 
 }

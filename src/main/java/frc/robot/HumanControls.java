@@ -11,7 +11,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-/** Add your docs here. */
+/**
+ * A class to define the various human-operated control methods. 
+ */
 public final class HumanControls {
     /*public final class OperatorPanel2024{
         public static final Joystick operatorPanel = new Joystick(1);
@@ -48,7 +50,7 @@ public final class HumanControls {
         //public static final JoystickButton F2=null;
         //public static final JoystickButton F3=null;
         public static final JoystickButton releaseCoral=new JoystickButton(OperatorPanel, 7);
-        public static final JoystickButton pickupAlgae=new JoystickButton(OperatorPanel, 9);
+        public static final JoystickButton pickupAlgae=new JoystickButton(OperatorPanel, 8);
         public static final JoystickButton gyro=new JoystickButton(OperatorPanel, 13);
         public static final JoystickButton Climb1=new JoystickButton(OperatorPanel, 4);
         public static final JoystickButton Climb2=new JoystickButton(OperatorPanel, 3);

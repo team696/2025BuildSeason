@@ -20,7 +20,6 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.BotConstants;
@@ -52,8 +51,7 @@ public class EndEffector extends SubsystemBase {
   StatusSignal<Voltage> voltageSignal;
   StatusSignal<Current> currentSignal;
 
-  // TODO: find the  pin number
-  DigitalInput beambreak=new DigitalInput(0);
+  public double idlePower = 0;
 
   public EndEffector() {
     motor.getConfigurator().apply(BotConstants.EndEffector.cfg);
@@ -79,30 +77,42 @@ public class EndEffector extends SubsystemBase {
    * @return the command
    */
   public Command spin(double power) {
-    return this.startEnd(() -> motor.setControl(VoltageRequest.withOutput(power * 12)), () -> motor.set(0));
+    return this.startEnd(() -> run(power), () -> motor.set(0));
   }
 
+  public boolean isStalling(){
+  
+    return motor.getStatorCurrent().getValue().in(Amps) >= BotConstants.EndEffector.cfg.CurrentLimits.StatorCurrentLimit && velocitySignal.getValue().in(RotationsPerSecond) < 5;
+  }
+
+  
+
   public Command spin(DoubleSupplier power) {
-    return this.runEnd(() -> motor.setControl(VoltageRequest.withOutput(power.getAsDouble() * 12)), () -> motor.set(0));
+    return this.runEnd(() -> run(power.getAsDouble()), () -> motor.set(0));
   }
 
   public Command spinVelocity(double velocity) {
     return this.startEnd(() -> motor.setControl(velocityOut.withVelocity(velocity)), () -> motor.set(0));
   }
 
-  public double getCurrentAmps(){
-    return currentSignal.getValue().in(Amps);
-  }
-  public boolean isStalling(){
-    return getCurrentAmps()>=BotConstants.EndEffector.cfg.CurrentLimits.StatorCurrentLimit-4;
-  }
-
-  public boolean hasCoral(){
-    return !beambreak.get();
-  }
-
   @Override
   public void periodic() {
+     
+    // if (isStalling() && BotConstants.Wrist.cfg.MotionMagic.MotionMagicCruiseVelocity == 10. ) {
+    //   BotConstants.Wrist.cfg.MotionMagic.MotionMagicCruiseVelocity = 6.;
+    //   BotConstants.Wrist.cfg.MotionMagic.MotionMagicAcceleration = 6.;
+    //   //Wrist.get().motor.getConfigurator().apply(BotConstants.Wrist.cfg.MotionMagic);
+    //  // idlePower = -0.8;
+    // } else if (!isStalling()) {
+    //   if (BotConstants.Wrist.cfg.MotionMagic.MotionMagicCruiseVelocity < 16.) {
+    //     BotConstants.Wrist.cfg.MotionMagic.MotionMagicCruiseVelocity = 10.;
+    //     BotConstants.Wrist.cfg.MotionMagic.MotionMagicAcceleration = 16.;
+    //     //Wrist.get().motor.getConfigurator().apply(BotConstants.Wrist.cfg.MotionMagic);
+    //   }
+    //   //idlePower = 0.;
+    // }
+      
+    
     // This method will be called once per scheduler run
     BackupLogger.addToQueue("EndEffector/VelocityRpsSquared", velocitySignal.refresh().getValue().in(RotationsPerSecond));
     BackupLogger.addToQueue("EndEffector/CurrentAmps", currentSignal.refresh().getValue().in(Amps));
