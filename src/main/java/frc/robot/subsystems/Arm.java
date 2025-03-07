@@ -67,7 +67,6 @@ public class Arm extends SubsystemBase {
 
     zeroArm();
     // this.setDefaultCommand(Position(()->0));
-    this.setDefaultCommand(ArmWithNTPosition());
     new TriggerNTDouble("testing/armAngle", ntpos, (ev) -> ntpos = ev);
 
     SmartDashboard.putData("ArmPlus", Spin(0.1));

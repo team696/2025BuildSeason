@@ -48,7 +48,6 @@ public class Elevator extends SubsystemBase {
       .linearPosition(Meters.of(master.getPosition()))
       .linearVelocity(MetersPerSecond.of(master.getVelocity()));
     }, this));
-    this.setDefaultCommand(positionCommand(0));
     SmartDashboard.putData("Elevator duty cycle up", runDutyCycle());
   }
 

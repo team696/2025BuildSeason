@@ -370,6 +370,22 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
     }
 
     public Rotation2d FaceNet() {
-        return Util.getAlliance() == Alliance.Blue ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180);
+        return Util.getAlliance() == Alliance.Blue ? Rotation2d.fromDegrees(-90) : Rotation2d.fromDegrees(90);
+    }
+
+    public Rotation2d FaceSource() {
+        if (Util.getAlliance() == Alliance.Blue) {
+            if (getPose().getY() > GameInfo.fieldWidthMeters.in(Meters) / 2) {
+                return Rotation2d.fromDegrees(-45);
+            } else {
+                return Rotation2d.fromDegrees(45);
+            }
+        } else {
+            if (getPose().getY() > GameInfo.fieldWidthMeters.in(Meters) / 2) {
+                return Rotation2d.fromDegrees(135);
+            } else {
+                return Rotation2d.fromDegrees(-135);
+            }
+        }
     }
 }

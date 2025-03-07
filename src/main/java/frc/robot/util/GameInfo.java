@@ -52,11 +52,11 @@ public class GameInfo {
         public Angle wristRot;
     }
 
-    public static CoralScoringPosition L1, L2, L3, L4, Net, Intake, ground, ClimbUp, ClimbDown;
+    public static CoralScoringPosition Net, ground, Processor, ClimbUp, ClimbDown, L2Algae, L3Algae;
 
 
     /* Looking at the Index Dead On */
-    public enum Side {
+    public enum ReefSide {
         Right,
         Left
     }
@@ -72,6 +72,7 @@ public class GameInfo {
     }
 
     public final static Distance fieldLengthMeters = Feet.of(57.53);
+    public final static Distance fieldWidthMeters = Feet.of(26.75);
 
     public static Translation2d mirrorTranslation(Translation2d starting) {
         return new Translation2d(fieldLengthMeters.in(Meters) - starting.getY(), starting.getY());
@@ -79,52 +80,88 @@ public class GameInfo {
 
     public final static Translation2d blueReef = new Translation2d(4.5,4.);
 
-    public final static Map<Index, Map<Side, Translation2d>> ScoringPosesBlue;
+    public final static Map<Index, Map<ReefSide, Translation2d>> ScoringPosesBlue;
     
+    public enum Position {
+        L1,
+        L2, 
+        L3,
+        L4,
+        Intake
+    }
+
+    public enum RobotSide {
+        Front,
+        Back
+    }
+
+    public final static Map<Position, Map<RobotSide, CoralScoringPosition>> RobotState;
+
     static {
         ScoringPosesBlue = Map.of(
             Index.One, Map.of(
-                Side.Right, new Translation2d(4.046, 5.322),
-                Side.Left, new Translation2d(3.539, 4.912)
+                ReefSide.Right, new Translation2d(4.046, 5.322),
+                ReefSide.Left, new Translation2d(3.539, 4.912)
             ),
             
             Index.Two, Map.of(
-                Side.Right, new Translation2d(3.188, 4.473),
-                Side.Left, new Translation2d(3.179, 3.752)
+                ReefSide.Right, new Translation2d(3.188, 4.473),
+                ReefSide.Left, new Translation2d(3.179, 3.752)
             ),
             
             Index.Three, Map.of(
-                Side.Right, new Translation2d(3.481, 3.050),
-                Side.Left, new Translation2d(4.056, 2.689)
+                ReefSide.Right, new Translation2d(3.481, 3.050),
+                ReefSide.Left, new Translation2d(4.056, 2.689)
             ),
             
             Index.Four, Map.of(
-                Side.Right, new Translation2d(4.836, 2.679),
-                Side.Left, new Translation2d(5.450, 2.992)
+                ReefSide.Right, new Translation2d(4.836, 2.679),
+                ReefSide.Left, new Translation2d(5.450, 2.992)
             ),
             
             Index.Five, Map.of(
-                Side.Right, new Translation2d(5.821, 3.762),
-                Side.Left, new Translation2d(5.850, 4.376)
+                ReefSide.Right, new Translation2d(5.821, 3.762),
+                ReefSide.Left, new Translation2d(5.850, 4.376)
             ),
             
             Index.Six, Map.of(
-                Side.Right, new Translation2d(5.489, 4.932),
-                Side.Left, new Translation2d(4.924, 5.351)
+                ReefSide.Right, new Translation2d(5.489, 4.932),
+                ReefSide.Left, new Translation2d(4.924, 5.351)
             )
         );
 
+        RobotState = Map.of(
+            Position.L1, Map.of(
+                RobotSide.Front, new CoralScoringPosition(0., 1.75, 1.1),
+                RobotSide.Back, new CoralScoringPosition(0, -1., -8.)
+            ),
+            Position.L2, Map.of(
+                RobotSide.Front, new CoralScoringPosition(14., 1.75, 1.56),
+                RobotSide.Back, new CoralScoringPosition(7., -1., -7.6)
+            ),
+            Position.L3, Map.of(
+                RobotSide.Front, new CoralScoringPosition(33., 1.75, 1.1),
+                RobotSide.Back, new CoralScoringPosition(25., -1., -7.9)
+            ),
+            Position.L4, Map.of(
+                RobotSide.Front, new CoralScoringPosition(67., 0.7, 1.6),
+                RobotSide.Back, new CoralScoringPosition(62, -1.1, -8.3)
+            ),
+            Position.Intake, Map.of(
+                RobotSide.Front, new CoralScoringPosition(6., 1., -0.9),
+                RobotSide.Back, new CoralScoringPosition(0, 0, 0)
+            )
+            
+        );
 
+        L2Algae = new CoralScoringPosition (18., -3., 1.);
+        L3Algae = new CoralScoringPosition (44., -3., 1.);
 
-        L1 = new CoralScoringPosition(0., 1.75, 0.45);
-        L2 = new CoralScoringPosition(8., 1.75, 0.45);
-        L3 = new CoralScoringPosition(30., 1.75, .45);
-        L4 = new CoralScoringPosition(67., 0.7, .65);
-        Net = new CoralScoringPosition(67., 0., 2.5);
-        ClimbUp=new CoralScoringPosition(27, -8., 0);
-        ClimbDown=new CoralScoringPosition(2, -8., 0);
-        Intake = new CoralScoringPosition(0, -1.75, 3.6);
-        ground=new CoralScoringPosition(5., 8.2, 4.3);
+        Net = new CoralScoringPosition(67., 0., 5.8);
+        ClimbUp=new CoralScoringPosition(27, 0, 0);
+        ClimbDown=new CoralScoringPosition(2, 0, 0);
+        ground=new CoralScoringPosition(5., -6.3, -.5);
+        Processor = new CoralScoringPosition(0, 7., 11.9);
     }
 
 }

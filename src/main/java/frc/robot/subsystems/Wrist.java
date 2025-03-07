@@ -35,7 +35,7 @@ public class Wrist extends SubsystemBase {
     return m_Wrist;
   }
 
-  private TalonFX motor = new TalonFX(BotConstants.Wrist.motorID, BotConstants.rioBus);
+  public TalonFX motor = new TalonFX(BotConstants.Wrist.motorID, BotConstants.rioBus);
 
   StatusSignal<AngularVelocity> velocitySignal;
   StatusSignal<Angle> positionSignal;
@@ -53,7 +53,6 @@ public class Wrist extends SubsystemBase {
     positionSignal = motor.getPosition();
     voltageSignal = motor.getMotorVoltage();
     currentSignal = motor.getStatorCurrent();
-    this.setDefaultCommand(Position(0));
     SmartDashboard.putData("Zero Wrist", this.runOnce(() -> zero()).ignoringDisable(true));
   }
 
@@ -72,17 +71,25 @@ public class Wrist extends SubsystemBase {
   public double getPosition() {
     return positionSignal.getValueAsDouble();
   }
+
   public Command Position(double position){
-    return this.startEnd(()->motor.setControl(WristPoistionRequest.withPosition(position)), ()->motor.set(0.0));
+    return this.runEnd(()->goToPosition(position), ()->motor.set(0.0));
+  }
+
+  public void goToPosition(double position) {
+    motor.setControl(WristPoistionRequest.withPosition(position));
+
   }
 
   public void goToPosition(CoralScoringPosition position){
-    motor.setControl(WristPoistionRequest.withPosition(position.wristRot.in(Rotation)));
+    goToPosition(position.wristRot.in(Rotation));
   }
 
 
   @Override
   public void periodic() {
+    
+
     // This method will be called once per scheduler run
     BackupLogger.addToQueue("Wrist/VelocityRpsSquared", velocitySignal.refresh().getValue().in(RotationsPerSecond));
     BackupLogger.addToQueue("Wrist/CurrentAmps", currentSignal.refresh().getValue().in(Amps));

@@ -33,13 +33,13 @@ public class BotConstants {
         static {
             cfg = new TalonFXConfiguration();
             cfg.Slot0.kP = 6.;
-            //cfg.Slot0.kG = 0.05;
+            cfg.Slot0.kG = 0.05;
             //cfg.Slot0.kS = 0.02;
             cfg.Slot0.GravityType = GravityTypeValue.Elevator_Static;
             cfg.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseVelocitySign;
 
             cfg.MotionMagic.MotionMagicCruiseVelocity = 100.;
-            cfg.MotionMagic.MotionMagicAcceleration = 75.;
+            cfg.MotionMagic.MotionMagicAcceleration = 120.;
             cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
             cfg.CurrentLimits.StatorCurrentLimit = 120.;
             cfg.CurrentLimits.StatorCurrentLimitEnable = true;
@@ -57,9 +57,9 @@ public class BotConstants {
             cfg.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
             cfg.Slot0.kP = 8.;
             cfg.CurrentLimits.StatorCurrentLimitEnable = true;
-            cfg.CurrentLimits.StatorCurrentLimit = 120.;
+            cfg.CurrentLimits.StatorCurrentLimit = 100.;
             cfg.MotionMagic.MotionMagicCruiseVelocity = 80.;
-            cfg.MotionMagic.MotionMagicAcceleration = 80.;
+            cfg.MotionMagic.MotionMagicAcceleration = 65.;
 
             cfg.Slot0.kG = 0;
         }
@@ -71,11 +71,11 @@ public class BotConstants {
         static {
             cfg.Slot0.kP = 32.;
 
-            cfg.MotionMagic.MotionMagicAcceleration = 16.;
-            cfg.MotionMagic.MotionMagicCruiseVelocity = 10.;
+            cfg.MotionMagic.MotionMagicAcceleration = 40.;
+            cfg.MotionMagic.MotionMagicCruiseVelocity = 20.;
             cfg.CurrentLimits.StatorCurrentLimitEnable = false;
             cfg.CurrentLimits.SupplyCurrentLimitEnable=false;
-            cfg.CurrentLimits.StatorCurrentLimit = 80.;
+            cfg.CurrentLimits.StatorCurrentLimit = 120.;
         }
 
     }
@@ -85,21 +85,7 @@ public class BotConstants {
         public static TalonFXConfiguration cfg = new TalonFXConfiguration();
         static {
             cfg.CurrentLimits.StatorCurrentLimitEnable = true;
-            cfg.CurrentLimits.StatorCurrentLimit = 120.;
-        }
-    }
-
-    public static class ClimberIntake {
-        public static int masterID = 0;
-        public static int slaveID = 1;
-        public static TalonFXConfiguration cfg = new TalonFXConfiguration();
-        static {
-            cfg.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-            cfg.CurrentLimits.StatorCurrentLimitEnable = true;
-            cfg.CurrentLimits.StatorCurrentLimit = 120.;
-            cfg.MotionMagic.MotionMagicCruiseVelocity = 20.;
-            cfg.MotionMagic.MotionMagicAcceleration = 15.;
-            cfg.MotionMagic.MotionMagicJerk = 30.;
+            cfg.CurrentLimits.StatorCurrentLimit = 80.;
         }
     }
 
