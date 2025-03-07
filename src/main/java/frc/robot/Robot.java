@@ -12,14 +12,9 @@ import com.ctre.phoenix6.Utils;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathfindingCommand;
-import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -29,19 +24,16 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.MoveSuperStructure;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Wrist;
 import frc.robot.util.GameInfo;
-import frc.robot.util.GameInfo.CoralScoringPosition;
 import frc.team696.lib.Camera.LimelightHelpers;
 import frc.team696.lib.Logging.BackupLogger;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.EndEffector;
-import frc.robot.HumanControls.OperatorPanel2025;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -49,10 +41,6 @@ public class Robot extends TimedRobot {
   private double MaxRotationalRate = RotationsPerSecond.of(10).in(RadiansPerSecond);
   private SwerveTelemetry m_SwerveTelemetry = new SwerveTelemetry(MaxSpeed);
 
-  private void configureBinds() {
-    OperatorPanel2025.gyro.onTrue(new InstantCommand(() -> Swerve.get().seedFieldCentric()));
-    OperatorPanel2025.releaseCoral.onTrue(new InstantCommand());
-  }
 
   private void logBuildInfo() {
     BackupLogger.addToQueue("BuildConstants/ProjectName", BuildConstants.MAVEN_NAME);
@@ -78,12 +66,6 @@ public class Robot extends TimedRobot {
     return Math.abs(x) < deadband ? 0 : x;
   }
 
-  public void putCommandButtons() {
-    SmartDashboard.putData("pathfindToMiddle", new PrintCommand("s").andThen(
-      AutoBuilder.pathfindToPose(new Pose2d(7, 3, Rotation2d.fromDegrees(12)), new PathConstraints(1, 1, Math.PI, Math.PI))));
-  
-
-  }
 
   public void putSwerveSysIDCalibrationButtons() {
     SmartDashboard.putData("CTRESwerveCalibrationc/DynamicForward",
@@ -113,7 +95,6 @@ public class Robot extends TimedRobot {
     // Log Build information
     logBuildInfo();
 
-    // TODO: Restore TeleopSwerve
     Swerve.get().setDefaultCommand(Swerve.get().applyRequest(
         () -> Swerve.fcDriveReq.withVelocityX(
             Math.pow(applyDeadband(HumanControls.DriverPanel.leftJoyY.getAsDouble(), 0.08),2) * Math.signum(HumanControls.DriverPanel.leftJoyY.getAsDouble()) * MaxSpeed)
@@ -137,7 +118,6 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putData("Reset Gyro", Commands.runOnce(() -> Swerve.get().seedFieldCentric()));
 
-    putCommandButtons();
     NamedCommands.registerCommand("hello", new InstantCommand(
         () -> SmartDashboard.putBoolean("auto", true)));
 

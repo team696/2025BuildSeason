@@ -10,8 +10,6 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
-import frc.robot.util.TriggerNTDouble;
-
 /**
  * Constants for robot mechanisms unrelated to the drive train
  */

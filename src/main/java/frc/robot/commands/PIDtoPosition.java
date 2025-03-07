@@ -23,11 +23,6 @@ public class PIDtoPosition extends Command {
   private ProfiledPIDController xController, yController, omegaController;
   private Pose2d goalPose;
 
-  private double calculateWithTolerance(ProfiledPIDController controller, double measurement, double goal){
-    double tolerance=controller.getPositionTolerance();
-    double error=goal-measurement;
-    return Math.abs(error)<tolerance?0:controller.calculate(measurement, goal);
-  }
   public PIDtoPosition(Pose2d goalPose) {
     System.out.println("Driving to "+goalPose.getX()+","+goalPose.getY());
     

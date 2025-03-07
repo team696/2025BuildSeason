@@ -97,7 +97,7 @@ public class PoseUtil {
      * @return the mirrored pose
      */
     public static Pose2d mirrorPoseX(Pose2d pose){
-        double fieldX = 17.5387; // Field length in meters; TODO: get the real number
+        double fieldX = 17.5387; // Field length in meters; 
         pose=new Pose2d(fieldX-pose.getX(), pose.getY(), pose.getRotation());
         pose.rotateBy(Rotation2d.fromRotations(0));
         return pose;

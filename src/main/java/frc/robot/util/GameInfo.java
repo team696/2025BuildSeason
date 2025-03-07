@@ -4,27 +4,15 @@
 
 package frc.robot.util;
 
-import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Feet;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Rotation;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Stream;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.units.Measure;
-import edu.wpi.first.units.Unit;
-import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.HumanControls;
 
 /**
  * A class contianing all the positions needed to move the superstructure into a
@@ -61,14 +49,14 @@ public class GameInfo {
         Left
     }
 
-    /*  Starts from 3 O'clock on field render */
+    /*  Labels For Blue Side Of Field, Relative To Center Of Hex */
     public enum Index {
-        One, 
-        Two, 
-        Three,
-        Four,
-        Five, 
-        Six
+        One, // -X 
+        Two,  // -X, +Y
+        Three, // +X, +Y
+        Four, // +X
+        Five, // +X, -Y
+        Six // -X, -Y
     }
 
     public final static Distance fieldLengthMeters = Feet.of(57.53);
