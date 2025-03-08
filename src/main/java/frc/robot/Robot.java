@@ -8,12 +8,10 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
-import com.ctre.phoenix6.Utils;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathfindingCommand;
 
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -30,10 +28,10 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Wrist;
 import frc.robot.util.GameInfo;
-import frc.team696.lib.Camera.LimelightHelpers;
 import frc.team696.lib.Logging.BackupLogger;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.EndEffector;
+import frc.robot.subsystems.GroundCoral;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -86,6 +84,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData(Arm.get());
     SmartDashboard.putData(EndEffector.get());
     SmartDashboard.putData(Wrist.get());
+    SmartDashboard.putData(GroundCoral.get());
 
     Swerve.get().registerTelemetry(m_SwerveTelemetry::telemeterize);
 
@@ -109,13 +108,6 @@ public class Robot extends TimedRobot {
           .withRotationalRate(
               (Swerve.get().getPose().getRotation().minus(Swerve.get().FaceHexFace())).getDegrees() / -120 * MaxRotationalRate)));
 
-    SmartDashboard.putData("Face Net", Swerve.get().applyRequest(
-      () -> Swerve.fcDriveReq.withVelocityX(
-          applyDeadband(HumanControls.DriverPanel.leftJoyY.getAsDouble(), 0.1) * MaxSpeed)
-          .withVelocityY(applyDeadband(HumanControls.DriverPanel.leftJoyX.getAsDouble(), 0.1) * MaxSpeed)
-          .withRotationalRate(
-            (Swerve.get().getPose().getRotation().minus(Swerve.get().FaceNet())).getDegrees() / 30 * MaxRotationalRate)));
-
     SmartDashboard.putData("Reset Gyro", Commands.runOnce(() -> Swerve.get().seedFieldCentric()));
 
     NamedCommands.registerCommand("hello", new InstantCommand(
@@ -135,32 +127,74 @@ public class Robot extends TimedRobot {
 
   private void configureDriverStationBinds() {
     HumanControls.OperatorPanel2025.gyro.onTrue(new InstantCommand(()->Swerve.get().seedFieldCentric()));
-    HumanControls.OperatorPanel2025.releaseCoral.onTrue(new InstantCommand(()-> {EndEffector.get().idlePower = -0.6;}));
+    HumanControls.OperatorPanel2025.releaseCoral.whileTrue(
+      new ConditionalCommand(
+        new InstantCommand(()-> {EndEffector.get().idlePower = -0.6;}), 
+        GroundCoral.get().Spit(),  
+        HumanControls.OperatorPanel2025.unlabedSwitch::getAsBoolean)
+    );
+
+    
+
+    HumanControls.OperatorPanel2025.unlabedSwitch.onTrue(
+      new InstantCommand(() -> {
+        Elevator.get().getCurrentCommand().cancel();
+        GroundCoral.get().getCurrentCommand().cancel();
+        Elevator.get().setDefaultCommand(Elevator.get().positionCommand(0));
+        GroundCoral.get().setDefaultCommand(GroundCoral.get().Stowed());
+      })
+    );
+
+    HumanControls.OperatorPanel2025.unlabedSwitch.onFalse(
+      new InstantCommand(() -> {
+        Elevator.get().getCurrentCommand().cancel();
+        GroundCoral.get().getCurrentCommand().cancel();
+
+        Elevator.get().setDefaultCommand(Elevator.get().positionCommand(35));
+        GroundCoral.get().setDefaultCommand(GroundCoral.get().Ready());
+        EndEffector.get().idlePower = 0;
+      })
+    );
+
+    HumanControls.OperatorPanel2025.GroundCoral.whileTrue(
+      new ConditionalCommand(Commands.none(), GroundCoral.get().Intake(), HumanControls.OperatorPanel2025.unlabedSwitch::getAsBoolean)
+    );
+
+    
 
     HumanControls.OperatorPanel2025.L1.whileTrue(
       new ConditionalCommand(
         new MoveSuperStructure(GameInfo.ground, -0.8, false, -.8), 
         new MoveSuperStructure(GameInfo.RobotState.get(GameInfo.Position.L1).get(GameInfo.RobotSide.Back), -0.4), 
         HumanControls.OperatorPanel2025.pickupAlgae::getAsBoolean
-      ));
+      ).deadlineFor(Swerve.get().setGoalRotation( Swerve.get()::FaceHexFace, Swerve.get()::FaceSource )));
     
     HumanControls.OperatorPanel2025.L2.whileTrue(
       new ConditionalCommand(
         new MoveSuperStructure(GameInfo.L2Algae, -0.8, false, -0.8), 
         new MoveSuperStructure(GameInfo.RobotState.get(GameInfo.Position.L2).get(GameInfo.RobotSide.Back), -0.6), 
         HumanControls.OperatorPanel2025.pickupAlgae::getAsBoolean
-      ));
+      ).deadlineFor(Swerve.get().setGoalRotation( Swerve.get()::FaceHexFace, Swerve.get()::FaceSource )));
 
     HumanControls.OperatorPanel2025.L3.whileTrue(
       new ConditionalCommand(
         new MoveSuperStructure(GameInfo.L3Algae, -0.8, false, -1.), 
         new MoveSuperStructure(GameInfo.RobotState.get(GameInfo.Position.L3).get(GameInfo.RobotSide.Back), -0.6),
         HumanControls.OperatorPanel2025.pickupAlgae::getAsBoolean
-      ));
+      ).deadlineFor(Swerve.get().setGoalRotation( Swerve.get()::FaceHexFace, Swerve.get()::FaceSource )));
 
-    HumanControls.OperatorPanel2025.L4.whileTrue(new MoveSuperStructure(GameInfo.RobotState.get(GameInfo.Position.L4).get(GameInfo.RobotSide.Back), -0.6));
-    HumanControls.OperatorPanel2025.Climb2.whileTrue(new MoveSuperStructure(GameInfo.RobotState.get(GameInfo.Position.Intake).get(GameInfo.RobotSide.Front), 0.5, false, 0.2));
-    HumanControls.OperatorPanel2025.Barge.whileTrue(new MoveSuperStructure(GameInfo.Net, 1.));
+    HumanControls.OperatorPanel2025.L4.whileTrue(
+      new MoveSuperStructure(GameInfo.RobotState.get(GameInfo.Position.L4).get(GameInfo.RobotSide.Back), -0.6)
+      .deadlineFor(Swerve.get().setGoalRotation( Swerve.get()::FaceHexFace, Swerve.get()::FaceSource ))
+      );  //
+
+    HumanControls.OperatorPanel2025.Barge.whileTrue(
+      new MoveSuperStructure(GameInfo.Net, 1.)
+      .deadlineFor(Swerve.get().setGoalRotation( Swerve.get()::FaceNet, Swerve.get()::FaceSource ))
+    );
+
+
+    HumanControls.OperatorPanel2025.SouceCoral.whileTrue(new MoveSuperStructure(GameInfo.RobotState.get(GameInfo.Position.Intake).get(GameInfo.RobotSide.Front), 0.5, false, 0.2));
     HumanControls.OperatorPanel2025.Climb1.whileTrue(new MoveSuperStructure(GameInfo.ClimbUp, 0));
     HumanControls.OperatorPanel2025.Processor.whileTrue(new MoveSuperStructure(GameInfo.Processor, 0.6));
     //HumanControls.OperatorPanel2025.pickupAlgae.whileTrue(new MoveSuperStructure(GameInfo.ground, -0.8, false, -0.8));
@@ -171,19 +205,9 @@ public class Robot extends TimedRobot {
     long start = RobotController.getTime();
     CommandScheduler.getInstance().run();
     long elapsed = RobotController.getTime() - start;
-    BackupLogger.addToQueue("SchedulerTimeMS", elapsed); // Scheduler Time in Microseconds, anything over 20,000 should
-                                                         // trigger the watchdog
-    updateVision("limelight-corner");
+    BackupLogger.addToQueue("SchedulerTimeMicroSeconds", elapsed); // Scheduler Time in Microseconds, anything over 20,000 should
+                           
     BackupLogger.logSystemInformation();
-
-    /*
-     * int i = 0;
-     * for (SwerveModule<TalonFX, TalonFX, CANcoder> mod :
-     * CommandSwerveDrivetrain.get().getModules()) {
-     * SmartDashboard.putNumber("Encoder" + ++i,
-     * mod.getEncoder().getPosition().getValueAsDouble());
-     * }
-     */
   }
 
   @Override
@@ -222,23 +246,6 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
-    }
-  }
-
-  public void updateVision(String limelightName) {
-    double heading = Swerve.get().getState().Pose.getRotation().getDegrees();
-
-    LimelightHelpers.SetRobotOrientation(limelightName, heading, 0.0, 0.0, 0.0, 0.0, 0.0);
-    var measurement = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightName);
-    if (measurement != null) {
-      if (measurement.tagCount > 0 && measurement.rawFiducials[0].ambiguity < 0.5
-          && measurement.rawFiducials[0].distToCamera < 5) {
-        // Experimental
-        double trustMetric = (Math.pow(measurement.rawFiducials[0].distToCamera, 2)
-            * measurement.rawFiducials[0].ambiguity / 35);
-        Swerve.get().setVisionMeasurementStdDevs(VecBuilder.fill(trustMetric, trustMetric, trustMetric));
-        Swerve.get().addVisionMeasurement(measurement.pose, Utils.fpgaToCurrentTime(measurement.timestampSeconds));
-      }
     }
   }
 

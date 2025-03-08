@@ -1,0 +1,43 @@
+{
+  "NetworkTables": {
+    "transitory": {
+      "SmartDashboard": {
+        "GroundCoral": {
+          "open": true
+        },
+        "open": true
+      }
+    },
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/Pose": "Field2d",
+      "/SmartDashboard/Alerts": "Alerts",
+      "/SmartDashboard/Arm": "Subsystem",
+      "/SmartDashboard/ArmMinus": "Command",
+      "/SmartDashboard/ArmPlus": "Command",
+      "/SmartDashboard/Auto Chooser": "String Chooser",
+      "/SmartDashboard/Elevator": "Subsystem",
+      "/SmartDashboard/Elevator duty cycle up": "Command",
+      "/SmartDashboard/EndEffector": "Subsystem",
+      "/SmartDashboard/Face Hex": "Command",
+      "/SmartDashboard/Face Net": "Command",
+      "/SmartDashboard/GroundCoral": "Subsystem",
+      "/SmartDashboard/Module 0": "Mechanism2d",
+      "/SmartDashboard/Module 1": "Mechanism2d",
+      "/SmartDashboard/Module 2": "Mechanism2d",
+      "/SmartDashboard/Module 3": "Mechanism2d",
+      "/SmartDashboard/Reset Gyro": "Command",
+      "/SmartDashboard/Scheduler": "Scheduler",
+      "/SmartDashboard/Wrist": "Subsystem",
+      "/SmartDashboard/Zero Arm": "Command",
+      "/SmartDashboard/Zero Wrist": "Command"
+    }
+  },
+  "NetworkTables Info": {
+    "visible": true
+  },
+  "NetworkTables Settings": {
+    "mode": "Client (NT4)",
+    "serverTeam": "696"
+  }
+}

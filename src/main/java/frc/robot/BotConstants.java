@@ -7,6 +7,7 @@ package frc.robot;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
@@ -48,7 +49,6 @@ public class BotConstants {
 
     public static class Arm {
         public static int masterID = 13;
-        public static int slaveID=16;
         public static TalonFXConfiguration cfg = new TalonFXConfiguration();
         static {
             cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -85,6 +85,23 @@ public class BotConstants {
             cfg.CurrentLimits.StatorCurrentLimitEnable = true;
             cfg.CurrentLimits.StatorCurrentLimit = 80.;
         }
+    }
+
+    public static class GroundCoral{
+        public static int angleId=17;
+        public static int rollerId=18;
+        public static TalonFXConfiguration angleCfg=new TalonFXConfiguration();
+        public static TalonFXConfiguration rollerCfg=new TalonFXConfiguration();
+        static{
+            angleCfg.Slot0.kP=10.;
+            angleCfg.CurrentLimits.StatorCurrentLimit=120;
+            angleCfg.CurrentLimits.StatorCurrentLimitEnable=true;
+            angleCfg.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+
+            rollerCfg.CurrentLimits.StatorCurrentLimit=120;
+            rollerCfg.CurrentLimits.StatorCurrentLimitEnable=true;
+        }
+
     }
 
 }

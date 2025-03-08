@@ -13,7 +13,6 @@ import static edu.wpi.first.units.Units.Volts;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 
 import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -48,7 +47,6 @@ public class Elevator extends SubsystemBase {
       .linearPosition(Meters.of(master.getPosition()))
       .linearVelocity(MetersPerSecond.of(master.getVelocity()));
     }, this));
-    SmartDashboard.putData("Elevator duty cycle up", runDutyCycle());
   }
 
   public void stop() {
@@ -62,8 +60,15 @@ public class Elevator extends SubsystemBase {
     master.VoltageOut(v);
   }
 
+  public void goToPosition(double position) {
+    if (GroundCoral.get().getPosition() > .1) {
+      position = Math.max(position, 30);
+    }
+    master.get().setControl(positionReq.withPosition(position));
+  }
+
   public void goToPosition(GameInfo.CoralScoringPosition position) {
-    master.get().setControl(positionReq.withPosition(position.height));
+    goToPosition(position.height);
   } 
 
   public double getPosition() {
@@ -76,31 +81,28 @@ public class Elevator extends SubsystemBase {
    * @return the command which holds the elevator at position (requires this subsystem)
    */
   public Command positionCommand(GameInfo.CoralScoringPosition position){
-    return this.runEnd(()->master.get().setControl(positionReq.withPosition(position.height)), ()->master.get().set(0));
-  }
-  public Command positionCommandRun(GameInfo.CoralScoringPosition position){
-    return this.runEnd(()->master.setControl(positionReq.withPosition(position.height)), ()->master.VoltageOut(Volts.of(0)));
+    return this.runEnd(()->goToPosition(position), ()->master.get().set(0));
   }
   public Command positionCommand(double position){
-    return this.startEnd(()->master.setControl(positionReq.withPosition(position)), ()->master.VoltageOut(Volts.of(0)));
+    return this.runEnd(()->goToPosition(position), ()->master.VoltageOut(Volts.of(0)));
   }
   /**
    * Holds the current position
    * @return a command that holds the elevator at the position it was in at schedluing time
    */
   public Command holdPosition(){
-    return this.startEnd(()->master.setControl(positionReq.withPosition(master.getPosition())), ()->master.VoltageOut(Volts.of(0)));
+    return this.startEnd(()->goToPosition(master.getPosition()), ()->master.VoltageOut(Volts.of(0)));
   }
-  public Command runDutyCycle(){
-    return this.startEnd(()->master.PercentOutput(.4), ()->master.stop());
-  }
+
   public void zero(){
     resetPosition(0);
   }
+
   public void resetPosition(double newPosition){
     master.setPosition(newPosition);
     slave.setPosition(newPosition);
   }
+
   @Override
   public void periodic() {
     BackupLogger.addToQueue("Elevator/MasterCurrent", master.getCurrent());

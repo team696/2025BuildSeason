@@ -12,7 +12,6 @@ import static edu.wpi.first.units.Units.Volts;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -40,7 +39,6 @@ public class Arm extends SubsystemBase {
   }
 
   TalonFX master = new TalonFX(BotConstants.Arm.masterID, BotConstants.rioBus);
-  TalonFX slave = new TalonFX(BotConstants.Arm.slaveID, BotConstants.rioBus);
   StatusSignal<AngularVelocity> velocitySignal;
   StatusSignal<Angle> positionSignal;
   StatusSignal<Voltage> voltageSignal;
@@ -54,13 +52,10 @@ public class Arm extends SubsystemBase {
   /** Creates a new Arm. */
   private Arm() {
     master.getConfigurator().apply(BotConstants.Arm.cfg);
-    slave.getConfigurator().apply(BotConstants.Arm.cfg);
     velocitySignal = master.getVelocity();
     positionSignal = master.getPosition();
     voltageSignal = master.getMotorVoltage();
     currentSignal = master.getStatorCurrent();
-
-    slave.setControl(new Follower(master.getDeviceID(), false));
 
     zeroArm();
     // this.setDefaultCommand(Position(()->0));

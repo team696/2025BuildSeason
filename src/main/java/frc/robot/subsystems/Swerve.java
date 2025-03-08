@@ -27,12 +27,14 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.TunerConstants;
 import frc.robot.TunerConstants.TunerSwerveDrivetrain;
 import frc.robot.util.GameInfo;
 import frc.team696.lib.Util;
+import frc.team696.lib.Camera.LimeLightCam;
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
@@ -44,6 +46,25 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
     private double m_lastSimTime;
     
     private static Swerve m_CommandSwerveDrivetrain=null;
+
+    public LimeLightCam CamA = new LimeLightCam("B");
+    public LimeLightCam CamB = new LimeLightCam("A");
+
+    public Supplier<Rotation2d> goalRotation = () -> new Rotation2d();
+
+    public Command setGoalRotation(Supplier<Rotation2d> during, Supplier<Rotation2d> after) {
+        return Commands.startEnd( ()-> {
+            if (during != null) {
+                goalRotation = during;
+            }
+        }, ()-> {
+            if (after != null) {
+                goalRotation = after;
+            }
+        } );
+
+    }
+
     public static synchronized Swerve get(){
         if(m_CommandSwerveDrivetrain==null){
             m_CommandSwerveDrivetrain=TunerConstants.createDrivetrain();
@@ -250,6 +271,10 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
                 m_hasAppliedOperatorPerspective = true;
             });
         }
+
+        CamA.addVisionEstimate(this::addVisionMeasurement);
+        CamB.addVisionEstimate(this::addVisionMeasurement);
+
     }
 
     private void startSimThread() {
