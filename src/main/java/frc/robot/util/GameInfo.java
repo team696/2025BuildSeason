@@ -181,8 +181,8 @@ public class GameInfo {
         double minDistance = Double.MAX_VALUE; // Initialize with a very large value
 
             // Calculate the squared Euclidean distance between the translations
-            for (var poseEntry : ScoringPosesBlue.get(side).entrySet()) {
-                Translation2d pose = poseEntry.getValue();
+            for (var poseEntry : ScoringPosesBlue.entrySet()) {
+                Translation2d pose = poseEntry.getValue().get(side);
                 Translation2d referenceTranslation = referencePose.getTranslation();
                 double distance = referenceTranslation.getDistance(pose);
 

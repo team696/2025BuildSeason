@@ -44,12 +44,12 @@ public class PIDtoNearest extends Command {
    */
   public PIDtoNearest(boolean ignoreLR){
     addRequirements(Swerve.get());
-    xController=new ProfiledPIDController(/*1.7*/3.5, 0.0, 0.0, new TrapezoidProfile.Constraints(1.0, 1.4));
-    yController=new ProfiledPIDController(/*1.7*/3.5, 0.0, 0.0, new TrapezoidProfile.Constraints(1.0, 1.4));
+    xController=new ProfiledPIDController(8, 0.0, 0.0, new TrapezoidProfile.Constraints(1.0, 1.4));
+    yController=new ProfiledPIDController(8, 0.0, 0.0, new TrapezoidProfile.Constraints(1.0, 1.4));
     xController.setTolerance(0.01);
     yController.setTolerance(0.01);
     
-    omegaController=new ProfiledPIDController(4.8 , /*1*/0, /*0.3*/0, new TrapezoidProfile.Constraints(1.6, 0.6));
+    omegaController=new ProfiledPIDController(6 , 0, 0, new TrapezoidProfile.Constraints(3, 1.2));
     omegaController.enableContinuousInput(-Math.PI, Math.PI);
     omegaController.setTolerance(0.08);
     this.ignoreLR=ignoreLR;
@@ -62,6 +62,7 @@ public class PIDtoNearest extends Command {
     else
       goalTranslation=GameInfo.findClosestTranslation(Swerve.get().getState().Pose, OperatorPanel2025.leftOrRight.getAsBoolean()?ReefSide.Left:ReefSide.Right);
     Rotation2d goalRot=Swerve.get().angleTo(goalTranslation, GameInfo.blueReef);
+    goalRot=Rotation2d.fromDegrees(((int)((goalRot.getDegrees() + (30*Math.signum(goalRot.getDegrees()))) / 60)) * 60.);
     return new Pose2d(goalTranslation, goalRot);
   }
 
@@ -101,8 +102,8 @@ public class PIDtoNearest extends Command {
     //System.out.println("no not finished yet "+Math.abs(goal.getX()-curr.getX())+" "+(Math.abs(goal.getY()-curr.getY())+" "+Math.abs(goal.getRotation().getDegrees()-curr.getRotation().getDegrees())));
 
     return 
-      (Math.abs(goal.getX()-curr.getX())<0.03)&&
-      (Math.abs(goal.getY()-curr.getY())<0.03)&&
+      (Math.abs(goal.getX()-curr.getX())<=0.02)&&
+      (Math.abs(goal.getY()-curr.getY())<=0.02)&&
       (Math.abs(goal.getRotation().minus(curr.getRotation()).getDegrees()))<4;
   }
   // Returns true when the command should end.

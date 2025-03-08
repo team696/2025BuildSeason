@@ -131,7 +131,6 @@ public class Robot extends TimedRobot {
 
     Swerve.get().registerTelemetry(m_SwerveTelemetry::telemeterize);
 
-    //
     DriverStation.silenceJoystickConnectionWarning(true);
     configureDriverStationBinds();
 
@@ -165,6 +164,7 @@ public class Robot extends TimedRobot {
                     * MaxRotationalRate)));
 
     SmartDashboard.putData("Reset Gyro", Commands.runOnce(() -> Swerve.get().seedFieldCentric()));
+    SmartDashboard.putData("pid to nearest", new PIDtoNearest(false));
     /*
      * NamedCommands.registerCommand("ScoreL4",
      * MoveSuperStructure.autoScore(GameInfo.L4));
