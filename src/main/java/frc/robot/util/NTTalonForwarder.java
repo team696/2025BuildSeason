@@ -21,10 +21,10 @@ import frc.team696.lib.Logging.BackupLogger;
 /** Add your docs here. */
 public class NTTalonForwarder {
     String name="";
-    StatusSignal<AngularVelocity> velocitySignal;
-    StatusSignal<Angle> positionSignal;
-    StatusSignal<Voltage> voltageSignal;
-    StatusSignal<Current> currentSignal;
+    public StatusSignal<AngularVelocity> velocitySignal;
+    public StatusSignal<Angle> positionSignal;
+    public StatusSignal<Voltage> voltageSignal;
+    public StatusSignal<Current> currentSignal;
     public NTTalonForwarder(String name, TalonFX motor){
         this.name=name;
         velocitySignal = motor.getVelocity();

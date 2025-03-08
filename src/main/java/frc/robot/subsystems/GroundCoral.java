@@ -12,48 +12,62 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.BotConstants;
 import frc.robot.util.NTTalonForwarder;
 
-
 /**
  * represents the other coral system that picks up from ground and can score L1
  */
 public class GroundCoral extends SubsystemBase {
-  private static GroundCoral m_GroundCoral=null;
-  public static synchronized final GroundCoral get(){
-    if(m_GroundCoral==null){
-      m_GroundCoral=new GroundCoral();
+  private static GroundCoral m_GroundCoral = null;
+
+  public static synchronized final GroundCoral get() {
+    if (m_GroundCoral == null) {
+      m_GroundCoral = new GroundCoral();
     }
     return m_GroundCoral;
   }
 
-  TalonFX angleMotor=new TalonFX(BotConstants.GroundCoral.angleId, BotConstants.rioBus);
-  TalonFX rollerMotor=new TalonFX(BotConstants.GroundCoral.rollerId, BotConstants.rioBus);
-  NTTalonForwarder angleForwarder=new NTTalonForwarder("GroundCoralAngle", angleMotor);
-  NTTalonForwarder rollerForwarder=new NTTalonForwarder("GroundCoralRoller", rollerMotor);
-  MotionMagicVoltage positionRequest=new MotionMagicVoltage(0);
+  TalonFX angleMotor = new TalonFX(BotConstants.GroundCoral.angleId, BotConstants.rioBus);
+  TalonFX rollerMotor = new TalonFX(BotConstants.GroundCoral.rollerId, BotConstants.rioBus);
+  NTTalonForwarder angleForwarder = new NTTalonForwarder("GroundCoralAngle", angleMotor);
+  NTTalonForwarder rollerForwarder = new NTTalonForwarder("GroundCoralRoller", rollerMotor);
+  MotionMagicVoltage positionRequest = new MotionMagicVoltage(0);
 
   private GroundCoral() {
     angleMotor.getConfigurator().apply(BotConstants.GroundCoral.angleCfg);
     rollerMotor.getConfigurator().apply(BotConstants.GroundCoral.rollerCfg);
     zero();
+    this.setDefaultCommand(this.runEnd(() -> {
+      angleMotor.setControl(positionRequest.withPosition(0));
+    }, () -> {
+      angleMotor.stopMotor();
+    }));
   }
 
-  public void resetPosition(double newPosition){
+  public void resetPosition(double newPosition) {
     angleMotor.setPosition(newPosition);
   }
-  public void zero(){
+
+  public void zero() {
     resetPosition(0);
   }
 
-  public Command Intake(){
-    return this.startEnd(()->{
+  public void stop(){
+    angleMotor.stopMotor();
+    rollerMotor.stopMotor();
+  }
+
+  public boolean isStalling(){
+    return rollerForwarder.getCurrentAmps()>(BotConstants.GroundCoral.rollerCfg.CurrentLimits.StatorCurrentLimit-20);
+  }
+
+  public Command Intake() {
+    return this.startEnd(() -> {
       angleMotor.setControl(positionRequest.withPosition(2.5));
       rollerMotor.set(0.6);
-    }, ()->{
+    }, () -> {
       angleMotor.stopMotor();
       rollerMotor.stopMotor();
     });
   }
-
 
   @Override
   public void periodic() {

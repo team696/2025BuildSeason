@@ -81,7 +81,6 @@ public class EndEffector extends SubsystemBase {
   }
 
   public boolean isStalling(){
-  
     return motor.getStatorCurrent().getValue().in(Amps) >= BotConstants.EndEffector.cfg.CurrentLimits.StatorCurrentLimit && velocitySignal.getValue().in(RotationsPerSecond) < 5;
   }
 
