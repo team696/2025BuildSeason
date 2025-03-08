@@ -56,7 +56,7 @@ public class Robot extends TimedRobot {
     OperatorPanel2025.gyro.onTrue(new InstantCommand(() -> Swerve.get().seedFieldCentric()));
     OperatorPanel2025.releaseCoral.onTrue(new InstantCommand());
   }
-  
+
   private void logBuildInfo() {
     BackupLogger.addToQueue("BuildConstants/ProjectName", BuildConstants.MAVEN_NAME);
     BackupLogger.addToQueue("BuildConstants/BuildDate", BuildConstants.BUILD_DATE);
@@ -84,16 +84,21 @@ public class Robot extends TimedRobot {
   public void putCommandButtons() {
     SmartDashboard.putData("Reset Gyro", Commands.runOnce(() -> Swerve.get().seedFieldCentric()).ignoringDisable(true));
     SmartDashboard.putData("pathfindToMiddle", new PrintCommand("s").andThen(
-      AutoBuilder.pathfindToPose(new Pose2d(7, 3, Rotation2d.fromDegrees(12)), new PathConstraints(1, 1, Math.PI, Math.PI))));
+        AutoBuilder.pathfindToPose(new Pose2d(7, 3, Rotation2d.fromDegrees(12)),
+            new PathConstraints(1, 1, Math.PI, Math.PI))));
     SmartDashboard.putData("ScoreNet", new MoveSuperStructure(GameInfo.Net, 0));
-    SmartDashboard.putData("ScoreL4", new MoveSuperStructure(GameInfo.ScoringPositions.get(RobotSide.Back).get(GameInfo.Position.L4), 0));
-    SmartDashboard.putData("ScoreL3", new MoveSuperStructure(GameInfo.ScoringPositions.get(RobotSide.Front).get(GameInfo.Position.L3), 0));
-    SmartDashboard.putData("ScoreL2", new MoveSuperStructure(GameInfo.ScoringPositions.get(RobotSide.Front).get(GameInfo.Position.L2), 0));
-    SmartDashboard.putData("ScoreL1", new MoveSuperStructure(GameInfo.ScoringPositions.get(RobotSide.Front).get(GameInfo.Position.L1), 0));
+    SmartDashboard.putData("ScoreL4",
+        new MoveSuperStructure(GameInfo.ScoringPositions.get(GameInfo.Position.L4).get(RobotSide.Back), 0));
+    SmartDashboard.putData("ScoreL3",
+        new MoveSuperStructure(GameInfo.ScoringPositions.get(GameInfo.Position.L3).get(RobotSide.Back), 0));
+    SmartDashboard.putData("ScoreL2",
+        new MoveSuperStructure(GameInfo.ScoringPositions.get(GameInfo.Position.L2).get(RobotSide.Back), 0));
+    SmartDashboard.putData("ScoreL1",
+        new MoveSuperStructure(GameInfo.ScoringPositions.get(GameInfo.Position.L1).get(RobotSide.Back), 0));
     SmartDashboard.putData("Ground", new MoveSuperStructure(GameInfo.ground, 0));
     SmartDashboard.putData("Spin Rollers Forward", EndEffector.get().spin(0.6));
     SmartDashboard.putData("Spin Rollers Reverse", EndEffector.get().spin(-0.6));
-    //SmartDashboard.putData("Source", new MoveSuperStructure(GameInfo.Source));
+    // SmartDashboard.putData("Source", new MoveSuperStructure(GameInfo.Source));
     SmartDashboard.putData("Climb Up", new MoveSuperStructure(GameInfo.ClimbUp, 0));
     SmartDashboard.putData("Climb Down", new MoveSuperStructure(GameInfo.ClimbDown, 0));
 
@@ -135,57 +140,83 @@ public class Robot extends TimedRobot {
 
     Swerve.get().setDefaultCommand(Swerve.get().applyRequest(
         () -> Swerve.fcDriveReq.withVelocityX(
+            Math.pow(applyDeadband(HumanControls.DriverPanel.leftJoyY.getAsDouble(), 0.08), 2)
+                * Math.signum(HumanControls.DriverPanel.leftJoyY.getAsDouble()) * MaxSpeed)
+            .withVelocityY(Math.pow(applyDeadband(HumanControls.DriverPanel.leftJoyX.getAsDouble(), 0.08), 2)
+                * Math.signum(HumanControls.DriverPanel.leftJoyX.getAsDouble()) * MaxSpeed)
+            .withRotationalRate(
+                Math.pow(applyDeadband(HumanControls.DriverPanel.rightJoyX.getAsDouble(), 0.08), 2)
+                    * Math.signum(HumanControls.DriverPanel.rightJoyX.getAsDouble()) * MaxRotationalRate)));
+
+    SmartDashboard.putData("Face Hex", Swerve.get().applyRequest(
+        () -> Swerve.fcDriveReq.withVelocityX(
             applyDeadband(HumanControls.DriverPanel.leftJoyY.getAsDouble(), 0.1) * MaxSpeed)
             .withVelocityY(applyDeadband(HumanControls.DriverPanel.leftJoyX.getAsDouble(), 0.1) * MaxSpeed)
             .withRotationalRate(
-                applyDeadband(HumanControls.DriverPanel.rightJoyX.getAsDouble(), 0.1) * MaxRotationalRate)));
+                (Swerve.get().getPose().getRotation().minus(Swerve.get().FaceHexFace())).getDegrees() / -120
+                    * MaxRotationalRate)));
 
-    NamedCommands.registerCommand("PIDtoNearest", new PIDtoNearest(true));
-    /*NamedCommands.registerCommand("ScoreL4",
-        MoveSuperStructure.autoScore(GameInfo.L4));
-    NamedCommands.registerCommand("ScoreL3",
-    MoveSuperStructure(GameInfo.ScoringPositions.get(RobotSide.Front).get(GameInfo.Position.L3)));
-    NamedCommands.registerCommand("ScoreL2", MoveSuperStructure.autoScore(GameInfo.L2));
-    NamedCommands.registerCommand("ScoreL1", MoveSuperStructure.autoScore(GameInfo.L1));*/
+    SmartDashboard.putData("Face Net", Swerve.get().applyRequest(
+        () -> Swerve.fcDriveReq.withVelocityX(
+            applyDeadband(HumanControls.DriverPanel.leftJoyY.getAsDouble(), 0.1) * MaxSpeed)
+            .withVelocityY(applyDeadband(HumanControls.DriverPanel.leftJoyX.getAsDouble(), 0.1) * MaxSpeed)
+            .withRotationalRate(
+                (Swerve.get().getPose().getRotation().minus(Swerve.get().FaceNet())).getDegrees() / 30
+                    * MaxRotationalRate)));
+
+    SmartDashboard.putData("Reset Gyro", Commands.runOnce(() -> Swerve.get().seedFieldCentric()));
+    /*
+     * NamedCommands.registerCommand("ScoreL4",
+     * MoveSuperStructure.autoScore(GameInfo.L4));
+     * NamedCommands.registerCommand("ScoreL3",
+     * MoveSuperStructure(GameInfo.ScoringPositions.get(RobotSide.Front).get(
+     * GameInfo.Position.L3)));
+     * NamedCommands.registerCommand("ScoreL2",
+     * MoveSuperStructure.autoScore(GameInfo.L2));
+     * NamedCommands.registerCommand("ScoreL1",
+     * MoveSuperStructure.autoScore(GameInfo.L1));
+     */
+
     putCommandButtons();
-    NamedCommands.registerCommand("hello", new InstantCommand(
-        () -> SmartDashboard.putBoolean("auto", true)));
 
-    // TODO: decide whether or not this will be a temporary fix
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
-    // Warmup Commands for PathPlanner
+    // Warmup Command for PathPlanner
     PathfindingCommand.warmupCommand().schedule();
   }
 
   private void configureDriverStationBinds() {
-    HumanControls.OperatorPanel2025.gyro.onTrue(new InstantCommand(()->Swerve.get().seedFieldCentric()));
-    HumanControls.OperatorPanel2025.releaseCoral.onTrue(new InstantCommand(()-> {EndEffector.get().idlePower = -0.6;}));
+    HumanControls.OperatorPanel2025.gyro.onTrue(new InstantCommand(() -> Swerve.get().seedFieldCentric()));
+    HumanControls.OperatorPanel2025.releaseCoral.onTrue(new InstantCommand(() -> {
+      EndEffector.get().idlePower = -0.6;
+    }));
 
     HumanControls.OperatorPanel2025.L1.whileTrue(
-      new ConditionalCommand(
-        new MoveSuperStructure(GameInfo.ground, -0.8, false, -.8), 
-        new MoveSuperStructure(GameInfo.ScoringPositions.get(GameInfo.Position.L1).get(GameInfo.RobotSide.Back), -0.4), 
-        HumanControls.OperatorPanel2025.pickupAlgae::getAsBoolean
-      ));
-    
+        new ConditionalCommand(
+            new MoveSuperStructure(GameInfo.ground, -0.8, false, -.8),
+            new MoveSuperStructure(GameInfo.ScoringPositions.get(GameInfo.Position.L1).get(GameInfo.RobotSide.Back),
+                -0.4),
+            HumanControls.OperatorPanel2025.pickupAlgae::getAsBoolean));
+
     HumanControls.OperatorPanel2025.L2.whileTrue(
-      new ConditionalCommand(
-        new MoveSuperStructure(GameInfo.L2Algae, -0.8, false, -0.8), 
-        new MoveSuperStructure(GameInfo.ScoringPositions.get(GameInfo.Position.L2).get(GameInfo.RobotSide.Back), -0.6), 
-        HumanControls.OperatorPanel2025.pickupAlgae::getAsBoolean
-      ));
+        new ConditionalCommand(
+            new MoveSuperStructure(GameInfo.L2Algae, -0.8, false, -0.8),
+            new MoveSuperStructure(GameInfo.ScoringPositions.get(GameInfo.Position.L2).get(GameInfo.RobotSide.Back),
+                -0.6),
+            HumanControls.OperatorPanel2025.pickupAlgae::getAsBoolean));
 
     HumanControls.OperatorPanel2025.L3.whileTrue(
-      new ConditionalCommand(
-        new MoveSuperStructure(GameInfo.L3Algae, -0.8, false, -1.), 
-        new MoveSuperStructure(GameInfo.ScoringPositions.get(GameInfo.Position.L3).get(GameInfo.RobotSide.Back), -0.6),
-        HumanControls.OperatorPanel2025.pickupAlgae::getAsBoolean
-      ));
+        new ConditionalCommand(
+            new MoveSuperStructure(GameInfo.L3Algae, -0.8, false, -1.),
+            new MoveSuperStructure(GameInfo.ScoringPositions.get(GameInfo.Position.L3).get(GameInfo.RobotSide.Back),
+                -0.6),
+            HumanControls.OperatorPanel2025.pickupAlgae::getAsBoolean));
 
-    HumanControls.OperatorPanel2025.L4.whileTrue(new MoveSuperStructure(GameInfo.ScoringPositions.get(GameInfo.Position.L4).get(GameInfo.RobotSide.Back), -0.6));
-    HumanControls.OperatorPanel2025.Climb2.whileTrue(new MoveSuperStructure(GameInfo.ScoringPositions.get(GameInfo.Position.Intake).get(GameInfo.RobotSide.Front), 0.5, false, 0.2));
+    HumanControls.OperatorPanel2025.L4.whileTrue(
+        new MoveSuperStructure(GameInfo.ScoringPositions.get(GameInfo.Position.L4).get(GameInfo.RobotSide.Back), -0.6));
+    HumanControls.OperatorPanel2025.Climb2.whileTrue(new MoveSuperStructure(
+        GameInfo.ScoringPositions.get(GameInfo.Position.Intake).get(GameInfo.RobotSide.Front), 0.5, false, 0.2));
     HumanControls.OperatorPanel2025.Barge.whileTrue(new MoveSuperStructure(GameInfo.Net, 1.));
     HumanControls.OperatorPanel2025.Climb1.whileTrue(new MoveSuperStructure(GameInfo.ClimbUp, 0));
     HumanControls.OperatorPanel2025.Processor.whileTrue(new MoveSuperStructure(GameInfo.Processor, 0.6));
@@ -196,19 +227,11 @@ public class Robot extends TimedRobot {
     long start = RobotController.getTime();
     CommandScheduler.getInstance().run();
     long elapsed = RobotController.getTime() - start;
-    BackupLogger.addToQueue("SchedulerTimeMS", elapsed); // Scheduler Time in Microseconds, anything over 20,000 should trigger the watchdog
+    BackupLogger.addToQueue("SchedulerTimeMS", elapsed); // Scheduler Time in Microseconds, anything over 20,000 should
+                                                         // trigger the watchdog
     updateVision("limelight-front");
     updateVision("limelight-back");
     BackupLogger.logSystemInformation();
-
-    /*
-     * int i = 0;
-     * for (SwerveModule<TalonFX, TalonFX, CANcoder> mod :
-     * CommandSwerveDrivetrain.get().getModules()) {
-     * SmartDashboard.putNumber("Encoder" + ++i,
-     * mod.getEncoder().getPosition().getValueAsDouble());
-     * }
-     */
   }
 
   @Override

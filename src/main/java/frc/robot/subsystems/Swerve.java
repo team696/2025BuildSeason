@@ -31,6 +31,8 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.TunerConstants;
 import frc.robot.TunerConstants.TunerSwerveDrivetrain;
+import frc.robot.util.GameInfo;
+import frc.team696.lib.Util;
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
@@ -360,5 +362,33 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
     public Rotation2d angleTo(Pose2d position) {
         return angleTo(position.getTranslation());
     }
+    public Rotation2d FaceHexFace() {
+        Translation2d reefPosition = Util.getAlliance() == Alliance.Blue ? GameInfo.blueReef : (new Translation2d(GameInfo.fieldLengthMeters.in(Meters) - GameInfo.blueReef.getX(),GameInfo.blueReef.getY()));
 
+        Rotation2d angleToReef = getPose().getTranslation().minus(reefPosition).getAngle();
+
+        Rotation2d hexAngleToReef =  Rotation2d.fromDegrees(((int)((angleToReef.getDegrees() + 30) / 60)) * 60.);
+
+        return hexAngleToReef;
+    }
+
+    public Rotation2d FaceNet() {
+        return Util.getAlliance() == Alliance.Blue ? Rotation2d.fromDegrees(-90) : Rotation2d.fromDegrees(90);
+    }
+
+    public Rotation2d FaceSource() {
+        if (Util.getAlliance() == Alliance.Blue) {
+            if (getPose().getY() > GameInfo.fieldWidthMeters.in(Meters) / 2) {
+                return Rotation2d.fromDegrees(-45);
+            } else {
+                return Rotation2d.fromDegrees(45);
+            }
+        } else {
+            if (getPose().getY() > GameInfo.fieldWidthMeters.in(Meters) / 2) {
+                return Rotation2d.fromDegrees(135);
+            } else {
+                return Rotation2d.fromDegrees(-135);
+            }
+        }
+    }
 }
