@@ -74,7 +74,7 @@ public class GroundCoral extends SubsystemBase {
 
   public Command Intake() {
     return this.startEnd(() -> {
-      position(1.2);
+      position(1.2 * 9.);
       rollerMotor.set(1.);
     }, () -> {
       angleMotor.stopMotor();
@@ -91,14 +91,14 @@ public class GroundCoral extends SubsystemBase {
 
   public Command Ready() {
     return this.runEnd(
-      ()->{position(0.6); rollerMotor.stopMotor();},
+      ()->{position(0.6 * 9.); rollerMotor.stopMotor();},
       this::stop
     );
   }
 
   public Command Spit() {
     return this.runEnd(()-> {
-      position(0.6);
+      position(0.6 * 9.);
       if (getPosition() > 30) {
         rollerMotor.set(-0.6);
       }

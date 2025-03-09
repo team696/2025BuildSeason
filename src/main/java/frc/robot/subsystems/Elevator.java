@@ -22,46 +22,52 @@ import frc.team696.lib.HardwareDevices.TalonFactory;
 import frc.team696.lib.Logging.BackupLogger;
 
 public class Elevator extends SubsystemBase {
-  private static Elevator m_Elevator=null;
-  public static synchronized Elevator get(){
-    if(m_Elevator==null){
-      m_Elevator=new Elevator();
+  private static Elevator m_Elevator = null;
+
+  public static synchronized Elevator get() {
+    if (m_Elevator == null) {
+      m_Elevator = new Elevator();
     }
     return m_Elevator;
   }
+
   private TalonFactory master, slave;
   private MotionMagicVoltage positionReq;
   public SysIdRoutine identificationRoutine;
 
   private Elevator() {
-    master=new TalonFactory(BotConstants.Elevator.masterID, BotConstants.rioBus, BotConstants.Elevator.cfg, "Elevator Master");
-    slave=new TalonFactory(BotConstants.Elevator.slaveId,BotConstants.rioBus, BotConstants.Elevator.cfg, "Elevator Slave");
+    master = new TalonFactory(BotConstants.Elevator.masterID, BotConstants.rioBus, BotConstants.Elevator.cfg,
+        "Elevator Master");
+    slave = new TalonFactory(BotConstants.Elevator.slaveId, BotConstants.rioBus, BotConstants.Elevator.cfg,
+        "Elevator Slave");
 
     slave.Follow(master, true);
-    
-    positionReq=new MotionMagicVoltage(0).withSlot(0);
+
+    positionReq = new MotionMagicVoltage(0).withSlot(0);
     zero();
-    identificationRoutine=new SysIdRoutine(new SysIdRoutine.Config(Volts.per(Second).of(0.5), Volts.of(0.4),Seconds.of(3)), 
-    new SysIdRoutine.Mechanism(this::DriveVoltage, (log)->{
-      log.motor(master.getName()).voltage(master.get().getMotorVoltage().getValue())
-      .linearPosition(Meters.of(master.getPosition()))
-      .linearVelocity(MetersPerSecond.of(master.getVelocity()));
-    }, this));
+    identificationRoutine = new SysIdRoutine(
+        new SysIdRoutine.Config(Volts.per(Second).of(0.5), Volts.of(0.4), Seconds.of(3)),
+        new SysIdRoutine.Mechanism(this::DriveVoltage, (log) -> {
+          log.motor(master.getName()).voltage(master.get().getMotorVoltage().getValue())
+              .linearPosition(Meters.of(master.getPosition()))
+              .linearVelocity(MetersPerSecond.of(master.getVelocity()));
+        }, this));
   }
 
   public void stop() {
     master.stop();
   }
+
   /**
    *
    * Use ONLY for SysID. Sets the elevator motors to a specific voltage
    */
-  public void DriveVoltage(Voltage v){
+  public void DriveVoltage(Voltage v) {
     master.VoltageOut(v);
   }
 
   public void goToPosition(double position) {
-    if (GroundCoral.get().getPosition() > .1) {
+    if (GroundCoral.get().getPosition() > .5) {
       position = Math.max(position, 30);
     }
     master.get().setControl(positionReq.withPosition(position));
@@ -69,36 +75,43 @@ public class Elevator extends SubsystemBase {
 
   public void goToPosition(GameInfo.CoralScoringPosition position) {
     goToPosition(position.height);
-  } 
+  }
 
   public double getPosition() {
     return master.getPosition();
   }
+
   /**
    * 
    * Moves to and holds a position
+   * 
    * @param position The scoring position to hold
-   * @return the command which holds the elevator at position (requires this subsystem)
+   * @return the command which holds the elevator at position (requires this
+   *         subsystem)
    */
-  public Command positionCommand(GameInfo.CoralScoringPosition position){
-    return this.runEnd(()->goToPosition(position), ()->master.get().set(0));
-  }
-  public Command positionCommand(double position){
-    return this.runEnd(()->goToPosition(position), ()->master.VoltageOut(Volts.of(0)));
-  }
-  /**
-   * Holds the current position
-   * @return a command that holds the elevator at the position it was in at schedluing time
-   */
-  public Command holdPosition(){
-    return this.startEnd(()->goToPosition(master.getPosition()), ()->master.VoltageOut(Volts.of(0)));
+  public Command positionCommand(GameInfo.CoralScoringPosition position) {
+    return this.runEnd(() -> goToPosition(position), () -> master.get().set(0));
   }
 
-  public void zero(){
+  public Command positionCommand(double position) {
+    return this.runEnd(() -> goToPosition(position), () -> master.VoltageOut(Volts.of(0)));
+  }
+
+  /**
+   * Holds the current position
+   * 
+   * @return a command that holds the elevator at the position it was in at
+   *         schedluing time
+   */
+  public Command holdPosition() {
+    return this.startEnd(() -> goToPosition(master.getPosition()), () -> master.VoltageOut(Volts.of(0)));
+  }
+
+  public void zero() {
     resetPosition(0);
   }
 
-  public void resetPosition(double newPosition){
+  public void resetPosition(double newPosition) {
     master.setPosition(newPosition);
     slave.setPosition(newPosition);
   }

@@ -139,17 +139,14 @@ public class GameInfo {
                 RobotSide.Front, new CoralScoringPosition(6., 1., -0.9),
                 RobotSide.Back, new CoralScoringPosition(0, 0, 0)
             )
-            
         );
-
         L2Algae = new CoralScoringPosition (18., -3., 1.);
         L3Algae = new CoralScoringPosition (44., -3., 1.);
-
         Net = new CoralScoringPosition(67., 0., 5.8);
         ClimbUp=new CoralScoringPosition(27, 0, 0);
         ClimbDown=new CoralScoringPosition(2, 0, 0);
         ground=new CoralScoringPosition(5., -6.3, -.5);
-        Processor = new CoralScoringPosition(0, 7., 11.9);
+        Processor = new CoralScoringPosition(0, -5., 1.);
     }
 
 }

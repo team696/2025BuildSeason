@@ -93,7 +93,7 @@ public class BotConstants {
         public static TalonFXConfiguration angleCfg=new TalonFXConfiguration();
         public static TalonFXConfiguration rollerCfg=new TalonFXConfiguration();
         static{
-            angleCfg.Slot0.kP=10.;
+            angleCfg.Slot0.kP=1.;
             angleCfg.CurrentLimits.StatorCurrentLimit=120;
             angleCfg.CurrentLimits.StatorCurrentLimitEnable=true;
             angleCfg.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
