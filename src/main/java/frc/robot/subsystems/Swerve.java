@@ -47,7 +47,7 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
 
   private static Swerve m_CommandSwerveDrivetrain = null;
 
-  public LimeLightCam CamA = new LimeLightCam("B");
+  public LimeLightCam CamA = new LimeLightCam("limelight-right");
   public LimeLightCam CamB = new LimeLightCam("A");
 
   public Supplier<Rotation2d> goalRotation = () -> new Rotation2d();
