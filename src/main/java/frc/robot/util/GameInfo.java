@@ -116,19 +116,19 @@ public class GameInfo {
             RobotSide.Back, new CoralScoringPosition(0, -1., -8.)),
         Position.L2, Map.of(
             RobotSide.Front, new CoralScoringPosition(14., 1.75, 1.56),
-            RobotSide.Back, new CoralScoringPosition(4., -1., -7.6)),
+            RobotSide.Back, new CoralScoringPosition(4., -1., -8.1)),
         Position.L3, Map.of(
             RobotSide.Front, new CoralScoringPosition(33., 1.75, 1.1),
             RobotSide.Back, new CoralScoringPosition(25., -1., -7.9)),
         Position.L4, Map.of(
             RobotSide.Front, new CoralScoringPosition(67., 0.7, 1.6),
-            RobotSide.Back, new CoralScoringPosition(62, -1.1, -8.3)),
+            RobotSide.Back, new CoralScoringPosition(62, -1.1, -9.)),
         Position.Intake, Map.of(
             RobotSide.Front, new CoralScoringPosition(6., 1., -0.9),
             RobotSide.Back, new CoralScoringPosition(0, 0, 0)));
     L2Algae = new CoralScoringPosition(18., -3., 1.);
     L3Algae = new CoralScoringPosition(44., -3., 1.);
-    Net = new CoralScoringPosition(67., 0., 5.8);
+    Net = new CoralScoringPosition(67., 0., 6.5);
     ClimbUp = new CoralScoringPosition(27, 0, 0);
     ClimbDown = new CoralScoringPosition(2, 0, 0);
     ground = new CoralScoringPosition(5., -6.3, -.5);

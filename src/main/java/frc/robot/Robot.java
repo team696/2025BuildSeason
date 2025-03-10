@@ -45,8 +45,8 @@ public class Robot extends TimedRobot {
   private double MaxRotationalRate = RotationsPerSecond.of(10).in(RadiansPerSecond);
   private SwerveTelemetry m_SwerveTelemetry = new SwerveTelemetry(MaxSpeed);
 
-  private ProfiledPIDController thetaController = new ProfiledPIDController(1 / 60, 0, 0,
-      new TrapezoidProfile.Constraints(60, 40));
+  private ProfiledPIDController thetaController = new ProfiledPIDController(1. / 200., 0, 0.,
+      new TrapezoidProfile.Constraints(360, 480));
 
   private void logBuildInfo() {
     BackupLogger.addToQueue("BuildConstants/ProjectName", BuildConstants.MAVEN_NAME);
@@ -116,7 +116,9 @@ public class Robot extends TimedRobot {
                 (thetaController.calculate(Swerve.get().getPose().getRotation().getDegrees(),
                     Swerve.get().goalRotation.get().getDegrees()))
                     * MaxRotationalRate))
-        .alongWith(new InstantCommand(() -> thetaController.reset(Swerve.get().getPose().getRotation().getDegrees()))));
+        .alongWith(
+            Commands.startEnd(() -> thetaController.reset(Swerve.get().getPose().getRotation().getDegrees()), () -> {
+            })));
 
     NamedCommands.registerCommand("L4", new AutoMoveSuperStructure(
         GameInfo.RobotState.get(GameInfo.Position.L3).get(GameInfo.RobotSide.Back), -0.6, 0.0).asProxy());
