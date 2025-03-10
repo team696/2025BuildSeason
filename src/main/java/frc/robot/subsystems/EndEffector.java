@@ -5,10 +5,7 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static edu.wpi.first.units.Units.Volts;
-
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.StatusSignal;
@@ -23,7 +20,6 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.BotConstants;
-import frc.team696.lib.Logging.BackupLogger;
 
 /**
  * This class represents the Coral scoring mechanism attached to the arm of the

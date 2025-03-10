@@ -68,10 +68,10 @@ public class BotConstants {
     public static TalonFXConfiguration cfg = new TalonFXConfiguration();
     static {
       cfg.Slot0.kP = 32.;
-
+      cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
       cfg.MotionMagic.MotionMagicAcceleration = 40.;
       cfg.MotionMagic.MotionMagicCruiseVelocity = 20.;
-      cfg.CurrentLimits.StatorCurrentLimitEnable = false;
+      cfg.CurrentLimits.StatorCurrentLimitEnable = true;
       cfg.CurrentLimits.SupplyCurrentLimitEnable = false;
       cfg.CurrentLimits.StatorCurrentLimit = 120.;
     }

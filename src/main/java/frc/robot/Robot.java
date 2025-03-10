@@ -11,7 +11,10 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.path.ConstraintsZone;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -30,6 +33,7 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Wrist;
 import frc.robot.util.GameInfo;
 import frc.team696.lib.Logging.BackupLogger;
+import frc.team696.lib.Swerve.SwerveConstants;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.EndEffector;
 import frc.robot.subsystems.GroundCoral;
@@ -37,9 +41,12 @@ import frc.robot.subsystems.LED;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+  private double MaxSpeed = SwerveConstants.THEORETICAL_MAX_SPEED.in(MetersPerSecond);// aTunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
   private double MaxRotationalRate = RotationsPerSecond.of(10).in(RadiansPerSecond);
   private SwerveTelemetry m_SwerveTelemetry = new SwerveTelemetry(MaxSpeed);
+
+  private ProfiledPIDController thetaController = new ProfiledPIDController(1 / 60, 0, 0,
+      new TrapezoidProfile.Constraints(60, 40));
 
   private void logBuildInfo() {
     BackupLogger.addToQueue("BuildConstants/ProjectName", BuildConstants.MAVEN_NAME);
@@ -90,21 +97,26 @@ public class Robot extends TimedRobot {
     configureDriverStationBinds();
     Swerve.get().setDefaultCommand(Swerve.get().applyRequest(
         () -> Swerve.fcDriveReq.withVelocityX(
-            Math.pow(applyDeadband(HumanControls.DriverPanel.leftJoyY.getAsDouble(), 0.08), 2)
+            Math.pow(applyDeadband(HumanControls.DriverPanel.leftJoyY.getAsDouble(), 0.09), 2)
                 * Math.signum(HumanControls.DriverPanel.leftJoyY.getAsDouble()) * MaxSpeed)
-            .withVelocityY(Math.pow(applyDeadband(HumanControls.DriverPanel.leftJoyX.getAsDouble(), 0.08), 2)
+            .withVelocityY(Math.pow(applyDeadband(HumanControls.DriverPanel.leftJoyX.getAsDouble(), 0.07), 2)
                 * Math.signum(HumanControls.DriverPanel.leftJoyX.getAsDouble()) * MaxSpeed)
             .withRotationalRate(
-                Math.pow(applyDeadband(HumanControls.DriverPanel.rightJoyX.getAsDouble(), 0.08), 2)
+                Math.pow(applyDeadband(HumanControls.DriverPanel.rightJoyX.getAsDouble(), 0.09), 2)
                     * Math.signum(HumanControls.DriverPanel.rightJoyX.getAsDouble()) * MaxRotationalRate)));
 
     HumanControls.DriverPanel.OtherButton.whileTrue(Swerve.get().applyRequest(
         () -> Swerve.fcDriveReq.withVelocityX(
-            applyDeadband(HumanControls.DriverPanel.leftJoyY.getAsDouble(), 0.1) * MaxSpeed)
-            .withVelocityY(applyDeadband(HumanControls.DriverPanel.leftJoyX.getAsDouble(), 0.1) * MaxSpeed)
+            Math.pow(applyDeadband(HumanControls.DriverPanel.leftJoyY.getAsDouble(), 0.09), 2)
+                * Math.signum(HumanControls.DriverPanel.leftJoyY.getAsDouble()) * MaxSpeed)
+            .withVelocityY(Math.pow(applyDeadband(HumanControls.DriverPanel.leftJoyX.getAsDouble(), 0.09), 2)
+                * Math.signum(HumanControls.DriverPanel.leftJoyX.getAsDouble()) * MaxSpeed)
+
             .withRotationalRate(
-                (Swerve.get().getPose().getRotation().minus(Swerve.get().goalRotation.get())).getDegrees() / -300
-                    * MaxRotationalRate)));
+                (thetaController.calculate(Swerve.get().getPose().getRotation().getDegrees(),
+                    Swerve.get().goalRotation.get().getDegrees()))
+                    * MaxRotationalRate))
+        .alongWith(new InstantCommand(() -> thetaController.reset(Swerve.get().getPose().getRotation().getDegrees()))));
 
     NamedCommands.registerCommand("L4", new AutoMoveSuperStructure(
         GameInfo.RobotState.get(GameInfo.Position.L3).get(GameInfo.RobotSide.Back), -0.6, 0.0).asProxy());
@@ -201,6 +213,7 @@ public class Robot extends TimedRobot {
     // Time in Microseconds, anything over
     // 20,000 should
 
+    m_SwerveTelemetry.telemeterize(Swerve.get().getState());
     // BackupLogger.logSystemInformation();
     //
   }

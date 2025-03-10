@@ -24,6 +24,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -48,7 +49,7 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
   private static Swerve m_CommandSwerveDrivetrain = null;
 
   public LimeLightCam CamA = new LimeLightCam("limelight-right");
-  public LimeLightCam CamB = new LimeLightCam("A");
+  public LimeLightCam CamB = new LimeLightCam("limelight-left");
 
   public Supplier<Rotation2d> goalRotation = () -> new Rotation2d();
 
@@ -296,6 +297,11 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
     }
 
     CamA.addVisionEstimate(this::addVisionMeasurement, (Estimate) -> {
+      if (Estimate.distToTag > 4)
+        return false;
+      return true;
+    });
+    CamB.addVisionEstimate(this::addVisionMeasurement, (Estimate) -> {
       if (Estimate.distToTag > 4)
         return false;
       return true;

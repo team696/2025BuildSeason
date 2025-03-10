@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.BotConstants;
 import frc.robot.util.GameInfo;
 import frc.team696.lib.HardwareDevices.TalonFactory;
-import frc.team696.lib.Logging.BackupLogger;
 
 public class Elevator extends SubsystemBase {
   private static Elevator m_Elevator = null;
