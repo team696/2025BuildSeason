@@ -53,7 +53,6 @@ public class Wrist extends SubsystemBase {
     positionSignal = motor.getPosition();
     voltageSignal = motor.getMotorVoltage();
     currentSignal = motor.getStatorCurrent();
-    SmartDashboard.putData("Zero Wrist", this.runOnce(() -> zero()).ignoringDisable(true));
   }
 
   public void resetPosition(double newPosition) {
@@ -69,11 +68,11 @@ public class Wrist extends SubsystemBase {
   }
 
   public double getPosition() {
-    return positionSignal.getValueAsDouble();
+    return motor.getPosition().getValueAsDouble();
   }
 
-  public Command Position(double position){
-    return this.runEnd(()->goToPosition(position), ()->motor.set(0.0));
+  public Command Position(double position) {
+    return this.runEnd(() -> goToPosition(position), () -> motor.set(0.0));
   }
 
   public void goToPosition(double position) {
@@ -81,19 +80,13 @@ public class Wrist extends SubsystemBase {
 
   }
 
-  public void goToPosition(CoralScoringPosition position){
+  public void goToPosition(CoralScoringPosition position) {
     goToPosition(position.wristRot.in(Rotation));
   }
 
-
   @Override
   public void periodic() {
-    
 
     // This method will be called once per scheduler run
-    BackupLogger.addToQueue("Wrist/VelocityRpsSquared", velocitySignal.refresh().getValue().in(RotationsPerSecond));
-    BackupLogger.addToQueue("Wrist/CurrentAmps", currentSignal.refresh().getValue().in(Amps));
-    BackupLogger.addToQueue("Wrist/VoltageVolts", voltageSignal.refresh().getValue().in(Volts));
-    BackupLogger.addToQueue("Wrist/PositionRot", positionSignal.refresh().getValue().in(Rotation));
   }
 }

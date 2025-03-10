@@ -67,8 +67,8 @@ public class Elevator extends SubsystemBase {
   }
 
   public void goToPosition(double position) {
-    if (GroundCoral.get().getPosition() > .5) {
-      position = Math.max(position, 30);
+    if (GroundCoral.get().getPosition() > 2.) {
+      position = Math.max(position, 16);
     }
     master.get().setControl(positionReq.withPosition(position));
   }
@@ -118,12 +118,5 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
-    BackupLogger.addToQueue("Elevator/MasterCurrent", master.getCurrent());
-    BackupLogger.addToQueue("Elevator/SlaveCurrent", slave.getCurrent());
-    BackupLogger.addToQueue("Elevator/MasterPosition", master.getPosition());
-    BackupLogger.addToQueue("Elevator/SlavePosition", slave.getPosition());
-    BackupLogger.addToQueue("Elevator/SlaveVelocity", slave.getVelocity());
-    BackupLogger.addToQueue("Elevator/MasterVelocity", master.getVelocity());
-
   }
 }

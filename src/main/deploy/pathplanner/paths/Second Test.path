@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.566,
-        "y": 6.17975
+        "x": 5.992617033407298,
+        "y": 1.9549432938856013
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.579700584987288,
-        "y": 5.806952241681442
+        "x": 4.595626463880671,
+        "y": 1.7228558000493093
       },
       "isLocked": false,
-      "linkedName": "MiddleStart"
+      "linkedName": "Nuts"
     },
     {
       "anchor": {
-        "x": 5.46975,
-        "y": 4.922
+        "x": 1.4531419501972382,
+        "y": 0.8238423785749501
       },
       "prevControl": {
-        "x": 5.71019443267824,
-        "y": 4.990457832232982
+        "x": 2.946701260478304,
+        "y": 1.447724821252465
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "ReefCR"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 1.0,
+    "maxAcceleration": 1.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 58.172553423326704
+    "rotation": 143.60051234648324
   },
   "reversed": false,
-  "folder": "ComponentPaths",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

@@ -25,7 +25,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.BotConstants;
 import frc.robot.util.GameInfo;
-import frc.robot.util.TriggerNTDouble;
 import frc.team696.lib.Logging.BackupLogger;
 
 public class Arm extends SubsystemBase {
@@ -59,11 +58,7 @@ public class Arm extends SubsystemBase {
 
     zeroArm();
     // this.setDefaultCommand(Position(()->0));
-    new TriggerNTDouble("testing/armAngle", ntpos, (ev) -> ntpos = ev);
 
-    SmartDashboard.putData("ArmPlus", Spin(0.1));
-    SmartDashboard.putData("ArmMinus", Spin(-0.1));
-    SmartDashboard.putData("Zero Arm", this.runOnce(() -> zeroArm()).ignoringDisable(true));
   }
 
   public void stop() {
@@ -112,10 +107,5 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    BackupLogger.addToQueue("Arm/VelocityRpsSquared", velocitySignal.refresh().getValue().in(RotationsPerSecond));
-    BackupLogger.addToQueue("Arm/CurrentAmps", currentSignal.refresh().getValue().in(Amps));
-    BackupLogger.addToQueue("Arm/VoltageVolts", voltageSignal.refresh().getValue().in(Volts));
-    BackupLogger.addToQueue("Arm/PositionRot", positionSignal.refresh().getValue().in(Rotations));
   }
 }

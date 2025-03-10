@@ -7,10 +7,9 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Amp;
 import static edu.wpi.first.units.Units.Rotation;
 
-import com.ctre.phoenix6.controls.PositionDutyCycle;
+import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.BotConstants;
@@ -30,7 +29,7 @@ public class GroundCoral extends SubsystemBase {
 
   TalonFX angleMotor = new TalonFX(BotConstants.GroundCoral.angleId, BotConstants.rioBus);
   TalonFX rollerMotor = new TalonFX(BotConstants.GroundCoral.rollerId, BotConstants.rioBus);
-  PositionDutyCycle positionRequest = new PositionDutyCycle(0);
+  MotionMagicDutyCycle positionRequest = new MotionMagicDutyCycle(0);
 
   private GroundCoral() {
     angleMotor.getConfigurator().apply(BotConstants.GroundCoral.angleCfg);
@@ -51,21 +50,22 @@ public class GroundCoral extends SubsystemBase {
     resetPosition(0);
   }
 
-  public void stop(){
+  public void stop() {
     angleMotor.stopMotor();
     rollerMotor.stopMotor();
   }
 
-  public boolean isStalling(){
-    return rollerMotor.getStatorCurrent().getValue().in(Amp)>(BotConstants.GroundCoral.rollerCfg.CurrentLimits.StatorCurrentLimit-20);
+  public boolean isStalling() {
+    return rollerMotor.getStatorCurrent().getValue()
+        .in(Amp) > (BotConstants.GroundCoral.rollerCfg.CurrentLimits.StatorCurrentLimit - 20);
   }
 
-  public double getPosition(){
+  public double getPosition() {
     return angleMotor.getPosition().getValue().in(Rotation);
   }
 
   public void position(double position) {
-    if (Elevator.get().getPosition() >= 30) {
+    if (Elevator.get().getPosition() >= 16) {
       angleMotor.setControl(positionRequest.withPosition(position));
     } else {
       stop();
@@ -84,30 +84,31 @@ public class GroundCoral extends SubsystemBase {
 
   public Command Stowed() {
     return this.runEnd(
-      ()->{position(0); rollerMotor.stopMotor();},
-      this::stop
-    );
+        () -> {
+          position(0);
+          rollerMotor.stopMotor();
+        },
+        this::stop);
   }
 
   public Command Ready() {
     return this.runEnd(
-      ()->{position(0.6 * 9.); rollerMotor.stopMotor();},
-      this::stop
-    );
+        () -> {
+          position(0.6 * 9.);
+          rollerMotor.set(0.3);
+        },
+        this::stop);
   }
 
   public Command Spit() {
-    return this.runEnd(()-> {
+    return this.runEnd(() -> {
       position(0.6 * 9.);
-      if (getPosition() > 30) {
-        rollerMotor.set(-0.6);
-      }
+      rollerMotor.set(-0.6);
     }, this::stop);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("GroundCoral/Position", getPosition());
   }
 }

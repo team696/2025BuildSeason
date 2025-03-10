@@ -80,12 +80,10 @@ public class EndEffector extends SubsystemBase {
     return this.startEnd(() -> run(power), () -> motor.set(0));
   }
 
-  public boolean isStalling(){
-  
-    return motor.getStatorCurrent().getValue().in(Amps) >= 40 && velocitySignal.getValue().in(RotationsPerSecond) < 5;
-  }
+  public boolean isStalling() {
 
-  
+    return motor.getStatorCurrent().getValue().in(Amps) >= 75 && velocitySignal.getValue().in(RotationsPerSecond) < 5;
+  }
 
   public Command spin(DoubleSupplier power) {
     return this.runEnd(() -> run(power.getAsDouble()), () -> motor.set(0));
@@ -97,26 +95,22 @@ public class EndEffector extends SubsystemBase {
 
   @Override
   public void periodic() {
-     
-    // if (isStalling() && BotConstants.Wrist.cfg.MotionMagic.MotionMagicCruiseVelocity == 10. ) {
-    //   BotConstants.Wrist.cfg.MotionMagic.MotionMagicCruiseVelocity = 6.;
-    //   BotConstants.Wrist.cfg.MotionMagic.MotionMagicAcceleration = 6.;
-    //   //Wrist.get().motor.getConfigurator().apply(BotConstants.Wrist.cfg.MotionMagic);
-    //  // idlePower = -0.8;
+
+    // if (isStalling() &&
+    // BotConstants.Wrist.cfg.MotionMagic.MotionMagicCruiseVelocity == 10. ) {
+    // BotConstants.Wrist.cfg.MotionMagic.MotionMagicCruiseVelocity = 6.;
+    // BotConstants.Wrist.cfg.MotionMagic.MotionMagicAcceleration = 6.;
+    // //Wrist.get().motor.getConfigurator().apply(BotConstants.Wrist.cfg.MotionMagic);
+    // // idlePower = -0.8;
     // } else if (!isStalling()) {
-    //   if (BotConstants.Wrist.cfg.MotionMagic.MotionMagicCruiseVelocity < 16.) {
-    //     BotConstants.Wrist.cfg.MotionMagic.MotionMagicCruiseVelocity = 10.;
-    //     BotConstants.Wrist.cfg.MotionMagic.MotionMagicAcceleration = 16.;
-    //     //Wrist.get().motor.getConfigurator().apply(BotConstants.Wrist.cfg.MotionMagic);
-    //   }
-    //   //idlePower = 0.;
+    // if (BotConstants.Wrist.cfg.MotionMagic.MotionMagicCruiseVelocity < 16.) {
+    // BotConstants.Wrist.cfg.MotionMagic.MotionMagicCruiseVelocity = 10.;
+    // BotConstants.Wrist.cfg.MotionMagic.MotionMagicAcceleration = 16.;
+    // //Wrist.get().motor.getConfigurator().apply(BotConstants.Wrist.cfg.MotionMagic);
     // }
-      
-    
+    // //idlePower = 0.;
+    // }
+
     // This method will be called once per scheduler run
-    BackupLogger.addToQueue("EndEffector/VelocityRpsSquared", velocitySignal.refresh().getValue().in(RotationsPerSecond));
-    BackupLogger.addToQueue("EndEffector/CurrentAmps", currentSignal.refresh().getValue().in(Amps));
-    BackupLogger.addToQueue("EndEffector/VoltageVolts", voltageSignal.refresh().getValue().in(Volts));
-    BackupLogger.addToQueue("EndEffector/PositionRot", positionSignal.refresh().getValue().in(Rotations));
   }
 }

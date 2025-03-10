@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.AutoMoveSuperStructure;
 import frc.robot.commands.MoveSuperStructure;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Swerve;
@@ -32,6 +33,7 @@ import frc.team696.lib.Logging.BackupLogger;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.EndEffector;
 import frc.robot.subsystems.GroundCoral;
+import frc.robot.subsystems.LED;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -77,21 +79,15 @@ public class Robot extends TimedRobot {
   private final SendableChooser<Command> autoChooser;
 
   public Robot() {
-    SmartDashboard.putData(CommandScheduler.getInstance());
-    SmartDashboard.putData(Elevator.get());
-    SmartDashboard.putData(Arm.get());
-    SmartDashboard.putData(EndEffector.get());
-    SmartDashboard.putData(Wrist.get());
-    SmartDashboard.putData(GroundCoral.get());
-
-    Swerve.get().registerTelemetry(m_SwerveTelemetry::telemeterize);
-
+    Arm.get();
+    Elevator.get();
+    EndEffector.get();
+    GroundCoral.get();
+    LED.get();
+    Swerve.get();
+    Wrist.get();
     DriverStation.silenceJoystickConnectionWarning(true);
     configureDriverStationBinds();
-
-    // Log Build information
-    logBuildInfo();
-
     Swerve.get().setDefaultCommand(Swerve.get().applyRequest(
         () -> Swerve.fcDriveReq.withVelocityX(
             Math.pow(applyDeadband(HumanControls.DriverPanel.leftJoyY.getAsDouble(), 0.08), 2)
@@ -102,19 +98,18 @@ public class Robot extends TimedRobot {
                 Math.pow(applyDeadband(HumanControls.DriverPanel.rightJoyX.getAsDouble(), 0.08), 2)
                     * Math.signum(HumanControls.DriverPanel.rightJoyX.getAsDouble()) * MaxRotationalRate)));
 
-    SmartDashboard.putData("Face Hex", Swerve.get().applyRequest(
+    HumanControls.DriverPanel.OtherButton.whileTrue(Swerve.get().applyRequest(
         () -> Swerve.fcDriveReq.withVelocityX(
             applyDeadband(HumanControls.DriverPanel.leftJoyY.getAsDouble(), 0.1) * MaxSpeed)
             .withVelocityY(applyDeadband(HumanControls.DriverPanel.leftJoyX.getAsDouble(), 0.1) * MaxSpeed)
             .withRotationalRate(
-                (Swerve.get().getPose().getRotation().minus(Swerve.get().FaceHexFace())).getDegrees() / -120
+                (Swerve.get().getPose().getRotation().minus(Swerve.get().goalRotation.get())).getDegrees() / -300
                     * MaxRotationalRate)));
 
-    SmartDashboard.putData("Reset Gyro", Commands.runOnce(() -> Swerve.get().seedFieldCentric()));
-
-    NamedCommands.registerCommand("hello", new InstantCommand(
-        () -> SmartDashboard.putBoolean("auto", true)));
-
+    NamedCommands.registerCommand("L4", new AutoMoveSuperStructure(
+        GameInfo.RobotState.get(GameInfo.Position.L3).get(GameInfo.RobotSide.Back), -0.6, 0.0).asProxy());
+    NamedCommands.registerCommand("Intake", new AutoMoveSuperStructure(
+        GameInfo.RobotState.get(GameInfo.Position.Intake).get(GameInfo.RobotSide.Front), .6, .1, true).asProxy());
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
@@ -150,7 +145,7 @@ public class Robot extends TimedRobot {
           Elevator.get().getCurrentCommand().cancel();
           GroundCoral.get().getCurrentCommand().cancel();
 
-          Elevator.get().setDefaultCommand(Elevator.get().positionCommand(35));
+          Elevator.get().setDefaultCommand(Elevator.get().positionCommand(20));
           GroundCoral.get().setDefaultCommand(GroundCoral.get().Ready());
           EndEffector.get().idlePower = 0;
         }));
@@ -188,8 +183,9 @@ public class Robot extends TimedRobot {
         new MoveSuperStructure(GameInfo.Net, 1.)
             .deadlineFor(Swerve.get().setGoalRotation(Swerve.get()::FaceNet, Swerve.get()::FaceSource)));
 
-    HumanControls.OperatorPanel2025.SouceCoral.whileTrue(new MoveSuperStructure(
-        GameInfo.RobotState.get(GameInfo.Position.Intake).get(GameInfo.RobotSide.Front), 0.5, false, 0.2));
+    HumanControls.OperatorPanel2025.SouceCoral.whileTrue((new MoveSuperStructure(
+        GameInfo.RobotState.get(GameInfo.Position.Intake).get(GameInfo.RobotSide.Front), 0.6, false, 0.1))
+        .deadlineFor(Swerve.get().setGoalRotation(Swerve.get()::FaceSource, Swerve.get()::FaceHexFace)));
     HumanControls.OperatorPanel2025.Climb1.whileTrue(new MoveSuperStructure(GameInfo.ClimbUp, 0));
     HumanControls.OperatorPanel2025.Processor.whileTrue(new MoveSuperStructure(GameInfo.Processor, 0.6));
     // HumanControls.OperatorPanel2025.pickupAlgae.whileTrue(new
@@ -201,10 +197,12 @@ public class Robot extends TimedRobot {
     long start = RobotController.getTime();
     CommandScheduler.getInstance().run();
     long elapsed = RobotController.getTime() - start;
-    BackupLogger.addToQueue("SchedulerTimeMicroSeconds", elapsed); // Scheduler Time in Microseconds, anything over
-                                                                   // 20,000 should
+    // BackupLogger.addToQueue("SchedulerTimeMicroSeconds", elapsed); // Scheduler
+    // Time in Microseconds, anything over
+    // 20,000 should
 
-    BackupLogger.logSystemInformation();
+    // BackupLogger.logSystemInformation();
+    //
   }
 
   @Override

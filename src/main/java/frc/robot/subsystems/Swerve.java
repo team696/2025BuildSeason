@@ -255,7 +255,7 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
       .withDriveRequestType(com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType.OpenLoopVoltage)
       .withSteerRequestType(SteerRequestType.Position);
   public static SwerveRequest.FieldCentric fcDriveReq = new SwerveRequest.FieldCentric()
-      .withForwardPerspective(ForwardPerspectiveValue.BlueAlliance)
+      .withForwardPerspective(ForwardPerspectiveValue.OperatorPerspective)
       .withDriveRequestType(com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType.OpenLoopVoltage)
       .withSteerRequestType(SteerRequestType.Position);
 
@@ -295,8 +295,11 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
       });
     }
 
-    CamA.addVisionEstimate(this::addVisionMeasurement);
-    CamB.addVisionEstimate(this::addVisionMeasurement);
+    CamA.addVisionEstimate(this::addVisionMeasurement, (Estimate) -> {
+      if (Estimate.distToTag > 4)
+        return false;
+      return true;
+    });
 
   }
 
@@ -363,8 +366,9 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
             GameInfo.blueReef.getY()));
 
     Rotation2d angleToReef = getPose().getTranslation().minus(reefPosition).getAngle();
-
-    Rotation2d hexAngleToReef = Rotation2d.fromDegrees(((int) ((angleToReef.getDegrees() + 30) / 60)) * 60.);
+    Rotation2d hexAngleToReef = Rotation2d
+        .fromDegrees(
+            ((int) ((angleToReef.getDegrees() + Math.signum(angleToReef.getDegrees()) * 30) / 60)) * 60. - 90.);
 
     return hexAngleToReef;
   }
@@ -376,15 +380,15 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
   public Rotation2d FaceSource() {
     if (Util.getAlliance() == Alliance.Blue) {
       if (getPose().getY() > GameInfo.fieldWidthMeters.in(Meters) / 2) {
-        return Rotation2d.fromDegrees(-45);
+        return Rotation2d.fromDegrees(37);
       } else {
-        return Rotation2d.fromDegrees(45);
+        return Rotation2d.fromDegrees(127);
       }
     } else {
       if (getPose().getY() > GameInfo.fieldWidthMeters.in(Meters) / 2) {
-        return Rotation2d.fromDegrees(135);
+        return Rotation2d.fromDegrees(-37);
       } else {
-        return Rotation2d.fromDegrees(-135);
+        return Rotation2d.fromDegrees(-127);
       }
     }
   }
