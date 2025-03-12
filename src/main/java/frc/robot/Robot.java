@@ -99,7 +99,7 @@ public class Robot extends TimedRobot {
         () -> Swerve.fcDriveReq.withVelocityX(
             Math.pow(applyDeadband(HumanControls.DriverPanel.leftJoyY.getAsDouble(), 0.09), 2)
                 * Math.signum(HumanControls.DriverPanel.leftJoyY.getAsDouble()) * MaxSpeed)
-            .withVelocityY(Math.pow(applyDeadband(HumanControls.DriverPanel.leftJoyX.getAsDouble(), 0.07), 2)
+            .withVelocityY(Math.pow(applyDeadband(HumanControls.DriverPanel.leftJoyX.getAsDouble(), 0.09), 2)
                 * Math.signum(HumanControls.DriverPanel.leftJoyX.getAsDouble()) * MaxSpeed)
             .withRotationalRate(
                 Math.pow(applyDeadband(HumanControls.DriverPanel.rightJoyX.getAsDouble(), 0.09), 2)
@@ -134,6 +134,7 @@ public class Robot extends TimedRobot {
     Wrist.get().setDefaultCommand(Wrist.get().Position(0));
     Arm.get().setDefaultCommand(Arm.get().Position(() -> 0));
     EndEffector.get().setDefaultCommand(EndEffector.get().spin(() -> EndEffector.get().idlePower));
+    GroundCoral.get().setDefaultCommand(GroundCoral.get().Stowed());
   }
 
   private void configureDriverStationBinds() {
@@ -152,7 +153,7 @@ public class Robot extends TimedRobot {
           GroundCoral.get().getCurrentCommand().cancel();
           Elevator.get().setDefaultCommand(Elevator.get().positionCommand(0));
           GroundCoral.get().setDefaultCommand(GroundCoral.get().Stowed());
-        }));
+        }).ignoringDisable(true));
 
     HumanControls.OperatorPanel2025.unlabedSwitch.onFalse(
         new InstantCommand(() -> {
@@ -162,7 +163,7 @@ public class Robot extends TimedRobot {
           Elevator.get().setDefaultCommand(Elevator.get().positionCommand(20));
           GroundCoral.get().setDefaultCommand(GroundCoral.get().Ready());
           EndEffector.get().idlePower = 0;
-        }));
+        }).ignoringDisable(true));
 
     HumanControls.OperatorPanel2025.GroundCoral.whileTrue(
         new ConditionalCommand(Commands.none(), GroundCoral.get().Intake(),
@@ -171,7 +172,7 @@ public class Robot extends TimedRobot {
     HumanControls.OperatorPanel2025.L1.whileTrue(
         new ConditionalCommand(
             new MoveSuperStructure(GameInfo.ground, -0.8, false, -.8),
-            new MoveSuperStructure(GameInfo.RobotState.get(GameInfo.Position.L1).get(GameInfo.RobotSide.Back), -0.4),
+            new MoveSuperStructure(GameInfo.RobotState.get(GameInfo.Position.L1).get(GameInfo.RobotSide.Back), -0.3),
             HumanControls.OperatorPanel2025.pickupAlgae::getAsBoolean)
             .deadlineFor(Swerve.get().setGoalRotation(Swerve.get()::FaceHexFace, Swerve.get()::FaceSource)));
 

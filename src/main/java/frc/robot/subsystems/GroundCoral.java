@@ -20,6 +20,19 @@ import frc.robot.BotConstants;
 public class GroundCoral extends SubsystemBase {
   private static GroundCoral m_GroundCoral = null;
 
+  public static enum Positions {
+    Stowed(0),
+    Ready(6.),
+    Spit(6.),
+    Intake(10.8);
+
+    Positions(double value) {
+      this.value = value;
+    }
+
+    double value = 0;
+  }
+
   public static synchronized final GroundCoral get() {
     if (m_GroundCoral == null) {
       m_GroundCoral = new GroundCoral();
@@ -74,8 +87,8 @@ public class GroundCoral extends SubsystemBase {
 
   public Command Intake() {
     return this.startEnd(() -> {
-      position(1.2 * 9.);
-      rollerMotor.set(1.);
+      position(Positions.Intake.value);
+      rollerMotor.set(0.7);
     }, () -> {
       angleMotor.stopMotor();
       rollerMotor.stopMotor();
@@ -85,7 +98,7 @@ public class GroundCoral extends SubsystemBase {
   public Command Stowed() {
     return this.runEnd(
         () -> {
-          position(0);
+          position(Positions.Stowed.value);
           rollerMotor.stopMotor();
         },
         this::stop);
@@ -94,7 +107,7 @@ public class GroundCoral extends SubsystemBase {
   public Command Ready() {
     return this.runEnd(
         () -> {
-          position(0.6 * 9.);
+          position(Positions.Ready.value);
           rollerMotor.set(0.3);
         },
         this::stop);
@@ -102,8 +115,8 @@ public class GroundCoral extends SubsystemBase {
 
   public Command Spit() {
     return this.runEnd(() -> {
-      position(0.6 * 9.);
-      rollerMotor.set(-0.6);
+      position(Positions.Spit.value);
+      rollerMotor.set(-0.4);
     }, this::stop);
   }
 
