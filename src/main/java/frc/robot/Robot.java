@@ -86,6 +86,7 @@ public class Robot extends TimedRobot {
   private final SendableChooser<Command> autoChooser;
 
   public Robot() {
+    thetaController.enableContinuousInput(-180, 180);
     Arm.get();
     Elevator.get();
     EndEffector.get();

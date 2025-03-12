@@ -22,9 +22,9 @@ public class GroundCoral extends SubsystemBase {
 
   public static enum Positions {
     Stowed(0),
-    Ready(6.),
-    Spit(6.),
-    Intake(10.8);
+    Ready(7.),
+    Spit(7.),
+    Intake(14.);
 
     Positions(double value) {
       this.value = value;
