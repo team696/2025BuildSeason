@@ -52,7 +52,7 @@ public class AutoMoveSuperStructure extends Command {
     Wrist.get().goToPosition(position);
     Elevator.get().goToPosition(position);
     if (Math.abs(Wrist.get().getPosition() - position.wristRot.in(Units.Rotation)) < .5
-        && Math.abs(Arm.get().getPosition() - position.armRot.in(Units.Rotation)) < .5
+        && Math.abs(Arm.get().getPosition() - position.armRot.in(Units.Rotation)) < .3
         && Math.abs(Elevator.get().getPosition() - position.height) < .5) {
       EndEffector.get().run(runRollers);
       if (readyToShoot > 99999) {

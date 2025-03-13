@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Rotation;
+
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Wrist;
@@ -23,6 +25,8 @@ public class MoveSuperStructure extends Command {
 
   boolean requirePress = true;
 
+  boolean shouldFlick=false;
+
   public MoveSuperStructure(CoralScoringPosition position, double runRollers, boolean requirePress,
       double postRollerState) {
     this.position = position;
@@ -32,6 +36,7 @@ public class MoveSuperStructure extends Command {
     this.postRollerState = postRollerState;
 
     this.requirePress = requirePress;
+
 
     addRequirements(Arm.get(), Elevator.get(), Wrist.get(), EndEffector.get());
   }
@@ -50,16 +55,27 @@ public class MoveSuperStructure extends Command {
   @Override
   public void execute() {
     Arm.get().goToPosition(position);
-    Wrist.get().goToPosition(position);
+    if(!shouldFlick)
+      Wrist.get().goToPosition(position);
     Elevator.get().goToPosition(position);
 
     if ((!requirePress || HumanControls.OperatorPanel2025.releaseCoral.getAsBoolean())
         && Math.abs(Wrist.get().getPosition() - position.wristRot.in(Units.Rotation)) < .5
         && Math.abs(Arm.get().getPosition() - position.armRot.in(Units.Rotation)) < .5
-        && Math.abs(Elevator.get().getPosition() - position.height) < .5)
+        && Math.abs(Elevator.get().getPosition() - position.height) < .5){
       EndEffector.get().run(runRollers);
-    else
+      if(shouldFlick)
+        Wrist.get().goToPosition(position.wristRot.in(Rotation)+0.3);
+    }else{
       EndEffector.get().run(EndEffector.get().idlePower);
+      if(shouldFlick)
+        Wrist.get().goToPosition(position.wristRot.in(Rotation));
+    }
+  }
+
+  public MoveSuperStructure withFlick(boolean shouldFlick){
+    this.shouldFlick=shouldFlick;
+    return this;
   }
 
   // Called once the command ends or is interrupted.

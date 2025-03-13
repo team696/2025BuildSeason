@@ -13,6 +13,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.BotConstants;
+import frc.team696.lib.Logging.BackupLogger;
 
 /**
  * represents the other coral system that picks up from ground and can score L1
@@ -28,7 +29,7 @@ public class GroundCoral extends SubsystemBase {
   }
 
   TalonFX angleMotor = new TalonFX(BotConstants.GroundCoral.angleId, BotConstants.rioBus);
-  TalonFX rollerMotor = new TalonFX(BotConstants.GroundCoral.rollerId, BotConstants.rioBus);
+  public TalonFX rollerMotor = new TalonFX(BotConstants.GroundCoral.rollerId, BotConstants.rioBus);
   MotionMagicDutyCycle positionRequest = new MotionMagicDutyCycle(0);
 
   private GroundCoral() {
@@ -74,7 +75,7 @@ public class GroundCoral extends SubsystemBase {
 
   public Command Intake() {
     return this.startEnd(() -> {
-      position(1.2 * 9.);
+      position(14);
       rollerMotor.set(1.);
     }, () -> {
       angleMotor.stopMotor();
@@ -94,7 +95,7 @@ public class GroundCoral extends SubsystemBase {
   public Command Ready() {
     return this.runEnd(
         () -> {
-          position(0.6 * 9.);
+          position(6.4);
           rollerMotor.set(0.3);
         },
         this::stop);
@@ -102,13 +103,14 @@ public class GroundCoral extends SubsystemBase {
 
   public Command Spit() {
     return this.runEnd(() -> {
-      position(0.6 * 9.);
+      position(6.4);
       rollerMotor.set(-0.6);
     }, this::stop);
   }
 
   @Override
   public void periodic() {
+    BackupLogger.addToQueue("GroundCoral/Position", angleMotor.getPosition().getValueAsDouble());
     // This method will be called once per scheduler run
   }
 }

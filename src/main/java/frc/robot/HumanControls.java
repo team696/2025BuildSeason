@@ -36,9 +36,6 @@ public final class HumanControls {
         public static final JoystickButton unlabedSwitch=new JoystickButton(OperatorPanel, 15);
         public static final JoystickButton deepOrSwitch=new JoystickButton(OperatorPanel, 16);
 
-
-        // Use one of the switches on the driver station for this
-        //public static final BooleanSupplier manualOverride=new JoystickButton(null, 0);
     }
     public final class DriverPanel{
         public static final Joystick DriverPanel=new Joystick(0);

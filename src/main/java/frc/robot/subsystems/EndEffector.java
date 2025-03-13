@@ -20,6 +20,7 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.BotConstants;
+import frc.team696.lib.Logging.BackupLogger;
 
 /**
  * This class represents the Coral scoring mechanism attached to the arm of the
@@ -106,7 +107,7 @@ public class EndEffector extends SubsystemBase {
     // }
     // //idlePower = 0.;
     // }
-
+    BackupLogger.addToQueue("EndEffector/CurrentAmps", motor.getStatorCurrent().getValueAsDouble());
     // This method will be called once per scheduler run
   }
 }

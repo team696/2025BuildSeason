@@ -16,6 +16,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -297,13 +298,15 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
     }
 
     CamA.addVisionEstimate(this::addVisionMeasurement, (Estimate) -> {
-      if (Estimate.distToTag > 4)
+      if (Estimate.distToTag > 3)
         return false;
+        setVisionMeasurementStdDevs(VecBuilder.fill(0.01*Math.pow(Estimate.distToTag, 2), 0.01*Math.pow(Estimate.distToTag,2), 0.01*Math.pow(Estimate.distToTag,2)));
       return true;
     });
     CamB.addVisionEstimate(this::addVisionMeasurement, (Estimate) -> {
-      if (Estimate.distToTag > 4)
+      if (Estimate.distToTag > 3)
         return false;
+      setVisionMeasurementStdDevs(VecBuilder.fill(0.01*Math.pow(Estimate.distToTag, 2), 0.01*Math.pow(Estimate.distToTag,2), 0.01*Math.pow(Estimate.distToTag,2)));
       return true;
     });
 
@@ -397,5 +400,13 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
         return Rotation2d.fromDegrees(-127);
       }
     }
+  }
+  public Rotation2d FaceProcessor(){
+      if (getPose().getY() > GameInfo.fieldWidthMeters.in(Meters) / 2) {
+        return Rotation2d.fromDegrees(180);
+      } else {
+        return Rotation2d.fromDegrees(0);
+      }
+
   }
 }

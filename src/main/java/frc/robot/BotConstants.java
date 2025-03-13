@@ -53,7 +53,7 @@ public class BotConstants {
     static {
       cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
       cfg.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-      cfg.Slot0.kP = 8.;
+      cfg.Slot0.kP = 30.;
       cfg.CurrentLimits.StatorCurrentLimitEnable = true;
       cfg.CurrentLimits.StatorCurrentLimit = 100.;
       cfg.MotionMagic.MotionMagicCruiseVelocity = 80.;
@@ -67,7 +67,7 @@ public class BotConstants {
     public static int motorID = 14;
     public static TalonFXConfiguration cfg = new TalonFXConfiguration();
     static {
-      cfg.Slot0.kP = 32.;
+      cfg.Slot0.kP = 45.;
       cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
       cfg.MotionMagic.MotionMagicAcceleration = 40.;
       cfg.MotionMagic.MotionMagicCruiseVelocity = 20.;
@@ -83,7 +83,7 @@ public class BotConstants {
     public static TalonFXConfiguration cfg = new TalonFXConfiguration();
     static {
       cfg.CurrentLimits.StatorCurrentLimitEnable = true;
-      cfg.CurrentLimits.StatorCurrentLimit = 80.;
+      cfg.CurrentLimits.StatorCurrentLimit = 120.;
     }
   }
 
@@ -100,7 +100,7 @@ public class BotConstants {
       angleCfg.MotionMagic.MotionMagicCruiseVelocity = 40;
       angleCfg.MotionMagic.MotionMagicAcceleration = 40;
 
-      rollerCfg.CurrentLimits.StatorCurrentLimit = 120;
+      rollerCfg.CurrentLimits.StatorCurrentLimit = 80;
       rollerCfg.CurrentLimits.StatorCurrentLimitEnable = true;
     }
 
