@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "edgetoreef"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "L4"
@@ -13,7 +19,7 @@
       ]
     }
   },
-  "resetOdom": false,
+  "resetOdom": true,
   "folder": null,
   "choreoAuto": false
 }

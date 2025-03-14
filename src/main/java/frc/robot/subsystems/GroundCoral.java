@@ -10,6 +10,7 @@ import static edu.wpi.first.units.Units.Rotation;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.BotConstants;
@@ -21,6 +22,19 @@ import frc.team696.lib.Logging.BackupLogger;
 public class GroundCoral extends SubsystemBase {
   private static GroundCoral m_GroundCoral = null;
 
+  public static enum Positions {
+    Stowed(0),
+    Ready(6.7),
+    Spit(6.7),
+    Intake(14.);
+
+    Positions(double value) {
+      this.value = value;
+    }
+
+    double value = 0;
+  }
+
   public static synchronized final GroundCoral get() {
     if (m_GroundCoral == null) {
       m_GroundCoral = new GroundCoral();
@@ -28,7 +42,7 @@ public class GroundCoral extends SubsystemBase {
     return m_GroundCoral;
   }
 
-  TalonFX angleMotor = new TalonFX(BotConstants.GroundCoral.angleId, BotConstants.rioBus);
+  public TalonFX angleMotor = new TalonFX(BotConstants.GroundCoral.angleId, BotConstants.rioBus);
   public TalonFX rollerMotor = new TalonFX(BotConstants.GroundCoral.rollerId, BotConstants.rioBus);
   MotionMagicDutyCycle positionRequest = new MotionMagicDutyCycle(0);
 
@@ -75,8 +89,8 @@ public class GroundCoral extends SubsystemBase {
 
   public Command Intake() {
     return this.startEnd(() -> {
-      position(14);
-      rollerMotor.set(1.);
+      position(Positions.Intake.value);
+      rollerMotor.set(0.7);
     }, () -> {
       angleMotor.stopMotor();
       rollerMotor.stopMotor();
@@ -86,7 +100,7 @@ public class GroundCoral extends SubsystemBase {
   public Command Stowed() {
     return this.runEnd(
         () -> {
-          position(0);
+          position(Positions.Stowed.value);
           rollerMotor.stopMotor();
         },
         this::stop);
@@ -95,7 +109,7 @@ public class GroundCoral extends SubsystemBase {
   public Command Ready() {
     return this.runEnd(
         () -> {
-          position(6.4);
+          position(Positions.Ready.value);
           rollerMotor.set(0.3);
         },
         this::stop);
@@ -103,14 +117,14 @@ public class GroundCoral extends SubsystemBase {
 
   public Command Spit() {
     return this.runEnd(() -> {
-      position(6.4);
-      rollerMotor.set(-0.6);
+      position(Positions.Spit.value);
+      rollerMotor.set(-0.4);
     }, this::stop);
   }
 
   @Override
   public void periodic() {
-    BackupLogger.addToQueue("GroundCoral/Position", angleMotor.getPosition().getValueAsDouble());
     // This method will be called once per scheduler run
+    BackupLogger.addToQueue("GroundCoral/Angle", getPosition());
   }
 }

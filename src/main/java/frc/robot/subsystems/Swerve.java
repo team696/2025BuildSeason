@@ -300,13 +300,15 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
     CamA.addVisionEstimate(this::addVisionMeasurement, (Estimate) -> {
       if (Estimate.distToTag > 3)
         return false;
-        setVisionMeasurementStdDevs(VecBuilder.fill(0.01*Math.pow(Estimate.distToTag, 2), 0.01*Math.pow(Estimate.distToTag,2), 0.01*Math.pow(Estimate.distToTag,2)));
+      setVisionMeasurementStdDevs(VecBuilder.fill(0.01 * Math.pow(Estimate.distToTag, 2),
+          0.01 * Math.pow(Estimate.distToTag, 2), 0.01 * Math.pow(Estimate.distToTag, 2)));
       return true;
     });
     CamB.addVisionEstimate(this::addVisionMeasurement, (Estimate) -> {
       if (Estimate.distToTag > 3)
         return false;
-      setVisionMeasurementStdDevs(VecBuilder.fill(0.01*Math.pow(Estimate.distToTag, 2), 0.01*Math.pow(Estimate.distToTag,2), 0.01*Math.pow(Estimate.distToTag,2)));
+      setVisionMeasurementStdDevs(VecBuilder.fill(0.01 * Math.pow(Estimate.distToTag, 2),
+          0.01 * Math.pow(Estimate.distToTag, 2), 0.01 * Math.pow(Estimate.distToTag, 2)));
       return true;
     });
 
@@ -401,12 +403,13 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
       }
     }
   }
-  public Rotation2d FaceProcessor(){
-      if (getPose().getY() > GameInfo.fieldWidthMeters.in(Meters) / 2) {
-        return Rotation2d.fromDegrees(180);
-      } else {
-        return Rotation2d.fromDegrees(0);
-      }
+
+  public Rotation2d FaceProcessor() {
+    if (getPose().getY() > GameInfo.fieldWidthMeters.in(Meters) / 2) {
+      return Rotation2d.fromDegrees(180);
+    } else {
+      return Rotation2d.fromDegrees(0);
+    }
 
   }
 }

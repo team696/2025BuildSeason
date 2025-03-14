@@ -130,7 +130,6 @@ public class Robot extends TimedRobot {
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
-    SmartDashboard.putData("Auto Score L1", new GroundScore());
     // Warmup Commands for PathPlanner
     PathfindingCommand.warmupCommand().schedule();
 

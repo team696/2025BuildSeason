@@ -11,10 +11,13 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.BotConstants;
@@ -37,6 +40,9 @@ public class Wrist extends SubsystemBase {
   StatusSignal<Voltage> voltageSignal;
   StatusSignal<Current> currentSignal;
 
+  // toorian wanted this oscar don't kill me
+  NetworkTableEntry bias=NetworkTableInstance.getDefault().getEntry("wristBias");
+
   MotionMagicVoltage WristPoistionRequest = new MotionMagicVoltage(0);
   VoltageOut WristVoltageRequest = new VoltageOut(0);
 
@@ -48,6 +54,8 @@ public class Wrist extends SubsystemBase {
     positionSignal = motor.getPosition();
     voltageSignal = motor.getMotorVoltage();
     currentSignal = motor.getStatorCurrent();
+    bias.setDouble(0.0);
+    SmartDashboard.putData("SetWristBias", this.runOnce(()->resetPosition(positionSignal.getValueAsDouble()+bias.getDouble(0))));
   }
 
   public void resetPosition(double newPosition) {
