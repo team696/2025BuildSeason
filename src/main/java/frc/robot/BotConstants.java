@@ -53,7 +53,7 @@ public class BotConstants {
     static {
       cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
       cfg.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-      cfg.Slot0.kP = 1.;
+      cfg.Slot0.kP = 30.;
       cfg.CurrentLimits.StatorCurrentLimitEnable = true;
       cfg.CurrentLimits.StatorCurrentLimit = 100.;
       cfg.MotionMagic.MotionMagicCruiseVelocity = 80.;

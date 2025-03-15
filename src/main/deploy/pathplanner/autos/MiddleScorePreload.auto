@@ -15,6 +15,30 @@
           "data": {
             "name": "L4"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "runtoSource"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceToReef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L4"
+          }
         }
       ]
     }

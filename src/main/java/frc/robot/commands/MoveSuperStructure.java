@@ -65,7 +65,7 @@ public class MoveSuperStructure extends Command {
         && Math.abs(Elevator.get().getPosition() - position.height) < .5){
       EndEffector.get().run(runRollers);
       if(shouldFlick)
-        Wrist.get().goToPosition(position.wristRot.in(Rotation)+1);
+        Wrist.get().goToPosition(position.wristRot.in(Rotation)+3);
     }else{
       EndEffector.get().run(EndEffector.get().idlePower);
       if(shouldFlick)

@@ -8,12 +8,15 @@ import static edu.wpi.first.units.Units.Rotations;
 
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.BotConstants;
@@ -30,32 +33,27 @@ public class Arm extends SubsystemBase {
   }
 
   TalonFX master = new TalonFX(BotConstants.Arm.masterID, BotConstants.rioBus);
+  StatusSignal<AngularVelocity> velocitySignal;
+  StatusSignal<Angle> positionSignal;
+  StatusSignal<Voltage> voltageSignal;
+  StatusSignal<Current> currentSignal;
 
   MotionMagicVoltage positionRequest = new MotionMagicVoltage(0);
   VoltageOut voltageRequest = new VoltageOut(0);
 
-  boolean slowMode = false;
-
-  ProfiledPIDController pidController = new ProfiledPIDController(3., 0, 0.3, new TrapezoidProfile.Constraints(85., 120.)); // Need
-  // to
-  // use
-  // this
-  // because
-  // CTR SHITTYTRONICS IS
-  // GATEKEEPING BASIC
-  // FUNCTIONALITY
-  //
-  ProfiledPIDController slowPidController = new ProfiledPIDController(BotConstants.Arm.cfg.Slot0.kP, 0, 0,
-      new TrapezoidProfile.Constraints(60., 35.));
+  double ntpos = 0;
 
   /** Creates a new Arm. */
   private Arm() {
     master.getConfigurator().apply(BotConstants.Arm.cfg);
+    velocitySignal = master.getVelocity();
+    positionSignal = master.getPosition();
+    voltageSignal = master.getMotorVoltage();
+    currentSignal = master.getStatorCurrent();
 
     zeroArm();
+    // this.setDefaultCommand(Position(()->0));
 
-    pidController.reset(0);
-    slowPidController.reset(0);
   }
 
   public void stop() {
@@ -70,36 +68,39 @@ public class Arm extends SubsystemBase {
     resetArmPosition(0);
   }
 
-  public void goToPosition(double position) {
-    master.setControl(voltageRequest.withOutput(pidController.calculate(getPosition(), position)));
-  }
-
   public void goToPosition(GameInfo.CoralScoringPosition position) {
-    goToPosition(position.armRot.in(Rotations));
-  }
-
-  public void goToPosition(DoubleSupplier position) {
-    goToPosition(position.getAsDouble());
+    master.setControl(positionRequest.withPosition(position.armRot.in(Rotations)));
   }
 
   public Command Position(DoubleSupplier position) {
-    return this.runEnd(() -> goToPosition(position),
-        () -> stop());
+    return this.runEnd(() -> master.setControl(positionRequest.withPosition(position.getAsDouble())),
+        () -> master.set(0));
   }
 
   public Command Position(GameInfo.CoralScoringPosition position) {
-    return this.startEnd(() -> goToPosition(position),
-        () -> stop());
+    return this.startEnd(() -> master.setControl(positionRequest.withPosition(position.armRot.in(Rotations))),
+        () -> master.set(0));
   }
 
   public double getPosition() {
     return master.getPosition().getValueAsDouble();
   }
 
+  public Command ArmWithNTPosition() {
+    return this.runEnd(() -> master.setControl(positionRequest.withPosition(ntpos)), () -> master.stopMotor());
+  }
+
+  /**
+   * Spins the arm at a certain fraction of the motors
+   * 
+   * @param speed [-1, 1]
+   * @return the command that spins the arm
+   */
+  public Command Spin(double speed) {
+    return this.runEnd(() -> master.setControl(voltageRequest.withOutput(speed * 12)), () -> master.set(0));
+  }
+
   @Override
   public void periodic() {
-    pidController.calculate(getPosition());
-    slowPidController.calculate(getPosition());
-
   }
 }
