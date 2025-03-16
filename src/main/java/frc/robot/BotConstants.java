@@ -97,8 +97,8 @@ public class BotConstants {
       angleCfg.CurrentLimits.StatorCurrentLimit = 120;
       angleCfg.CurrentLimits.StatorCurrentLimitEnable = true;
       angleCfg.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-      angleCfg.MotionMagic.MotionMagicCruiseVelocity = 40;
-      angleCfg.MotionMagic.MotionMagicAcceleration = 40;
+      angleCfg.MotionMagic.MotionMagicCruiseVelocity = 60;
+      angleCfg.MotionMagic.MotionMagicAcceleration = 30;
 
       rollerCfg.CurrentLimits.StatorCurrentLimit = 120;
       rollerCfg.CurrentLimits.StatorCurrentLimitEnable = true;

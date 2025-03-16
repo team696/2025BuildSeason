@@ -10,6 +10,7 @@ import static edu.wpi.first.units.Units.Rotation;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.BotConstants;
@@ -22,9 +23,9 @@ public class GroundCoral extends SubsystemBase {
 
   public static enum Positions {
     Stowed(0),
-    Ready(7.),
-    Spit(7.),
-    Intake(14.);
+    Ready(7.3),
+    Spit(7.3),
+    Intake(12.5);
 
     Positions(double value) {
       this.value = value;
@@ -78,11 +79,7 @@ public class GroundCoral extends SubsystemBase {
   }
 
   public void position(double position) {
-    if (Elevator.get().getPosition() >= 16) {
-      angleMotor.setControl(positionRequest.withPosition(position));
-    } else {
-      stop();
-    }
+    angleMotor.setControl(positionRequest.withPosition(position));
   }
 
   public Command Intake() {
@@ -98,7 +95,12 @@ public class GroundCoral extends SubsystemBase {
   public Command Stowed() {
     return this.runEnd(
         () -> {
-          position(Positions.Stowed.value);
+          if (Elevator.get().getPosition() > 20
+              || this.getPosition() < 4) {
+            position(Positions.Stowed.value);
+          } else {
+            position(Positions.Ready.value);
+          }
           rollerMotor.stopMotor();
         },
         this::stop);
@@ -107,7 +109,11 @@ public class GroundCoral extends SubsystemBase {
   public Command Ready() {
     return this.runEnd(
         () -> {
-          position(Positions.Ready.value);
+          if (Elevator.get().getPosition() > 20 || this.getPosition() > 6.) {
+            position(Positions.Ready.value);
+          } else {
+            position(Positions.Stowed.value);
+          }
           rollerMotor.set(0.3);
         },
         this::stop);
@@ -122,6 +128,7 @@ public class GroundCoral extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("GroundCoral/Position", getPosition());
     // This method will be called once per scheduler run
   }
 }

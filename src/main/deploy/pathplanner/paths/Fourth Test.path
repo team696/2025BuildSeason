@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.91479328464004,
-        "y": 2.9057453464003937
+        "x": 4.1040376140285995,
+        "y": 2.868407914201183
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.050264268984221,
-        "y": 1.7830794656065079
+        "x": 3.115277906188363,
+        "y": 1.8700347479043384
       },
       "isLocked": false,
-      "linkedName": "Nuts"
+      "linkedName": "third"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 0.8693047337278097
       },
       "prevControl": {
-        "x": 2.645024731878695,
-        "y": 1.4931871764053244
+        "x": 2.232266241370808,
+        "y": 1.5271133814102564
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,7 +48,7 @@
   "folder": "RightSide",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -149.5631867906827
+    "rotation": 150.0
   },
   "useDefaultConstraints": true
 }

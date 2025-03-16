@@ -7,25 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "First Test"
+            "pathName": "MiddleOne"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "L4"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Second Test"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake"
           }
         }
       ]

@@ -83,7 +83,7 @@ public class GameInfo {
   }
 
   public final static Map<Position, Map<RobotSide, CoralScoringPosition>> RobotState;
-
+  public final static double wristOffset = 1.15;
   static {
     ScoringPosesBlue = Map.of(
         Index.One, Map.of(
@@ -112,27 +112,27 @@ public class GameInfo {
 
     RobotState = Map.of(
         Position.L1, Map.of(
-            RobotSide.Front, new CoralScoringPosition(0., 1.75, 1.1),
-            RobotSide.Back, new CoralScoringPosition(0, -1., -8.)),
+            RobotSide.Front, new CoralScoringPosition(0., 1.75, 1.1 - wristOffset),
+            RobotSide.Back, new CoralScoringPosition(0, -1., -8. - wristOffset)),
         Position.L2, Map.of(
-            RobotSide.Front, new CoralScoringPosition(14., 1.75, 1.56),
-            RobotSide.Back, new CoralScoringPosition(4., -1., -8.1)),
+            RobotSide.Front, new CoralScoringPosition(14., 1.75, 1.56 - wristOffset),
+            RobotSide.Back, new CoralScoringPosition(4., -1., -8.1 - wristOffset)),
         Position.L3, Map.of(
-            RobotSide.Front, new CoralScoringPosition(33., 1.75, 1.1),
-            RobotSide.Back, new CoralScoringPosition(25., -1., -7.9)),
+            RobotSide.Front, new CoralScoringPosition(33., 1.75, 1.1 - wristOffset),
+            RobotSide.Back, new CoralScoringPosition(25., -1., -8.1 - wristOffset)),
         Position.L4, Map.of(
-            RobotSide.Front, new CoralScoringPosition(67., 0.7, 1.6),
-            RobotSide.Back, new CoralScoringPosition(62, -1.1, -9.)),
+            RobotSide.Front, new CoralScoringPosition(67., 0.7, 1.6 - wristOffset),
+            RobotSide.Back, new CoralScoringPosition(64, -1.1, -9. - wristOffset)),
         Position.Intake, Map.of(
-            RobotSide.Front, new CoralScoringPosition(6., 1., -0.9),
-            RobotSide.Back, new CoralScoringPosition(0, 0, 0)));
-    L2Algae = new CoralScoringPosition(18., -3., 1.);
-    L3Algae = new CoralScoringPosition(44., -3., 1.);
-    Net = new CoralScoringPosition(67., 0., 6.5);
-    ClimbUp = new CoralScoringPosition(27, 0, 0);
-    ClimbDown = new CoralScoringPosition(2, 0, 0);
-    ground = new CoralScoringPosition(5., -6.3, -.5);
-    Processor = new CoralScoringPosition(0, -5., 1.);
+            RobotSide.Front, new CoralScoringPosition(6., 1., -0.9 - wristOffset),
+            RobotSide.Back, new CoralScoringPosition(0, 0, 0 - wristOffset)));
+    L2Algae = new CoralScoringPosition(17., -3., 1. - wristOffset);
+    L3Algae = new CoralScoringPosition(38., -3., 1. - wristOffset);
+    Net = new CoralScoringPosition(67., 0., 6.5 - wristOffset);
+    ClimbUp = new CoralScoringPosition(27, 0, 0 - wristOffset);
+    ClimbDown = new CoralScoringPosition(2, 0, 0 - wristOffset);
+    ground = new CoralScoringPosition(5., -6.3, -.5 - wristOffset);
+    Processor = new CoralScoringPosition(0, -5., 1. - wristOffset);
   }
 
 }

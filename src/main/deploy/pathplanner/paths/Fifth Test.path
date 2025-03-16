@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.91479328464004,
-        "y": 2.9057453464003937
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 4.050264268984221,
-        "y": 1.7830794656065079
-      },
-      "isLocked": false,
-      "linkedName": "Nuts"
-    },
-    {
-      "anchor": {
         "x": 1.1514654215976328,
         "y": 0.8693047337278097
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.9153322238658776,
+        "y": 1.5428670488165666
+      },
+      "isLocked": false,
+      "linkedName": "balls"
+    },
+    {
+      "anchor": {
+        "x": 3.781769677638067,
+        "y": 3.0356200690335298
+      },
       "prevControl": {
-        "x": 2.645024731878695,
-        "y": 1.4931871764053244
+        "x": 2.5871579142011836,
+        "y": 1.9796281743096635
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "balls"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 146.1455719493309
+    "rotation": 145.85153165654307
   },
   "reversed": false,
   "folder": "RightSide",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -149.5631867906827
+    "rotation": 146.1455719493309
   },
   "useDefaultConstraints": true
 }

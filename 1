@@ -82,7 +82,7 @@ public class AutoMoveSuperStructure extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Timer.getFPGATimestamp() - readyToShoot > 0.6)
+    return (Timer.getFPGATimestamp() - readyToShoot > 1)
         && (!waitForStall || EndEffector.get().isStalling());
   }
 }

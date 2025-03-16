@@ -18,6 +18,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -36,6 +37,7 @@ import frc.robot.TunerConstants;
 import frc.robot.TunerConstants.TunerSwerveDrivetrain;
 import frc.robot.util.GameInfo;
 import frc.team696.lib.Util;
+import frc.team696.lib.Camera.BaseCam;
 import frc.team696.lib.Camera.LimeLightCam;
 
 /**
@@ -52,6 +54,8 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
   public LimeLightCam CamA = new LimeLightCam("limelight-right");
   public LimeLightCam CamB = new LimeLightCam("limelight-left");
 
+  Rotation2d yawOffset = new Rotation2d(0);
+
   public Supplier<Rotation2d> goalRotation = () -> new Rotation2d();
 
   public Command setGoalRotation(Supplier<Rotation2d> during, Supplier<Rotation2d> after) {
@@ -65,6 +69,10 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
       }
     });
 
+  }
+
+  public void updateYawOffset() {
+    yawOffset = getPose().getRotation().minus(getPigeon2().getRotation2d());
   }
 
   public static synchronized Swerve get() {
@@ -276,6 +284,8 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
 
   @Override
   public void periodic() {
+    if (DriverStation.isDisabled())
+      updateYawOffset();
     /*
      * Periodically try to apply the operator perspective.
      * If we haven't applied the operator perspective before, then we should apply
@@ -297,16 +307,30 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
       });
     }
 
-    CamA.addVisionEstimate(this::addVisionMeasurement, (Estimate) -> {
-      if (Estimate.distToTag > 4)
+    BaseCam.acceptEstimate estimate = (Estimate) -> {
+      if (Estimate.distToTag > 3.5)
         return false;
+
+      if (Estimate.ambiguity > 0.4)
+        return false; // Too Ambiguous, Ignore
+      if (getState().Speeds.omegaRadiansPerSecond > 2.5)
+        return false; // Rotating too fast, ignore
+
+      if (Estimate.distToTag < 1) {
+        setVisionMeasurementStdDevs(VecBuilder.fill(0.001, 0.001, 0.001));
+      } else {
+        setVisionMeasurementStdDevs(
+            VecBuilder.fill(Estimate.ambiguity * Math.pow(Estimate.distToTag, 2),
+                Estimate.ambiguity * Math.pow(Estimate.distToTag, 2),
+                Estimate.ambiguity * Math.pow(Estimate.distToTag, 2)));
+      }
       return true;
-    });
-    CamB.addVisionEstimate(this::addVisionMeasurement, (Estimate) -> {
-      if (Estimate.distToTag > 4)
-        return false;
-      return true;
-    });
+    };
+    CamA.SetRobotOrientation(yawOffset);
+    CamB.SetRobotOrientation(yawOffset);
+
+    CamA.addVisionEstimate(this::addVisionMeasurement, estimate);
+    CamB.addVisionEstimate(this::addVisionMeasurement, estimate);
 
   }
 
@@ -398,6 +422,14 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
       } else {
         return Rotation2d.fromDegrees(-127);
       }
+    }
+  }
+
+  public Rotation2d FaceProcessor() {
+    if (getPose().getY() > GameInfo.fieldWidthMeters.in(Meters) / 2) {
+      return Rotation2d.fromDegrees(180);
+    } else {
+      return Rotation2d.fromDegrees(0);
     }
   }
 }

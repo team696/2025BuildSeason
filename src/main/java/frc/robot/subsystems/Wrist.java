@@ -6,15 +6,11 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Rotation;
 
-import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Current;
-import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.BotConstants;
@@ -30,12 +26,7 @@ public class Wrist extends SubsystemBase {
     return m_Wrist;
   }
 
-  public TalonFX motor = new TalonFX(BotConstants.Wrist.motorID, BotConstants.rioBus);
-
-  StatusSignal<AngularVelocity> velocitySignal;
-  StatusSignal<Angle> positionSignal;
-  StatusSignal<Voltage> voltageSignal;
-  StatusSignal<Current> currentSignal;
+  private TalonFX motor = new TalonFX(BotConstants.Wrist.motorID, BotConstants.rioBus);
 
   MotionMagicVoltage WristPoistionRequest = new MotionMagicVoltage(0);
   VoltageOut WristVoltageRequest = new VoltageOut(0);
@@ -44,10 +35,6 @@ public class Wrist extends SubsystemBase {
   private Wrist() {
     motor.getConfigurator().apply(BotConstants.Wrist.cfg);
     zero();
-    velocitySignal = motor.getVelocity();
-    positionSignal = motor.getPosition();
-    voltageSignal = motor.getMotorVoltage();
-    currentSignal = motor.getStatorCurrent();
   }
 
   public void resetPosition(double newPosition) {
@@ -81,7 +68,7 @@ public class Wrist extends SubsystemBase {
 
   @Override
   public void periodic() {
-
+    SmartDashboard.putNumber("Wrist/Position", getPosition());
     // This method will be called once per scheduler run
   }
 }

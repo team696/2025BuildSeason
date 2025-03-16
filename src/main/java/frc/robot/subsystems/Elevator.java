@@ -10,6 +10,8 @@ import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 
 import edu.wpi.first.units.measure.Voltage;
@@ -68,7 +70,7 @@ public class Elevator extends SubsystemBase {
   public void goToPosition(double position) {
     if (GroundCoral.get().getPosition() > GroundCoral.Positions.Stowed.value + 2.
         && GroundCoral.get().getPosition() < GroundCoral.Positions.Ready.value - 1) {
-      position = Math.max(position, 16);
+      position = Math.max(position, 25);
     }
     master.get().setControl(positionReq.withPosition(position));
   }
@@ -95,6 +97,10 @@ public class Elevator extends SubsystemBase {
 
   public Command positionCommand(double position) {
     return this.runEnd(() -> goToPosition(position), () -> master.VoltageOut(Volts.of(0)));
+  }
+
+  public Command positionCommand(DoubleSupplier position) {
+    return this.runEnd(() -> goToPosition(position.getAsDouble()), () -> stop());
   }
 
   /**

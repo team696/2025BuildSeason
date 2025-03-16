@@ -36,7 +36,6 @@ public class Arm extends SubsystemBase {
 
   boolean slowMode = false;
 
-  ProfiledPIDController pidController = new ProfiledPIDController(8., 0, 0, new TrapezoidProfile.Constraints(85., 65.)); // Need
   // to
   // use
   // this
@@ -45,7 +44,7 @@ public class Arm extends SubsystemBase {
   // GATEKEEPING BASIC
   // FUNCTIONALITY
   //
-  ProfiledPIDController slowPidController = new ProfiledPIDController(8., 0, 0,
+  ProfiledPIDController slowPidController = new ProfiledPIDController(1., 0, 0,
       new TrapezoidProfile.Constraints(60., 35.));
 
   /** Creates a new Arm. */
@@ -54,7 +53,6 @@ public class Arm extends SubsystemBase {
 
     zeroArm();
 
-    pidController.reset(0);
     slowPidController.reset(0);
   }
 
@@ -71,7 +69,11 @@ public class Arm extends SubsystemBase {
   }
 
   public void goToPosition(double position) {
-    master.setControl(voltageRequest.withOutput(pidController.calculate(getPosition(), position)));
+    if (!slowMode) {
+      master.setControl(positionRequest.withPosition(position));
+    } else {
+      master.setControl(voltageRequest.withOutput(slowPidController.calculate(getPosition(), position)));
+    }
   }
 
   public void goToPosition(GameInfo.CoralScoringPosition position) {
@@ -98,7 +100,6 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    pidController.calculate(getPosition());
     slowPidController.calculate(getPosition());
 
   }

@@ -49,17 +49,24 @@ public class MoveSuperStructure extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Arm.get().goToPosition(position);
     Wrist.get().goToPosition(position);
     Elevator.get().goToPosition(position);
 
-    if ((!requirePress || HumanControls.OperatorPanel2025.releaseCoral.getAsBoolean())
-        && Math.abs(Wrist.get().getPosition() - position.wristRot.in(Units.Rotation)) < .5
-        && Math.abs(Arm.get().getPosition() - position.armRot.in(Units.Rotation)) < .5
-        && Math.abs(Elevator.get().getPosition() - position.height) < .5)
-      EndEffector.get().run(runRollers);
-    else
+    if (Math.abs(Wrist.get().getPosition() - position.wristRot.in(Units.Rotation)) < .5
+        && Math.abs(Elevator.get().getPosition() - position.height) < .5) {
+
+      Arm.get().goToPosition(position);
+      if (Math.abs(Arm.get().getPosition() - position.armRot.in(Units.Rotation)) < .5
+          && (!requirePress || HumanControls.OperatorPanel2025.releaseCoral.getAsBoolean())) {
+
+        EndEffector.get().run(runRollers);
+      } else {
+        EndEffector.get().run(EndEffector.get().idlePower);
+      }
+    } else {
+      Arm.get().goToPosition(0);
       EndEffector.get().run(EndEffector.get().idlePower);
+    }
   }
 
   // Called once the command ends or is interrupted.
