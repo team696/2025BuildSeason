@@ -10,9 +10,13 @@ import static edu.wpi.first.units.Units.Rotation;
 
 import java.util.Map;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.team696.lib.Util;
 
 /**
  * A class contianing all the positions needed to move the superstructure into a
@@ -62,12 +66,19 @@ public class GameInfo {
   public final static Distance fieldWidthMeters = Feet.of(26.75);
 
   public static Translation2d mirrorTranslation(Translation2d starting) {
-    return new Translation2d(fieldLengthMeters.in(Meters) - starting.getY(), starting.getY());
+    return new Translation2d(17.55- starting.getX(), starting.getY());
+  }
+  public static Translation2d mirrorTranslationXY(Translation2d starting) {
+    return new Translation2d(17.55- starting.getX(), fieldWidthMeters.in(Meters)-starting.getY());
+  }
+
+  public static Map<Index, Map<ReefSide, Pose2d>> getScoringPoses(){
+    return (Util.getAlliance()==Alliance.Red)?ScoringPosesRed:ScoringPosesBlue;
   }
 
   public final static Translation2d blueReef = new Translation2d(4.5, 4.);
 
-  public final static Map<Index, Map<ReefSide, Translation2d>> ScoringPosesBlue;
+  public final static Map<Index, Map<ReefSide, Pose2d>> ScoringPosesBlue, ScoringPosesRed;
 
   public enum Position {
     L1,
@@ -87,29 +98,33 @@ public class GameInfo {
   static {
     ScoringPosesBlue = Map.of(
         Index.One, Map.of(
-            ReefSide.Right, new Translation2d(4.046, 5.322),
-            ReefSide.Left, new Translation2d(3.539, 4.912)),
+            ReefSide.Right, new Pose2d(3.29, 3.76, Rotation2d.fromDegrees(90)),
+            ReefSide.Left, new Pose2d(3.3, 4.10, Rotation2d.fromDegrees(90))),
 
         Index.Two, Map.of(
-            ReefSide.Right, new Translation2d(3.188, 4.473),
-            ReefSide.Left, new Translation2d(3.179, 3.752)),
+            ReefSide.Right, new Pose2d(3.66, 4.96, Rotation2d.fromDegrees(30)),
+            ReefSide.Left, new Pose2d(4.02, 5.1, Rotation2d.fromDegrees(30))),
 
         Index.Three, Map.of(
-            ReefSide.Right, new Translation2d(3.481, 3.050),
-            ReefSide.Left, new Translation2d(4.056, 2.689)),
+            ReefSide.Right, new Pose2d(4.87, 5.21, Rotation2d.fromDegrees(-30)),
+            ReefSide.Left, new Pose2d(5.16, 5.02, Rotation2d.fromDegrees(-30))),
 
         Index.Four, Map.of(
-            ReefSide.Right, new Translation2d(4.836, 2.679),
-            ReefSide.Left, new Translation2d(5.450, 2.992)),
+            ReefSide.Right, new Pose2d(5.66, 4.28, Rotation2d.fromDegrees(-90)),
+            ReefSide.Left, new Pose2d(5.68, 3.91, Rotation2d.fromDegrees(-90))),
 
         Index.Five, Map.of(
-            ReefSide.Right, new Translation2d(5.821, 3.762),
-            ReefSide.Left, new Translation2d(5.850, 4.376)),
+            ReefSide.Right, new Pose2d(5.30, 3.10, Rotation2d.fromDegrees(-150)),
+            ReefSide.Left, new Pose2d(5, 2.94, Rotation2d.fromDegrees(-150))),
 
         Index.Six, Map.of(
-            ReefSide.Right, new Translation2d(5.489, 4.932),
-            ReefSide.Left, new Translation2d(4.924, 5.351)));
+            ReefSide.Right, new Pose2d(4.09, 2.87, Rotation2d.fromDegrees(150)),
+            ReefSide.Left, new Pose2d(3.78, 3.05, Rotation2d.fromDegrees(150))));
 
+    ScoringPosesRed = Util.transformNestedMap(ScoringPosesBlue, (p2d) -> {
+      return new Pose2d(mirrorTranslationXY(p2d.getTranslation()),
+          p2d.getRotation().rotateBy(Rotation2d.fromDegrees(180)));
+    });
     RobotState = Map.of(
         Position.L1, Map.of(
             RobotSide.Front, new CoralScoringPosition(0., 1.75, 1.1 - wristOffset),

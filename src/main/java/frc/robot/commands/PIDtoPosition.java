@@ -23,17 +23,22 @@ public class PIDtoPosition extends Command {
   private ProfiledPIDController xController, yController, omegaController;
   private Pose2d goalPose;
 
+  private double calculateWithTolerance(ProfiledPIDController controller, double measurement, double goal){
+    double tolerance=controller.getPositionTolerance();
+    double error=goal-measurement;
+    return Math.abs(error)<tolerance?0:controller.calculate(measurement, goal);
+  }
   public PIDtoPosition(Pose2d goalPose) {
     System.out.println("Driving to "+goalPose.getX()+","+goalPose.getY());
     
 
     addRequirements(Swerve.get());
-    xController=new ProfiledPIDController(/*1.7*/3, 0.0, 0.0, new TrapezoidProfile.Constraints(1.0, 1.4));
-    yController=new ProfiledPIDController(/*1.7*/3, 0.0, 0.0, new TrapezoidProfile.Constraints(1.0, 1.4));
+    xController=new ProfiledPIDController(/*1.7*/8, 0.0, 0.0, new TrapezoidProfile.Constraints(1.0, 1.4));
+    yController=new ProfiledPIDController(/*1.7*/8, 0.0, 0.0, new TrapezoidProfile.Constraints(1.0, 1.4));
     xController.setTolerance(0.01);
     yController.setTolerance(0.01);
     
-    omegaController=new ProfiledPIDController(2 , /*1*/0, /*0.3*/0, new TrapezoidProfile.Constraints(1.6, 0.6));
+    omegaController=new ProfiledPIDController(6 , /*1*/0, /*0.3*/0, new TrapezoidProfile.Constraints(1.6, 0.6));
     omegaController.enableContinuousInput(-Math.PI, Math.PI);
     omegaController.setTolerance(0.08);
 

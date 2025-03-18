@@ -275,8 +275,9 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
 
   public void Drive(ChassisSpeeds c, boolean fieldRelative) {
     if (fieldRelative) {
-      this.setControl(fcDriveReq.withVelocityX(c.vxMetersPerSecond).withVelocityY(c.vyMetersPerSecond)
-          .withRotationalRate(c.omegaRadiansPerSecond));
+      setControl(rcDriveReq.withSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(c, getState().Pose.getRotation())));
+      /*this.setControl(fcDriveReq.withVelocityX(c.vxMetersPerSecond).withVelocityY(c.vyMetersPerSecond)
+          .withRotationalRate(c.omegaRadiansPerSecond));*/
     } else {
       Drive(c);
     }
