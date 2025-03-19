@@ -32,6 +32,8 @@ public class Elevator extends SubsystemBase {
     return m_Elevator;
   }
 
+  public double swerveDrivingMultiplier = 1;
+
   private TalonFactory master, slave;
   private MotionMagicVoltage positionReq;
   public SysIdRoutine identificationRoutine;
@@ -124,5 +126,6 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
+    swerveDrivingMultiplier = Math.min(1, (110 - getPosition()) / 90);
   }
 }

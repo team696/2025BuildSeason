@@ -101,12 +101,15 @@ public class Robot extends TimedRobot {
     Wrist.get();
     DriverStation.silenceJoystickConnectionWarning(true);
     configureDriverStationBinds();
+
     Swerve.get().setDefaultCommand(Swerve.get().applyRequest(
         () -> Swerve.fcDriveReq.withVelocityX(
             Math.pow(applyDeadband(HumanControls.DriverPanel.leftJoyY.getAsDouble(), 0.09), 2)
-                * Math.signum(HumanControls.DriverPanel.leftJoyY.getAsDouble()) * MaxSpeed)
+                * Math.signum(HumanControls.DriverPanel.leftJoyY.getAsDouble()) * MaxSpeed
+                * Elevator.get().swerveDrivingMultiplier)
             .withVelocityY(Math.pow(applyDeadband(HumanControls.DriverPanel.leftJoyX.getAsDouble(), 0.09), 2)
-                * Math.signum(HumanControls.DriverPanel.leftJoyX.getAsDouble()) * MaxSpeed)
+                * Math.signum(HumanControls.DriverPanel.leftJoyX.getAsDouble()) * MaxSpeed
+                * Elevator.get().swerveDrivingMultiplier)
             .withRotationalRate(
                 Math.pow(applyDeadband(HumanControls.DriverPanel.rightJoyX.getAsDouble(), 0.09), 2)
                     * Math.signum(HumanControls.DriverPanel.rightJoyX.getAsDouble()) * MaxRotationalRate)));
@@ -114,9 +117,11 @@ public class Robot extends TimedRobot {
     HumanControls.DriverPanel.OtherButton.whileTrue(Swerve.get().applyRequest(
         () -> Swerve.fcDriveReq.withVelocityX(
             Math.pow(applyDeadband(HumanControls.DriverPanel.leftJoyY.getAsDouble(), 0.09), 2)
-                * Math.signum(HumanControls.DriverPanel.leftJoyY.getAsDouble()) * MaxSpeed)
+                * Math.signum(HumanControls.DriverPanel.leftJoyY.getAsDouble()) * MaxSpeed
+                * Elevator.get().swerveDrivingMultiplier)
             .withVelocityY(Math.pow(applyDeadband(HumanControls.DriverPanel.leftJoyX.getAsDouble(), 0.09), 2)
-                * Math.signum(HumanControls.DriverPanel.leftJoyX.getAsDouble()) * MaxSpeed)
+                * Math.signum(HumanControls.DriverPanel.leftJoyX.getAsDouble()) * MaxSpeed
+                * Elevator.get().swerveDrivingMultiplier)
 
             .withRotationalRate(
                 (thetaController.calculate(Swerve.get().getPose().getRotation().getDegrees(),
