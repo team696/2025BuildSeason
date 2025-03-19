@@ -11,9 +11,12 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -24,9 +27,12 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutoMoveSuperStructure;
 import frc.robot.commands.MoveSuperStructure;
+import frc.robot.commands.PIDtoPosition;
+import frc.robot.commands.PathFindToScoringPosition;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Wrist;
@@ -215,8 +221,9 @@ public class Robot extends TimedRobot {
     HumanControls.OperatorPanel2025.Climb1.whileTrue(new MoveSuperStructure(GameInfo.ClimbUp, 0));
     HumanControls.OperatorPanel2025.Processor.whileTrue(new MoveSuperStructure(GameInfo.Processor, 0.6)
         .deadlineFor(Swerve.get().setGoalRotation(Swerve.get()::FaceProcessor, Swerve.get()::FaceSource)));
-    // HumanControls.OperatorPanel2025.pickupAlgae.whileTrue(new
-    // MoveSuperStructure(GameInfo.ground, -0.8, false, -0.8));
+
+    SmartDashboard.putData("GoToPsoition", new PathFindToScoringPosition());
+
   }
 
   @Override
