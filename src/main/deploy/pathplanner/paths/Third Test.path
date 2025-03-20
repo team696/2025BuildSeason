@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.1514654215976328,
-        "y": 0.8693047337278097
+        "x": 1.2123355263157893,
+        "y": 0.908
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.12943324704142,
-        "y": 1.3645529000246541
+        "x": 2.190303351759577,
+        "y": 1.4032481662968443
       },
       "isLocked": false,
       "linkedName": "balls"
     },
     {
       "anchor": {
-        "x": 4.1040376140285995,
-        "y": 2.868407914201183
+        "x": 4.128,
+        "y": 2.92
       },
       "prevControl": {
-        "x": 3.011638621794871,
-        "y": 2.025462663338264
+        "x": 3.0709996039264857,
+        "y": 2.033071357500476
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,19 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "",
+      "waypointRelativePos": 0.6452380952380952,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "L4"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.5,
     "maxAcceleration": 3.0,
@@ -48,7 +60,7 @@
   "folder": "RightSide",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 146.1455719493309
+    "rotation": 145.0079798014414
   },
   "useDefaultConstraints": true
 }

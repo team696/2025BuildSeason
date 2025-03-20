@@ -113,7 +113,7 @@ public class PIDtoNearest extends Command {
   public void initialize() {
     Pose2d currPose = Swerve.get().getState().Pose;
     goalPose = ignoreLR?findClosestPose(currPose):findClosestPose(currPose, HumanControls.OperatorPanel2025.leftOrRight.getAsBoolean()?ReefSide.Right:ReefSide.Left);
-    System.out.println("voy a ir a " + goalPose.getX() + " y " + goalPose.getY());
+    //System.out.println("voy a ir a " + goalPose.getX() + " y " + goalPose.getY());
     xController.reset(currPose.getX());
     yController.reset(currPose.getY());
     omegaController.reset(currPose.getRotation().getRadians());

@@ -13,8 +13,6 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathfindingCommand;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
@@ -30,7 +28,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutoMoveSuperStructure;
 import frc.robot.commands.MoveSuperStructure;
 import frc.robot.commands.PIDtoNearest;
-import frc.robot.commands.PIDtoPosition;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Wrist;
@@ -128,9 +125,9 @@ public class Robot extends TimedRobot {
         GameInfo.RobotState.get(GameInfo.Position.L4).get(GameInfo.RobotSide.Back), -0.6, 0.0).asProxy());
     NamedCommands.registerCommand("Intake", new AutoMoveSuperStructure(
         GameInfo.RobotState.get(GameInfo.Position.Intake).get(GameInfo.RobotSide.Front), .6, .1, true).asProxy());
+    NamedCommands.registerCommand("AfterIntake", new MoveSuperStructure(GameInfo.RobotState.get(GameInfo.Position.Intake).get(GameInfo.RobotSide.Front), 0.15, false, 0.1).asProxy());
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
-    SmartDashboard.putData("posey posey", new PIDtoNearest(false));
 
     // Warmup Commands for PathPlanner
     PathfindingCommand.warmupCommand().schedule();
