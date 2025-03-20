@@ -23,8 +23,8 @@ public class GroundCoral extends SubsystemBase {
 
   public static enum Positions {
     Stowed(0),
-    Ready(7.3),
-    Spit(7.3),
+    Ready(6.18),
+    Spit(6.18),
     Intake(12.5);
 
     Positions(double value) {
@@ -85,10 +85,10 @@ public class GroundCoral extends SubsystemBase {
   public Command Intake() {
     return this.startEnd(() -> {
       position(Positions.Intake.value);
-      rollerMotor.set(0.7);
+      rollerMotor.set(0.8);
     }, () -> {
       angleMotor.stopMotor();
-      rollerMotor.stopMotor();
+      //rollerMotor.stopMotor();
     });
   }
 
@@ -106,6 +106,8 @@ public class GroundCoral extends SubsystemBase {
         this::stop);
   }
 
+
+
   public Command Ready() {
     return this.runEnd(
         () -> {
@@ -114,7 +116,7 @@ public class GroundCoral extends SubsystemBase {
           } else {
             position(Positions.Stowed.value);
           }
-          rollerMotor.set(0.3);
+          rollerMotor.set(0.4);
         },
         this::stop);
   }
@@ -122,7 +124,7 @@ public class GroundCoral extends SubsystemBase {
   public Command Spit() {
     return this.runEnd(() -> {
       position(Positions.Spit.value);
-      rollerMotor.set(-0.4);
+      rollerMotor.set(-0.3);
     }, this::stop);
   }
 

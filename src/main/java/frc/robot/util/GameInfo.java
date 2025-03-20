@@ -131,16 +131,16 @@ public class GameInfo {
             RobotSide.Back, new CoralScoringPosition(0, -1., -8. - wristOffset)),
         Position.L2, Map.of(
             RobotSide.Front, new CoralScoringPosition(14., 1.75, 1.56 - wristOffset),
-            RobotSide.Back, new CoralScoringPosition(4., -1., -8.1 - wristOffset)),
+            RobotSide.Back, new CoralScoringPosition(3., -1., -8.1 - wristOffset)),
         Position.L3, Map.of(
             RobotSide.Front, new CoralScoringPosition(33., 1.75, 1.1 - wristOffset),
             RobotSide.Back, new CoralScoringPosition(25., -1., -8.1 - wristOffset)),
         Position.L4, Map.of(
             RobotSide.Front, new CoralScoringPosition(67., 0.7, 1.6 - wristOffset),
-            RobotSide.Back, new CoralScoringPosition(64, -1.1, -9. - wristOffset)),
+            RobotSide.Back, new CoralScoringPosition(62, -1.1, -9. - wristOffset)),
         Position.Intake, Map.of(
             RobotSide.Front, new CoralScoringPosition(6., 1., -0.9 - wristOffset),
-            RobotSide.Back, new CoralScoringPosition(0, 0, 0 - wristOffset)));
+            RobotSide.Back, new CoralScoringPosition(0, 0, 0.3 - wristOffset)));
     L2Algae = new CoralScoringPosition(17., -3., 1. - wristOffset);
     L3Algae = new CoralScoringPosition(38., -3., 1. - wristOffset);
     Net = new CoralScoringPosition(67., 0., 6.5 - wristOffset);

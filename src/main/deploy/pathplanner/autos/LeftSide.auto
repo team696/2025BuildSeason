@@ -57,6 +57,12 @@
                 "data": {
                   "pathName": "backtoreef"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AfterIntake"
+                }
               }
             ]
           }
@@ -107,6 +113,12 @@
                 "type": "path",
                 "data": {
                   "pathName": "end"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AfterIntake"
                 }
               }
             ]

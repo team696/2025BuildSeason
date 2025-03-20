@@ -5,23 +5,17 @@
 
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.Meters;
-
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.HumanControls;
-import frc.robot.HumanControls.OperatorPanel2025;
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.GameInfo;
 //import frc.robot.util.PoseUtil;
 import frc.robot.util.GameInfo.ReefSide;
-import frc.team696.lib.Util;
 import frc.team696.lib.Logging.BackupLogger;
 
 /**
@@ -97,12 +91,13 @@ public class PIDtoNearest extends Command {
    */
   public PIDtoNearest(boolean ignoreLR) {
     addRequirements(Swerve.get());
-    xController = new ProfiledPIDController(8, 0.0, 0.0, new TrapezoidProfile.Constraints(1.3, 1.4));
-    yController = new ProfiledPIDController(8, 0.0, 0.0, new TrapezoidProfile.Constraints(1.3, 1.4));
+    xController = new ProfiledPIDController(8, 0.0, 0.0, new TrapezoidProfile.Constraints(2.45, 2.2));
+    yController = new ProfiledPIDController(8, 0.0, 0.0, new TrapezoidProfile.Constraints(2.45
+    , 2.2));
     xController.setTolerance(0.01);
     yController.setTolerance(0.01);
 
-    omegaController = new ProfiledPIDController(10, 0, 0, new TrapezoidProfile.Constraints(5, 2));
+    omegaController = new ProfiledPIDController(10, 0, 0, new TrapezoidProfile.Constraints(5, 3.5));
     omegaController.enableContinuousInput(-Math.PI, Math.PI);
     omegaController.setTolerance(0.08);
     this.ignoreLR = ignoreLR;

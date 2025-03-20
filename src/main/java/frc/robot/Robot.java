@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutoMoveSuperStructure;
 import frc.robot.commands.MoveSuperStructure;
@@ -154,6 +155,7 @@ public class Robot extends TimedRobot {
   }
 
   private void configureDriverStationBinds() {
+    HumanControls.DriverPanel.resetGyro.whileTrue(new PIDtoNearest(false));
     HumanControls.OperatorPanel2025.gyro.onTrue(new InstantCommand(() -> Swerve.get().seedFieldCentric()));
     HumanControls.OperatorPanel2025.releaseCoral.whileTrue(
         new ConditionalCommand(
@@ -181,7 +183,6 @@ public class Robot extends TimedRobot {
     HumanControls.OperatorPanel2025.GroundCoral.whileTrue(
         new ConditionalCommand(Commands.none(), GroundCoral.get().Intake(),
             () -> !HumanControls.OperatorPanel2025.unlabedSwitch.getAsBoolean()));
-
     HumanControls.OperatorPanel2025.L1.whileTrue(
         new ConditionalCommand(
             new MoveSuperStructure(GameInfo.ground, -0.8, false, -.8),
@@ -219,7 +220,8 @@ public class Robot extends TimedRobot {
     HumanControls.OperatorPanel2025.Climb1.whileTrue(new PIDtoNearest(false));
     HumanControls.OperatorPanel2025.Processor.whileTrue(new MoveSuperStructure(GameInfo.Processor, 0.6)
         .deadlineFor(Swerve.get().setGoalRotation(Swerve.get()::FaceProcessor, Swerve.get()::FaceSource)));
-    // HumanControls.OperatorPanel2025.pickupAlgae.whileTrue(new
+    HumanControls.OperatorPanel2025.releaseCoral.and(HumanControls.OperatorPanel2025.pickupAlgae).whileTrue(new PrintCommand("trebuchet"));
+        // HumanControls.OperatorPanel2025.pickupAlgae.whileTrue(new
     // MoveSuperStructure(GameInfo.ground, -0.8, false, -0.8));
   }
 
