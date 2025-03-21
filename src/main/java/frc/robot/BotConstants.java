@@ -105,5 +105,15 @@ public class BotConstants {
     }
 
   }
+  
+  public static class Climber{
+    public static int motorID=19;
+    public static TalonFXConfiguration cfg=new TalonFXConfiguration();
+    static{
+      cfg.Slot0.kP=1;
+      cfg.CurrentLimits.StatorCurrentLimitEnable=false;
+      
+    }
+  }
 
 }

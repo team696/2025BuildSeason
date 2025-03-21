@@ -392,12 +392,12 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
     return angleTo(position.getTranslation());
   }
 
-  public Rotation2d FaceHexFace() {
+  public Rotation2d FaceHexFace(Translation2d pose) {
     Translation2d reefPosition = Util.getAlliance() == Alliance.Blue ? GameInfo.blueReef
         : (new Translation2d(GameInfo.fieldLengthMeters.in(Meters) - GameInfo.blueReef.getX(),
             GameInfo.blueReef.getY()));
 
-    Rotation2d angleToReef = getPose().getTranslation().minus(reefPosition).getAngle();
+    Rotation2d angleToReef = pose.minus(reefPosition).getAngle();
     Rotation2d hexAngleToReef = Rotation2d
         .fromDegrees(
             MathUtil.inputModulus(
@@ -406,6 +406,9 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
     return hexAngleToReef;
   }
 
+  public Rotation2d FaceHexFace() {
+    return FaceHexFace(Swerve.get().getPose().getTranslation());
+  }
   public Rotation2d FaceNet() {
     return Util.getAlliance() == Alliance.Blue ? Rotation2d.fromDegrees(-90) : Rotation2d.fromDegrees(90);
   }
