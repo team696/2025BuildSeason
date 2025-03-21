@@ -312,7 +312,7 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
       if (Estimate.distToTag > 3.5)
         return false;
 
-      if (Estimate.ambiguity > 0.4)
+      if (Estimate.ambiguity > 0.6)
         return false; // Too Ambiguous, Ignore
       if (getState().Speeds.omegaRadiansPerSecond > 2.5)
         return false; // Rotating too fast, ignore

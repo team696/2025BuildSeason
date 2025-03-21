@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.675,
+        "y": 4.27516447368421
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.551198630136986,
+        "y": 5.251833994232156
+      },
+      "isLocked": false,
+      "linkedName": "FourBall"
+    },
+    {
+      "anchor": {
+        "x": 7.618022260273973,
+        "y": 6.6995719178082185
+      },
+      "prevControl": {
+        "x": 6.656378424657535,
+        "y": 6.158647260273973
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.5,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 480.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "reversed": false,
+  "folder": "MiddleAndNet",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "useDefaultConstraints": true
+}

@@ -127,6 +127,8 @@ public class Robot extends TimedRobot {
     NamedCommands.registerCommand("Intake", new AutoMoveSuperStructure(
         GameInfo.RobotState.get(GameInfo.Position.Intake).get(GameInfo.RobotSide.Front), .6, .1, true).asProxy());
     NamedCommands.registerCommand("AfterIntake", new MoveSuperStructure(GameInfo.RobotState.get(GameInfo.Position.Intake).get(GameInfo.RobotSide.Front), 0.15, false, 0.1).asProxy());
+    NamedCommands.registerCommand("Barge", new MoveSuperStructure(GameInfo.Net, 1.).asProxy());
+    NamedCommands.registerCommand("L3Algae", new MoveSuperStructure(GameInfo.L3Algae, -0.8, false, -1.).asProxy());
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
 

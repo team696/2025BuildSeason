@@ -88,7 +88,7 @@ public class GroundCoral extends SubsystemBase {
       rollerMotor.set(0.8);
     }, () -> {
       angleMotor.stopMotor();
-      //rollerMotor.stopMotor();
+      rollerMotor.stopMotor();
     });
   }
 
@@ -106,8 +106,6 @@ public class GroundCoral extends SubsystemBase {
         this::stop);
   }
 
-
-
   public Command Ready() {
     return this.runEnd(
         () -> {
@@ -116,7 +114,7 @@ public class GroundCoral extends SubsystemBase {
           } else {
             position(Positions.Stowed.value);
           }
-          rollerMotor.set(0.4);
+          rollerMotor.set(0.45);
         },
         this::stop);
   }
@@ -124,7 +122,7 @@ public class GroundCoral extends SubsystemBase {
   public Command Spit() {
     return this.runEnd(() -> {
       position(Positions.Spit.value);
-      rollerMotor.set(-0.3);
+      rollerMotor.set(-0.2);
     }, this::stop);
   }
 
