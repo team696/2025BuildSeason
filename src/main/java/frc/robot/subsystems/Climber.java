@@ -13,10 +13,11 @@ import frc.robot.BotConstants;
 import frc.team696.lib.Logging.BackupLogger;
 
 public class Climber extends SubsystemBase {
-  private static Climber m_Climber=null;
-  public static synchronized Climber get(){
-    if(m_Climber==null){
-      m_Climber=new Climber();
+  private static Climber m_Climber = null;
+
+  public static synchronized Climber get() {
+    if (m_Climber == null) {
+      m_Climber = new Climber();
     }
     return m_Climber;
   }
@@ -25,33 +26,41 @@ public class Climber extends SubsystemBase {
   private MotionMagicVoltage positionReq;
 
   private Climber() {
-    motor=new TalonFX(BotConstants.Climber.motorID, BotConstants.canivoreBus);
-    positionReq=new MotionMagicVoltage(0);
+    motor = new TalonFX(BotConstants.Climber.motorID, BotConstants.canivoreBus);
+    positionReq = new MotionMagicVoltage(0);
     zero();
     this.setDefaultCommand(In());
   }
 
-  public void stop(){
+  public void stop() {
     motor.stopMotor();
   }
 
-  public Command Out(){
+  public Command Out() {
     return this.runEnd(
-      ()->{motor.setControl(positionReq.withPosition(14));},
-      ()->{stop();}
-    );
+        () -> {
+          motor.setControl(positionReq.withPosition(14));
+        },
+        () -> {
+          stop();
+        });
   }
-  public Command In(){
+
+  public Command In() {
     return this.runEnd(
-      ()->{motor.setControl(positionReq.withPosition(0));},
-      ()->{stop();}
-    );
+        () -> {
+          motor.setControl(positionReq.withPosition(0));
+        },
+        () -> {
+          stop();
+        });
   }
-  public void resetPosition(double newPosition){
+
+  public void resetPosition(double newPosition) {
     motor.setPosition(newPosition);
   }
 
-  public void zero(){
+  public void zero() {
     resetPosition(0);
   }
 

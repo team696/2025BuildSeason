@@ -321,9 +321,9 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
         setVisionMeasurementStdDevs(VecBuilder.fill(0.001, 0.001, 0.001));
       } else {
         setVisionMeasurementStdDevs(
-            VecBuilder.fill(Estimate.ambiguity * Math.pow(Estimate.distToTag, 2)*0.15,
-                Estimate.ambiguity * Math.pow(Estimate.distToTag, 2)*0.15,
-                Estimate.ambiguity * Math.pow(Estimate.distToTag, 2)*0.15));
+            VecBuilder.fill(Estimate.ambiguity * Math.pow(Estimate.distToTag, 2)*0.01,
+                Estimate.ambiguity * Math.pow(Estimate.distToTag, 2)*0.01,
+                Estimate.ambiguity * Math.pow(Estimate.distToTag, 2)*0.01));
       }
       return true;
     };

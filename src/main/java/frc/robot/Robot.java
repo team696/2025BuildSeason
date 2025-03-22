@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathfindingCommand;
@@ -96,6 +97,9 @@ public class Robot extends TimedRobot {
     Swerve.get();
     Wrist.get();
     DriverStation.silenceJoystickConnectionWarning(true);
+    logBuildInfo();
+    putSwerveSysIDCalibrationButtons();
+    SignalLogger.start();
     configureDriverStationBinds();
     Swerve.get().setDefaultCommand(Swerve.get().applyRequest(
         () -> Swerve.fcDriveReq.withVelocityX(
@@ -235,10 +239,8 @@ public class Robot extends TimedRobot {
     // BackupLogger.addToQueue("SchedulerTimeMicroSeconds", elapsed); // Scheduler
     // Time in Microseconds, anything over
     // 20,000 should
-
     m_SwerveTelemetry.telemeterize(Swerve.get().getState());
-    // BackupLogger.logSystemInformation();
-    //
+    BackupLogger.logSystemInformation();
   }
 
   @Override

@@ -74,7 +74,6 @@ public class PIDtoPosition extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("There!");
     Swerve.get().Drive(new ChassisSpeeds(0,0,0));
   }
   public boolean atGoalPose(Pose2d goal, Pose2d curr){

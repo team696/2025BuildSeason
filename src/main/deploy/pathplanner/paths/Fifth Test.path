@@ -4,24 +4,24 @@
     {
       "anchor": {
         "x": 1.2123355263157893,
-        "y": 0.9075657894736844
+        "y": 1.0
       },
       "prevControl": null,
       "nextControl": {
         "x": 1.9762023285840344,
-        "y": 1.5811281045624415
+        "y": 1.673562315088757
       },
       "isLocked": false,
       "linkedName": "balls"
     },
     {
       "anchor": {
-        "x": 3.7139802631578944,
-        "y": 3.0435855263157894
+        "x": 3.744,
+        "y": 3.044
       },
       "prevControl": {
-        "x": 2.519368499721011,
-        "y": 1.9875936315919234
+        "x": 2.5493882365631166,
+        "y": 1.988008105276134
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "L4",
-      "waypointRelativePos": 0.6,
+      "waypointRelativePos": 0.7214285714285711,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -45,8 +45,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.5,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 6.0,
+    "maxAcceleration": 3.2,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 480.0,
     "nominalVoltage": 12.0,

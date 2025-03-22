@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.HumanControls;
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.GameInfo;
-//import frc.robot.util.PoseUtil;
 import frc.robot.util.GameInfo.ReefSide;
 import frc.team696.lib.Logging.BackupLogger;
 
@@ -92,8 +91,7 @@ public class PIDtoNearest extends Command {
   public PIDtoNearest(boolean ignoreLR) {
     addRequirements(Swerve.get());
     xController = new ProfiledPIDController(8, 0.0, 0.0, new TrapezoidProfile.Constraints(2.45, 2.2));
-    yController = new ProfiledPIDController(8, 0.0, 0.0, new TrapezoidProfile.Constraints(2.45
-    , 2.2));
+    yController = new ProfiledPIDController(8, 0.0, 0.0, new TrapezoidProfile.Constraints(2.45, 2.2));
     xController.setTolerance(0.01);
     yController.setTolerance(0.01);
 
@@ -129,7 +127,6 @@ public class PIDtoNearest extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // System.out.println("There!");
     Swerve.get().Drive(new ChassisSpeeds(0, 0, 0));
   }
 

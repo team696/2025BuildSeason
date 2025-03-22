@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.91,
-        "y": 2.9057453464003937
+        "x": 5.0,
+        "y": 2.91
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.045470984344181,
-        "y": 1.7830794656065079
+        "x": 4.135470984344181,
+        "y": 1.7873341192061143
       },
       "isLocked": false,
       "linkedName": "Nuts"
@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 1.2123355263157893,
-        "y": 0.9075657894736844
+        "y": 1.0
       },
       "prevControl": {
         "x": 2.705894836596852,
-        "y": 1.5314482321511993
+        "y": 1.623882442677515
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.5,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 6.0,
+    "maxAcceleration": 3.2,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 480.0,
     "nominalVoltage": 12.0,
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 145.0079798014414
+    "rotation": 145.0
   },
   "reversed": false,
   "folder": "RightSide",
