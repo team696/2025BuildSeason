@@ -82,7 +82,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("CTRESwerveCalibration/QuasistaticForward",
         Swerve.get().sysIdQuasistatic(SysIdRoutine.Direction.kForward));
     SmartDashboard.putData("CTRESwerveCalibration/QuasistaticReverse",
-        Swerve.get().sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        Swerve.get().sysIdQuasistatic(SysIdRoutine.Direction.kReverse));    
   }
 
   private final SendableChooser<Command> autoChooser;

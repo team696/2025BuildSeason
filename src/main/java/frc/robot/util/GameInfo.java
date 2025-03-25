@@ -10,6 +10,10 @@ import static edu.wpi.first.units.Units.Rotation;
 
 import java.util.Map;
 
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.IdealStartingState;
+import com.pathplanner.lib.path.Waypoint;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -69,7 +73,10 @@ public class GameInfo {
     return new Translation2d(17.55- starting.getX(), starting.getY());
   }
   public static Translation2d mirrorTranslationXY(Translation2d starting) {
-    return new Translation2d(17.55- starting.getX(), fieldWidthMeters.in(Meters)-starting.getY());
+    Waypoint temp = new Waypoint(starting, starting, starting);
+    temp.flip();
+    //return temp.prevControl();
+    return new Translation2d(17.55- starting.getX(), 8.05-starting.getY());
   }
 
   public static Map<Index, Map<ReefSide, Pose2d>> getScoringPoses(){
@@ -131,13 +138,13 @@ public class GameInfo {
             RobotSide.Back, new CoralScoringPosition(0, -1., -8. - wristOffset)),
         Position.L2, Map.of(
             RobotSide.Front, new CoralScoringPosition(14., 1.75, 1.56 - wristOffset),
-            RobotSide.Back, new CoralScoringPosition(3., -1., -8.1 - wristOffset)),
+            RobotSide.Back, new CoralScoringPosition(3., -1., -8.3 - wristOffset)),
         Position.L3, Map.of(
             RobotSide.Front, new CoralScoringPosition(33., 1.75, 1.1 - wristOffset),
-            RobotSide.Back, new CoralScoringPosition(25., -1., -8.1 - wristOffset)),
+            RobotSide.Back, new CoralScoringPosition(25., -1., -8.3 - wristOffset)),
         Position.L4, Map.of(
             RobotSide.Front, new CoralScoringPosition(67., 0.7, 1.6 - wristOffset),
-            RobotSide.Back, new CoralScoringPosition(62, -1.1, -9. - wristOffset)),
+            RobotSide.Back, new CoralScoringPosition(64, -1.4, -9.7 - wristOffset)),
         Position.Intake, Map.of(
             RobotSide.Front, new CoralScoringPosition(6., 1., -0.9 - wristOffset),
             RobotSide.Back, new CoralScoringPosition(0, 0, 0.3 - wristOffset)));

@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 1.212,
-        "y": 1.0
+        "y": 0.91
       },
       "prevControl": null,
       "nextControl": {
         "x": 2.1899678254437878,
-        "y": 1.4952481662968444
+        "y": 1.4052481662968443
       },
       "isLocked": false,
       "linkedName": "balls"

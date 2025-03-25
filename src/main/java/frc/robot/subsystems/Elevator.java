@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Second;
@@ -124,5 +125,10 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if(Math.abs(Swerve.get().getPigeon2().getRoll().getValue().in(Degrees))>15||Math.abs(Swerve.get().getPigeon2().getPitch().getValue().in(Degrees))>15){
+      if(this.getCurrentCommand()!=null)
+        this.getCurrentCommand().cancel();
+      goToPosition(0);
+    }
   }
 }
