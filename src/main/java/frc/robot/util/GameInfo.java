@@ -5,14 +5,9 @@
 package frc.robot.util;
 
 import static edu.wpi.first.units.Units.Feet;
-import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Rotation;
 
 import java.util.Map;
-
-import com.pathplanner.lib.path.GoalEndState;
-import com.pathplanner.lib.path.IdealStartingState;
-import com.pathplanner.lib.path.Waypoint;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -73,9 +68,6 @@ public class GameInfo {
     return new Translation2d(17.55- starting.getX(), starting.getY());
   }
   public static Translation2d mirrorTranslationXY(Translation2d starting) {
-    Waypoint temp = new Waypoint(starting, starting, starting);
-    temp.flip();
-    //return temp.prevControl();
     return new Translation2d(17.55- starting.getX(), 8.05-starting.getY());
   }
 

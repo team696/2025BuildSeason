@@ -11,12 +11,10 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathfindingCommand;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutoMoveSuperStructure;
 import frc.robot.commands.MoveSuperStructure;
@@ -39,7 +36,6 @@ import frc.team696.lib.Swerve.SwerveConstants;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.EndEffector;
 import frc.robot.subsystems.GroundCoral;
-import frc.robot.subsystems.LED;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -82,7 +78,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("CTRESwerveCalibration/QuasistaticForward",
         Swerve.get().sysIdQuasistatic(SysIdRoutine.Direction.kForward));
     SmartDashboard.putData("CTRESwerveCalibration/QuasistaticReverse",
-        Swerve.get().sysIdQuasistatic(SysIdRoutine.Direction.kReverse));    
+        Swerve.get().sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
   }
 
   private final SendableChooser<Command> autoChooser;
@@ -93,7 +89,7 @@ public class Robot extends TimedRobot {
     Elevator.get();
     EndEffector.get();
     GroundCoral.get();
-    //LED.get();
+    // LED.get();
     Swerve.get();
     Wrist.get();
     DriverStation.silenceJoystickConnectionWarning(true);
@@ -129,14 +125,16 @@ public class Robot extends TimedRobot {
         GameInfo.RobotState.get(GameInfo.Position.L4).get(GameInfo.RobotSide.Back), -0.6, 0.0).asProxy());
     NamedCommands.registerCommand("Intake", new AutoMoveSuperStructure(
         GameInfo.RobotState.get(GameInfo.Position.Intake).get(GameInfo.RobotSide.Front), .6, .1, true).asProxy());
-    NamedCommands.registerCommand("AfterIntake", new MoveSuperStructure(GameInfo.RobotState.get(GameInfo.Position.Intake).get(GameInfo.RobotSide.Front), 0.15, false, 0.1).asProxy());
+    NamedCommands.registerCommand("AfterIntake",
+        new MoveSuperStructure(GameInfo.RobotState.get(GameInfo.Position.Intake).get(GameInfo.RobotSide.Front), 0.15,
+            false, 0.1).asProxy());
     NamedCommands.registerCommand("Barge", new MoveSuperStructure(GameInfo.Net, 1.).asProxy());
     NamedCommands.registerCommand("L3Algae", new MoveSuperStructure(GameInfo.L3Algae, -0.8, false, -1.).asProxy());
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
     // Warmup Commands for PathPlanner
-    PathfindingCommand.warmupCommand().schedule();
+    // PathfindingCommand.warmupCommand().schedule();
 
     Elevator.get().setDefaultCommand(Elevator.get().positionCommand(() -> {
       if (!HumanControls.OperatorPanel2025.unlabedSwitch.getAsBoolean()) {
@@ -220,24 +218,19 @@ public class Robot extends TimedRobot {
     HumanControls.OperatorPanel2025.SouceCoral.whileTrue((new MoveSuperStructure(
         GameInfo.RobotState.get(GameInfo.Position.Intake).get(GameInfo.RobotSide.Front), 0.6, false, 0.1))
         .deadlineFor(Swerve.get().setGoalRotation(Swerve.get()::FaceSource, Swerve.get()::FaceHexFace)));
-    HumanControls.OperatorPanel2025.SouceCoral.onFalse(new MoveSuperStructure(GameInfo.RobotState.get(GameInfo.Position.Intake).get(GameInfo.RobotSide.Front), 0.15, false, 0.1));
-    //HumanControls.OperatorPanel2025.Climb1.whileTrue(new MoveSuperStructure(GameInfo.ClimbUp, 0));
+    HumanControls.OperatorPanel2025.SouceCoral.onFalse(new MoveSuperStructure(
+        GameInfo.RobotState.get(GameInfo.Position.Intake).get(GameInfo.RobotSide.Front), 0.15, false, 0.1));
     HumanControls.OperatorPanel2025.Climb1.whileTrue(new PIDtoNearest(false));
     HumanControls.OperatorPanel2025.Processor.whileTrue(new MoveSuperStructure(GameInfo.Processor, 0.6)
         .deadlineFor(Swerve.get().setGoalRotation(Swerve.get()::FaceProcessor, Swerve.get()::FaceSource)));
-    HumanControls.OperatorPanel2025.releaseCoral.and(HumanControls.OperatorPanel2025.pickupAlgae).whileTrue(new PrintCommand("trebuchet"));
-        // HumanControls.OperatorPanel2025.pickupAlgae.whileTrue(new
-    // MoveSuperStructure(GameInfo.ground, -0.8, false, -0.8));
+    /*HumanControls.OperatorPanel2025.releaseCoral.and(HumanControls.OperatorPanel2025.pickupAlgae)
+        .whileTrue(new PrintCommand("trebuchet"));*/
+
   }
 
   @Override
   public void robotPeriodic() {
-    long start = RobotController.getTime();
     CommandScheduler.getInstance().run();
-    long elapsed = RobotController.getTime() - start;
-    // BackupLogger.addToQueue("SchedulerTimeMicroSeconds", elapsed); // Scheduler
-    // Time in Microseconds, anything over
-    // 20,000 should
     m_SwerveTelemetry.telemeterize(Swerve.get().getState());
     BackupLogger.logSystemInformation();
   }
