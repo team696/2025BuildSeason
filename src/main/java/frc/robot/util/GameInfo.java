@@ -144,7 +144,7 @@ public class GameInfo {
             RobotSide.Back, new CoralScoringPosition(25., -1., -8.3 - wristOffset)),
         Position.L4, Map.of(
             RobotSide.Front, new CoralScoringPosition(67., 0.7, 1.6 - wristOffset),
-            RobotSide.Back, new CoralScoringPosition(64, -1.4, -9.7 - wristOffset)),
+            RobotSide.Back, new CoralScoringPosition(64, -1.45, -9.5 - wristOffset)),
         Position.Intake, Map.of(
             RobotSide.Front, new CoralScoringPosition(6., 1., -0.9 - wristOffset),
             RobotSide.Back, new CoralScoringPosition(0, 0, 0.3 - wristOffset)));

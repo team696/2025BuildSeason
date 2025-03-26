@@ -9,19 +9,19 @@
       "prevControl": null,
       "nextControl": {
         "x": 2.1899678254437878,
-        "y": 1.4052481662968443
+        "y": 1.4052481662968441
       },
       "isLocked": false,
       "linkedName": "balls"
     },
     {
       "anchor": {
-        "x": 4.09,
-        "y": 2.87
+        "x": 4.071960616438356,
+        "y": 2.8529965753424653
       },
       "prevControl": {
-        "x": 3.032999603926485,
-        "y": 1.9830713575004761
+        "x": 3.0149602203648413,
+        "y": 1.9660679328429413
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,8 +45,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 6.0,
-    "maxAcceleration": 3.2,
+    "maxVelocity": 4.5,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 480.0,
     "nominalVoltage": 12.0,

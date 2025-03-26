@@ -93,12 +93,11 @@ public class Robot extends TimedRobot {
     Elevator.get();
     EndEffector.get();
     GroundCoral.get();
-    LED.get();
+    //LED.get();
     Swerve.get();
     Wrist.get();
     DriverStation.silenceJoystickConnectionWarning(true);
     logBuildInfo();
-    putSwerveSysIDCalibrationButtons();
     SignalLogger.start();
     configureDriverStationBinds();
     Swerve.get().setDefaultCommand(Swerve.get().applyRequest(

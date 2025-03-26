@@ -51,7 +51,7 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
 
   private static Swerve m_CommandSwerveDrivetrain = null;
 
-  public LimeLightCam CamA = new LimeLightCam("limelight-right");
+  public LimeLightCam CamA = new LimeLightCam("limelight");
   public LimeLightCam CamB = new LimeLightCam("limelight-left");
 
   Rotation2d yawOffset = new Rotation2d(0);
@@ -263,9 +263,9 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
                   .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())),
           new PPHolonomicDriveController(
               // PID constants for translation
-              new PIDConstants(12, 0, 0),
+              new PIDConstants(12, 0, 0.00 ),
               // PID constants for rotation
-              new PIDConstants(8, 0, 0)),
+              new PIDConstants(8, 0, 0.00)),
           config,
           // Assume the path needs to be flipped for Red vs Blue, this is normally the
           // case

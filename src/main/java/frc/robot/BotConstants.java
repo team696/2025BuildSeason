@@ -37,8 +37,8 @@ public class BotConstants {
       cfg.Slot0.GravityType = GravityTypeValue.Elevator_Static;
       cfg.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseVelocitySign;
 
-      cfg.MotionMagic.MotionMagicCruiseVelocity = 120.;
-      cfg.MotionMagic.MotionMagicAcceleration = 140.;
+      cfg.MotionMagic.MotionMagicCruiseVelocity = 100.;
+      cfg.MotionMagic.MotionMagicAcceleration = 120.;
       //cfg.MotionMagic.MotionMagicJerk= 500;
       cfg.MotorOutput.NeutralMode = NeutralModeValue.Brake;
       cfg.CurrentLimits.StatorCurrentLimit = 120.;
