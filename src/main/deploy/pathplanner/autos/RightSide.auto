@@ -17,21 +17,54 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Second Test"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Second Test"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.2
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Third Test"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Third Test"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AfterIntake"
+                }
+              }
+            ]
           }
         },
         {
@@ -41,21 +74,54 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Fourth Test"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Fourth Test"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.2
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Fifth Test"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Fifth Test"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AfterIntake"
+                }
+              }
+            ]
           }
         },
         {

@@ -84,12 +84,12 @@ public class Robot extends TimedRobot {
   private final SendableChooser<Command> autoChooser;
 
   public Robot() {
+    // TODO: strip out groundcoral system
     thetaController.enableContinuousInput(-180, 180);
     Arm.get();
     Elevator.get();
     EndEffector.get();
     GroundCoral.get();
-    // LED.get();
     Swerve.get();
     Wrist.get();
     DriverStation.silenceJoystickConnectionWarning(true);
