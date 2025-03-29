@@ -41,23 +41,23 @@ public class GroundCoral extends SubsystemBase {
     return m_GroundCoral;
   }
 
-  TalonFX angleMotor = new TalonFX(BotConstants.GroundCoral.angleId, BotConstants.rioBus);
-  TalonFX rollerMotor = new TalonFX(BotConstants.GroundCoral.rollerId, BotConstants.rioBus);
+  /*TalonFX angleMotor = new TalonFX(BotConstants.GroundCoral.angleId, BotConstants.rioBus);
+  TalonFX rollerMotor = new TalonFX(BotConstants.GroundCoral.rollerId, BotConstants.rioBus);*/
   MotionMagicDutyCycle positionRequest = new MotionMagicDutyCycle(0);
 
   private GroundCoral() {
-    angleMotor.getConfigurator().apply(BotConstants.GroundCoral.angleCfg);
+    /*angleMotor.getConfigurator().apply(BotConstants.GroundCoral.angleCfg);
     rollerMotor.getConfigurator().apply(BotConstants.GroundCoral.rollerCfg);
     zero();
     this.setDefaultCommand(this.runEnd(() -> {
       angleMotor.setControl(positionRequest.withPosition(0));
     }, () -> {
       angleMotor.stopMotor();
-    }));
+    }));*/
   }
 
   public void resetPosition(double newPosition) {
-    angleMotor.setPosition(newPosition);
+    //angleMotor.setPosition(newPosition);
   }
 
   public void zero() {
@@ -65,30 +65,32 @@ public class GroundCoral extends SubsystemBase {
   }
 
   public void stop() {
-    angleMotor.stopMotor();
-    rollerMotor.stopMotor();
+    //angleMotor.stopMotor();
+    //rollerMotor.stopMotor();
   }
 
   public boolean isStalling() {
-    return rollerMotor.getStatorCurrent().getValue()
-        .in(Amp) > (BotConstants.GroundCoral.rollerCfg.CurrentLimits.StatorCurrentLimit - 20);
+    /*return rollerMotor.getStatorCurrent().getValue()
+        .in(Amp) > (BotConstants.GroundCoral.rollerCfg.CurrentLimits.StatorCurrentLimit - 20);*/
+        return false;
   }
 
   public double getPosition() {
-    return angleMotor.getPosition().getValue().in(Rotation);
+    return 0;
+    //return angleMotor.getPosition().getValue().in(Rotation);
   }
 
   public void position(double position) {
-    angleMotor.setControl(positionRequest.withPosition(position));
+    //angleMotor.setControl(positionRequest.withPosition(position));
   }
 
   public Command Intake() {
     return this.startEnd(() -> {
       position(Positions.Intake.value);
-      rollerMotor.set(0.8);
+      //rollerMotor.set(0.8);
     }, () -> {
-      angleMotor.stopMotor();
-      rollerMotor.stopMotor();
+      //angleMotor.stopMotor();
+      //rollerMotor.stopMotor();
     });
   }
 
@@ -101,7 +103,7 @@ public class GroundCoral extends SubsystemBase {
           } else {
             position(Positions.Ready.value);
           }
-          rollerMotor.stopMotor();
+          //rollerMotor.stopMotor();
         },
         this::stop);
   }
@@ -114,7 +116,7 @@ public class GroundCoral extends SubsystemBase {
           } else {
             position(Positions.Stowed.value);
           }
-          rollerMotor.set(0.45);
+          //rollerMotor.set(0.45);
         },
         this::stop);
   }
@@ -122,7 +124,7 @@ public class GroundCoral extends SubsystemBase {
   public Command Spit() {
     return this.runEnd(() -> {
       position(Positions.Spit.value);
-      rollerMotor.set(-0.2);
+      //rollerMotor.set(-0.2);
     }, this::stop);
   }
 
