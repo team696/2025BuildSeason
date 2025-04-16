@@ -25,19 +25,44 @@
         {
           "type": "named",
           "data": {
-            "name": "L3Algae"
+            "name": "L2Algae"
           }
         },
         {
-          "type": "path",
+          "type": "deadline",
           "data": {
-            "pathName": "middletonet"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "middletonet"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AlgaeUp"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Barge"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "bargetoreef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "L3Algae"
           }
         }
       ]

@@ -128,8 +128,10 @@ public class Robot extends TimedRobot {
     NamedCommands.registerCommand("AfterIntake",
         new MoveSuperStructure(GameInfo.RobotState.get(GameInfo.Position.Intake).get(GameInfo.RobotSide.Front), 0.15,
             false, 0.1).asProxy());
-    NamedCommands.registerCommand("Barge", new MoveSuperStructure(GameInfo.Net, 1.).asProxy());
-    NamedCommands.registerCommand("L3Algae", new MoveSuperStructure(GameInfo.L3Algae, -0.8, false, -1.).asProxy());
+    NamedCommands.registerCommand("Barge", new AutoMoveSuperStructure(GameInfo.Net, 1.,0).asProxy());
+    NamedCommands.registerCommand("L3Algae", new MoveSuperStructure(GameInfo.L3Algae, -0.8, false, -1.).until(()->EndEffector.get().isStalling()).asProxy());
+    NamedCommands.registerCommand("L2Algae", new MoveSuperStructure(GameInfo.L2AlgaeLow, -0.8, false, -1.).withTimeout(2).asProxy());
+    NamedCommands.registerCommand("AlgaeUp", new MoveSuperStructure(GameInfo.algaeUp, -0.3).asProxy());
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
 

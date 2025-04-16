@@ -43,7 +43,7 @@ public class GameInfo {
     public Angle wristRot;
   }
 
-  public static CoralScoringPosition Net, ground, Processor, ClimbUp, ClimbDown, L2Algae, L3Algae;
+  public static CoralScoringPosition Net, ground, Processor, ClimbUp, ClimbDown, L2Algae, L2AlgaeLow, L3Algae, algaeUp;
 
   /* Looking at the Index Dead On */
   public enum ReefSide {
@@ -141,12 +141,14 @@ public class GameInfo {
             RobotSide.Front, new CoralScoringPosition(6., 1., -0.9 - wristOffset),
             RobotSide.Back, new CoralScoringPosition(0, 0, 0.3 - wristOffset)));
     L2Algae = new CoralScoringPosition(17., -3., 1. - wristOffset);
+    L2AlgaeLow = new CoralScoringPosition(8., -3., 1. - wristOffset);
     L3Algae = new CoralScoringPosition(38., -3., 1. - wristOffset);
     Net = new CoralScoringPosition(67., 0., 6.5 - wristOffset);
     ClimbUp = new CoralScoringPosition(27, 0, 0 - wristOffset);
     ClimbDown = new CoralScoringPosition(2, 0, 0 - wristOffset);
     ground = new CoralScoringPosition(5., -6.3, -.5 - wristOffset);
     Processor = new CoralScoringPosition(0, -5., 1. - wristOffset);
+    algaeUp=new CoralScoringPosition(0, 0, 3);
   }
 
 }
