@@ -39,8 +39,8 @@ import frc.robot.subsystems.GroundCoral;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  private double MaxSpeed = SwerveConstants.THEORETICAL_MAX_SPEED.in(MetersPerSecond);// aTunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
-  private double MaxRotationalRate = RotationsPerSecond.of(10).in(RadiansPerSecond);
+  private double MaxSpeed = 3;//SwerveConstants.THEORETICAL_MAX_SPEED.in(MetersPerSecond);// aTunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+  private double MaxRotationalRate = RotationsPerSecond.of(/*10*/7).in(RadiansPerSecond);
   private SwerveTelemetry m_SwerveTelemetry = new SwerveTelemetry(MaxSpeed);
 
   private ProfiledPIDController thetaController = new ProfiledPIDController(1. / 200., 0, 0.,
@@ -106,6 +106,26 @@ public class Robot extends TimedRobot {
                 Math.pow(applyDeadband(HumanControls.DriverPanel.rightJoyX.getAsDouble(), 0.09), 2)
                     * Math.signum(HumanControls.DriverPanel.rightJoyX.getAsDouble()) * MaxRotationalRate)));
 
+    /*
+     * HumanControls.DriverPanel.OtherButton.whileTrue(Swerve.get().applyRequest(
+     * () -> Swerve.fcDriveReq.withVelocityX(
+     * Math.pow(applyDeadband(HumanControls.DriverPanel.leftJoyY.getAsDouble(),
+     * 0.09), 2)
+     * Math.signum(HumanControls.DriverPanel.leftJoyY.getAsDouble()) * MaxSpeed)
+     * .withVelocityY(Math.pow(applyDeadband(HumanControls.DriverPanel.leftJoyX.
+     * getAsDouble(), 0.09), 2)
+     * Math.signum(HumanControls.DriverPanel.leftJoyX.getAsDouble()) * MaxSpeed)
+     * 
+     * .withRotationalRate(
+     * (thetaController.calculate(Swerve.get().getPose().getRotation().getDegrees(),
+     * Swerve.get().goalRotation.get().getDegrees()))
+     * MaxRotationalRate))
+     * .alongWith(
+     * Commands.startEnd(() ->
+     * thetaController.reset(Swerve.get().getPose().getRotation().getDegrees()), ()
+     * -> {
+     * })));
+     */
     HumanControls.DriverPanel.OtherButton.whileTrue(Swerve.get().applyRequest(
         () -> Swerve.fcDriveReq.withVelocityX(
             Math.pow(applyDeadband(HumanControls.DriverPanel.leftJoyY.getAsDouble(), 0.09), 2)
@@ -115,12 +135,11 @@ public class Robot extends TimedRobot {
 
             .withRotationalRate(
                 (thetaController.calculate(Swerve.get().getPose().getRotation().getDegrees(),
-                    Swerve.get().goalRotation.get().getDegrees()))
+                    Swerve.get().getGoalRotation().getDegrees()))
                     * MaxRotationalRate))
         .alongWith(
             Commands.startEnd(() -> thetaController.reset(Swerve.get().getPose().getRotation().getDegrees()), () -> {
             })));
-
     NamedCommands.registerCommand("L4", new AutoMoveSuperStructure(
         GameInfo.RobotState.get(GameInfo.Position.L4).get(GameInfo.RobotSide.Back), -0.6, 0.0).asProxy());
     NamedCommands.registerCommand("Intake", new AutoMoveSuperStructure(
@@ -128,9 +147,11 @@ public class Robot extends TimedRobot {
     NamedCommands.registerCommand("AfterIntake",
         new MoveSuperStructure(GameInfo.RobotState.get(GameInfo.Position.Intake).get(GameInfo.RobotSide.Front), 0.15,
             false, 0.1).asProxy());
-    NamedCommands.registerCommand("Barge", new AutoMoveSuperStructure(GameInfo.Net, 1.,0).asProxy());
-    NamedCommands.registerCommand("L3Algae", new MoveSuperStructure(GameInfo.L3Algae, -0.8, false, -1.).until(()->EndEffector.get().isStalling()).asProxy());
-    NamedCommands.registerCommand("L2Algae", new MoveSuperStructure(GameInfo.L2AlgaeLow, -0.8, false, -1.).withTimeout(2).asProxy());
+    NamedCommands.registerCommand("Barge", new AutoMoveSuperStructure(GameInfo.Net, 1., 0).asProxy());
+    NamedCommands.registerCommand("L3Algae", new MoveSuperStructure(GameInfo.L3Algae, -0.8, false, -1.)
+        .until(() -> EndEffector.get().isStalling()).asProxy());
+    NamedCommands.registerCommand("L2Algae",
+        new MoveSuperStructure(GameInfo.L2AlgaeLow, -0.8, false, -1.).withTimeout(2).asProxy());
     NamedCommands.registerCommand("AlgaeUp", new MoveSuperStructure(GameInfo.algaeUp, -0.3).asProxy());
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -225,8 +246,11 @@ public class Robot extends TimedRobot {
     HumanControls.OperatorPanel2025.Climb1.whileTrue(new PIDtoNearest(false));
     HumanControls.OperatorPanel2025.Processor.whileTrue(new MoveSuperStructure(GameInfo.Processor, 0.6)
         .deadlineFor(Swerve.get().setGoalRotation(Swerve.get()::FaceProcessor, Swerve.get()::FaceSource)));
-    /*HumanControls.OperatorPanel2025.releaseCoral.and(HumanControls.OperatorPanel2025.pickupAlgae)
-        .whileTrue(new PrintCommand("trebuchet"));*/
+    /*
+     * HumanControls.OperatorPanel2025.releaseCoral.and(HumanControls.
+     * OperatorPanel2025.pickupAlgae)
+     * .whileTrue(new PrintCommand("trebuchet"));
+     */
 
   }
 

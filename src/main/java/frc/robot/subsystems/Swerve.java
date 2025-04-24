@@ -71,6 +71,16 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
 
   }
 
+  public Rotation2d getGoalRotation(){
+    Pose2d pose=getPose();
+    if(distTo(GameInfo.blueReef)<2.3){
+      return FaceHexFace();
+    }if(pose.getX()>6&&pose.getX()<9.8){
+      return FaceNet();
+    }
+    return FaceSource();
+  }
+
   public void updateYawOffset() {
     yawOffset = getPose().getRotation().minus(getPigeon2().getRotation2d());
   }
