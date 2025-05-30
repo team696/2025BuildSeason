@@ -64,13 +64,28 @@ public class GameInfo {
   public final static Distance fieldLengthMeters = Feet.of(57.53);
   public final static Distance fieldWidthMeters = Feet.of(26.75);
 
+  /**
+   * Mirrors a Translation2D across the midpoint of the field x-ais 
+   * @param starting The Translation2d to mirror
+   * @return The mirrored translation (X-Axis)
+   */
   public static Translation2d mirrorTranslation(Translation2d starting) {
     return new Translation2d(17.55- starting.getX(), starting.getY());
   }
+
+  /**
+   * Mirrors a Translation2D across the midpoint of the field x-ais and of the field y-axis
+   * @param starting The Translation2d to mirror
+   * @return The mirrored translation
+   */
   public static Translation2d mirrorTranslationXY(Translation2d starting) {
     return new Translation2d(17.55- starting.getX(), 8.05-starting.getY());
   }
 
+  /**
+   * Returns the relevant collection of scoring poses according to the alliance the robot is currently on
+   * @return The collection of scoring poses
+   */
   public static Map<Index, Map<ReefSide, Pose2d>> getScoringPoses(){
     return (Util.getAlliance()==Alliance.Red)?ScoringPosesRed:ScoringPosesBlue;
   }
@@ -93,6 +108,7 @@ public class GameInfo {
   }
 
   public final static Map<Position, Map<RobotSide, CoralScoringPosition>> RobotState;
+  
   public final static double wristOffset = 1.15;
   static {
     ScoringPosesBlue = Map.of(

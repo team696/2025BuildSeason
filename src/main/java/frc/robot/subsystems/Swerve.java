@@ -73,7 +73,9 @@ public class Swerve extends TunerSwerveDrivetrain implements Subsystem {
 
   public Rotation2d getGoalRotation(){
     Pose2d pose=getPose();
-    if(distTo(GameInfo.blueReef)<2.3){
+    // the second condition converts the blue reef pos to a red reef pos before checking if the robot is close enough
+    if(distTo(GameInfo.blueReef)<2.3||distTo((new Translation2d(GameInfo.fieldLengthMeters.in(Meters) - GameInfo.blueReef.getX(),
+    GameInfo.blueReef.getY())))<2.3){
       return FaceHexFace();
     }if(pose.getX()>6&&pose.getX()<9.8){
       return FaceNet();

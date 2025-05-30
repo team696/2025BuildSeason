@@ -81,6 +81,13 @@ public class EndEffector extends SubsystemBase {
     return motor.getStatorCurrent().getValue().in(Amps) >= 75 && velocitySignal.getValue().in(RotationsPerSecond) < 5;
   }
 
+  /**
+   * spins the roller at a fraction of it's power <i> power </i>?
+   * 
+   * @param power [-1,1] A function returning the fraction of the power that the
+   *              roller can exert at 12V. Polled every tick.
+   * @return the command
+   */
   public Command spin(DoubleSupplier power) {
     return this.runEnd(() -> run(power.getAsDouble()), () -> motor.set(0));
   }
