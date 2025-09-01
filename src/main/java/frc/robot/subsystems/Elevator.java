@@ -67,10 +67,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public void goToPosition(double position) {
-    if (GroundCoral.get().getPosition() > GroundCoral.Positions.Stowed.value + 2.
-        && GroundCoral.get().getPosition() < GroundCoral.Positions.Ready.value - 1) {
-      position = Math.max(position, 25);
-    }
+
     master.get().setControl(positionReq.withPosition(position));
   }
 

@@ -11,8 +11,12 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -23,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutoMoveSuperStructure;
 import frc.robot.commands.MoveSuperStructure;
@@ -31,11 +36,11 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Wrist;
 import frc.robot.util.GameInfo;
+import frc.robot.util.GameInfo.ReefSide;
 import frc.team696.lib.Logging.BackupLogger;
 import frc.team696.lib.Swerve.SwerveConstants;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.EndEffector;
-import frc.robot.subsystems.GroundCoral;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -83,13 +88,37 @@ public class Robot extends TimedRobot {
 
   private final SendableChooser<Command> autoChooser;
 
+  private Command OldTimesAuto(){
+    SequentialCommandGroup commandGroup=new SequentialCommandGroup();
+    PathConstraints constraints=new PathConstraints(2,1, 15, 10);
+    for(var index:GameInfo.getScoringPoses().entrySet()){
+      Pose2d goalPoseLeft=index.getValue().get(GameInfo.ReefSide.Left);
+      Pose2d goalPoseRight=index.getValue().get(GameInfo.ReefSide.Right);
+
+      commandGroup.addCommands(
+        AutoBuilder.pathfindToPose(goalPoseLeft, constraints),
+        new AutoMoveSuperStructure(
+        GameInfo.RobotState.get(GameInfo.Position.L4).get(GameInfo.RobotSide.Back), -0.6, 0.0).asProxy(),
+        AutoBuilder.pathfindToPose(new Pose2d(1.397, 7.55, Rotation2d.fromDegrees(35)), constraints),
+        new AutoMoveSuperStructure(
+        GameInfo.RobotState.get(GameInfo.Position.Intake).get(GameInfo.RobotSide.Front), .6, .1, true).asProxy(),
+        AutoBuilder.pathfindToPose(goalPoseRight, constraints),
+        new AutoMoveSuperStructure(
+        GameInfo.RobotState.get(GameInfo.Position.L4).get(GameInfo.RobotSide.Back), -0.6, 0.0).asProxy(),
+        AutoBuilder.pathfindToPose(new Pose2d(1.397, 7.55, Rotation2d.fromDegrees(35)), constraints),
+        new AutoMoveSuperStructure(
+        GameInfo.RobotState.get(GameInfo.Position.Intake).get(GameInfo.RobotSide.Front), .6, .1, true).asProxy()
+      );
+    }
+    return commandGroup;
+  }
+
   public Robot() {
     // TODO: strip out groundcoral system
     thetaController.enableContinuousInput(-180, 180);
     Arm.get();
     Elevator.get();
     EndEffector.get();
-    GroundCoral.get();
     Swerve.get();
     Wrist.get();
     DriverStation.silenceJoystickConnectionWarning(true);
@@ -156,59 +185,33 @@ public class Robot extends TimedRobot {
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
+    SmartDashboard.putData("L1",new MoveSuperStructure(GameInfo.RobotState.get(GameInfo.Position.L1).get(GameInfo.RobotSide.Front), 0));
+    SmartDashboard.putData("L2", new MoveSuperStructure(GameInfo.RobotState.get(GameInfo.Position.L2).get(GameInfo.RobotSide.Front), 0));
+    SmartDashboard.putData("L3",new MoveSuperStructure(GameInfo.RobotState.get(GameInfo.Position.L3).get(GameInfo.RobotSide.Front), 0));
+    SmartDashboard.putData("L4",new MoveSuperStructure(GameInfo.RobotState.get(GameInfo.Position.L4).get(GameInfo.RobotSide.Front), 0));
+    SmartDashboard.putData("Old times Auto", OldTimesAuto());
+
     // Warmup Commands for PathPlanner
     // PathfindingCommand.warmupCommand().schedule();
 
     Elevator.get().setDefaultCommand(Elevator.get().positionCommand(() -> {
-      if (!HumanControls.OperatorPanel2025.unlabedSwitch.getAsBoolean()) {
-        if (GroundCoral.get().getPosition() > 3.) {
-          return 25;
-        } else {
-          return 0;
-        }
-      } else {
-        if (GroundCoral.get().getPosition() < 5.) {
-          return 25.;
-        } else {
-          return 0;
-        }
-      }
+      return 0;
     }));
     Wrist.get().setDefaultCommand(Wrist.get().Position(-0.3));
     Arm.get().setDefaultCommand(Arm.get().Position(() -> .7));
     EndEffector.get().setDefaultCommand(EndEffector.get().spin(() -> EndEffector.get().idlePower));
-    GroundCoral.get().setDefaultCommand(GroundCoral.get().Stowed());
   }
 
   private void configureDriverStationBinds() {
     HumanControls.DriverPanel.resetGyro.whileTrue(new PIDtoNearest(false));
     HumanControls.OperatorPanel2025.gyro.onTrue(new InstantCommand(() -> Swerve.get().seedFieldCentric()));
     HumanControls.OperatorPanel2025.releaseCoral.whileTrue(
-        new ConditionalCommand(
-            new InstantCommand(() -> {
-              EndEffector.get().idlePower = -0.6;
-            }),
-            GroundCoral.get().Spit(),
-            () -> !HumanControls.OperatorPanel2025.unlabedSwitch.getAsBoolean()));
+      new InstantCommand(() -> {
+        EndEffector.get().idlePower = -0.6;
+      }));
 
-    HumanControls.OperatorPanel2025.unlabedSwitch.onFalse(
-        new InstantCommand(() -> {
-          if (GroundCoral.get().getCurrentCommand() != null)
-            GroundCoral.get().getCurrentCommand().cancel();
-          GroundCoral.get().setDefaultCommand(GroundCoral.get().Stowed());
-        }).ignoringDisable(true));
-    HumanControls.OperatorPanel2025.unlabedSwitch.onTrue(
-        new InstantCommand(() -> {
-          if (GroundCoral.get().getCurrentCommand() != null)
-            GroundCoral.get().getCurrentCommand().cancel();
-          Swerve.get().goalRotation = Swerve.get()::FaceHexFace;
-          GroundCoral.get().setDefaultCommand(GroundCoral.get().Ready());
-          EndEffector.get().idlePower = 0;
-        }).ignoringDisable(true));
 
-    HumanControls.OperatorPanel2025.GroundCoral.whileTrue(
-        new ConditionalCommand(Commands.none(), GroundCoral.get().Intake(),
-            () -> !HumanControls.OperatorPanel2025.unlabedSwitch.getAsBoolean()));
+
     HumanControls.OperatorPanel2025.L1.whileTrue(
         new ConditionalCommand(
             new MoveSuperStructure(GameInfo.ground, -0.8, false, -.8),
