@@ -143,27 +143,27 @@ public class GameInfo {
     RobotState = Map.of(
         Position.L1, Map.of(
             RobotSide.Front, new CoralScoringPosition(0., 1.75, 1.1 - wristOffset),
-            RobotSide.Back, new CoralScoringPosition(0, -1., -8. - wristOffset)),
+            RobotSide.Back, new CoralScoringPosition(0, -1., -20)),
         Position.L2, Map.of(
             RobotSide.Front, new CoralScoringPosition(14., 1.75, 1.56 - wristOffset),
-            RobotSide.Back, new CoralScoringPosition(3., -1., -8.3 - wristOffset)),
+            RobotSide.Back, new CoralScoringPosition(3., -1., -20)),
         Position.L3, Map.of(
             RobotSide.Front, new CoralScoringPosition(33., 1.75, 1.1 - wristOffset),
-            RobotSide.Back, new CoralScoringPosition(25., -1., -8.3 - wristOffset)),
+            RobotSide.Back, new CoralScoringPosition(25., -1., -20.5)),
         Position.L4, Map.of(
             RobotSide.Front, new CoralScoringPosition(67., 0.7, 1.6 - wristOffset),
-            RobotSide.Back, new CoralScoringPosition(64, -1.45, -9.5 - wristOffset)),
+            RobotSide.Back, new CoralScoringPosition(64, -1.45, -22.6)),
         Position.Intake, Map.of(
-            RobotSide.Front, new CoralScoringPosition(6., 1., -0.9 - wristOffset),
+            RobotSide.Front, new CoralScoringPosition(6., 1., -4.5),
             RobotSide.Back, new CoralScoringPosition(0, 0, 0.3 - wristOffset)));
     L2Algae = new CoralScoringPosition(17., -3., 1. - wristOffset);
     L2AlgaeLow = new CoralScoringPosition(8., -3., 1. - wristOffset);
     L3Algae = new CoralScoringPosition(38., -3., 1. - wristOffset);
-    Net = new CoralScoringPosition(67., 0., 6.5 - wristOffset);
+    Net = new CoralScoringPosition(67., 0., 10);
     ClimbUp = new CoralScoringPosition(27, 0, 0 - wristOffset);
     ClimbDown = new CoralScoringPosition(2, 0, 0 - wristOffset);
-    ground = new CoralScoringPosition(5., -6.3, -.5 - wristOffset);
-    Processor = new CoralScoringPosition(0, -5., 1. - wristOffset);
+    ground = new CoralScoringPosition(5., -6.3, -.5 - wristOffset); // TODO: UPDATE THE WRIST COMPONENT OF THIS POSITION
+    Processor = new CoralScoringPosition(0, -5., 1. - wristOffset); // TODO: UPDATE THE WRIST COMPONENT OF THIS POSITION
     algaeUp=new CoralScoringPosition(0, 0, 3);
   }
 
