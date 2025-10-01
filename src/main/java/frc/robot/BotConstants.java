@@ -56,7 +56,7 @@ public class BotConstants {
       cfg.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
       cfg.Slot0.kP = 8.;
       cfg.CurrentLimits.StatorCurrentLimitEnable = true;
-      cfg.CurrentLimits.StatorCurrentLimit = 100.;
+      cfg.CurrentLimits.StatorCurrentLimit = 120.;
       cfg.MotionMagic.MotionMagicCruiseVelocity = 80.;
       cfg.MotionMagic.MotionMagicAcceleration = 65.;
 

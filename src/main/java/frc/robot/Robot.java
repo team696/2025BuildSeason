@@ -44,7 +44,7 @@ import frc.robot.subsystems.EndEffector;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  private double MaxSpeed = 3;//SwerveConstants.THEORETICAL_MAX_SPEED.in(MetersPerSecond);// aTunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+  private double MaxSpeed = SwerveConstants.MAX_VELOCITY.in(MetersPerSecond);// aTunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
   private double MaxRotationalRate = RotationsPerSecond.of(/*10*/7).in(RadiansPerSecond);
   private SwerveTelemetry m_SwerveTelemetry = new SwerveTelemetry(MaxSpeed);
 
@@ -174,7 +174,7 @@ public class Robot extends TimedRobot {
     NamedCommands.registerCommand("Intake", new AutoMoveSuperStructure(
         GameInfo.RobotState.get(GameInfo.Position.Intake).get(GameInfo.RobotSide.Front), .6, .1, true).asProxy());
     NamedCommands.registerCommand("AfterIntake",
-        new MoveSuperStructure(GameInfo.RobotState.get(GameInfo.Position.Intake).get(GameInfo.RobotSide.Front), 0.15,
+        new MoveSuperStructure(GameInfo.RobotState.get(GameInfo.Position.L1).get(GameInfo.RobotSide.Back), 0.15,
             false, 0.1).asProxy());
     NamedCommands.registerCommand("Barge", new AutoMoveSuperStructure(GameInfo.Net, 1., 0).asProxy());
     NamedCommands.registerCommand("L3Algae", new MoveSuperStructure(GameInfo.L3Algae, -0.8, false, -1.)
