@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.675,
-        "y": 4.1
+        "x": 5.8,
+        "y": 4.09
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.551198630136986,
-        "y": 5.076669520547945
+        "x": 6.676198630136986,
+        "y": 5.066669520547945
       },
       "isLocked": false,
       "linkedName": "FourBall"

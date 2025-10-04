@@ -159,11 +159,11 @@ public class GameInfo {
     L2Algae = new CoralScoringPosition(17., -3., 1. - wristOffset);
     L2AlgaeLow = new CoralScoringPosition(8., -3., 1. - wristOffset);
     L3Algae = new CoralScoringPosition(38., -3., 1. - wristOffset);
-    Net = new CoralScoringPosition(67., 0., 10);
+    Net = new CoralScoringPosition(67., 0.4, 12);
     ClimbUp = new CoralScoringPosition(27, 0, 0 - wristOffset);
     ClimbDown = new CoralScoringPosition(2, 0, 0 - wristOffset);
-    ground = new CoralScoringPosition(5., -6.3, -.5 - wristOffset); // TODO: UPDATE THE WRIST COMPONENT OF THIS POSITION
-    Processor = new CoralScoringPosition(0, -5., 1. - wristOffset); // TODO: UPDATE THE WRIST COMPONENT OF THIS POSITION
+    ground = new CoralScoringPosition(5., -6.3, -2 - wristOffset); // TODO: UPDATE THE WRIST COMPONENT OF THIS POSITION
+    Processor = new CoralScoringPosition(0, -5., 1.3 - wristOffset); // TODO: UPDATE THE WRIST COMPONENT OF THIS POSITION
     algaeUp=new CoralScoringPosition(0, 0, 3);
   }
 
