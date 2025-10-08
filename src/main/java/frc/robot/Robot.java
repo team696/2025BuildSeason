@@ -176,6 +176,10 @@ public class Robot extends TimedRobot {
     NamedCommands.registerCommand("AfterIntake",
         new MoveSuperStructure(GameInfo.RobotState.get(GameInfo.Position.L1).get(GameInfo.RobotSide.Back), 0.15,
             false, 0.1).asProxy());
+
+    NamedCommands.registerCommand("L1", new AutoMoveSuperStructure(
+      GameInfo.RobotState.get(GameInfo.Position.L2).get(GameInfo.RobotSide.Back), -0.6, 0.0).asProxy());
+      
     NamedCommands.registerCommand("Barge", new AutoMoveSuperStructure(GameInfo.Net, 1., 0).asProxy());
     NamedCommands.registerCommand("L3Algae", new MoveSuperStructure(GameInfo.L3Algae, -0.8, false, -1.)
         .until(() -> EndEffector.get().isStalling()).asProxy());
