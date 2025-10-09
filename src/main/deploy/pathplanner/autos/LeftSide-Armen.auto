@@ -23,7 +23,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "thentosource-armen"
+                  "pathName": "2. thentosource-armen"
                 }
               },
               {
@@ -55,7 +55,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "backtoreef-armen"
+                  "pathName": "3. backtoreef-armen"
                 }
               },
               {
@@ -80,7 +80,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "tosource2-armen"
+                  "pathName": "4. tosource2-armen"
                 }
               },
               {
@@ -112,7 +112,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "end-armen"
+                  "pathName": "5.end-armen"
                 }
               },
               {
@@ -127,7 +127,7 @@
         {
           "type": "named",
           "data": {
-            "name": "L4"
+            "name": "L1"
           }
         }
       ]
