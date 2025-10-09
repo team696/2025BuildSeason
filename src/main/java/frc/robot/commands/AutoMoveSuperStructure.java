@@ -51,10 +51,10 @@ public class AutoMoveSuperStructure extends Command {
     Wrist.get().goToPosition(position);
     Elevator.get().goToPosition(position);
     if (Math.abs(Wrist.get().getPosition() - position.wristRot.in(Units.Rotation)) < .5
-        && Math.abs(Elevator.get().getPosition() - position.height) < .5) {
+        && Math.abs(Elevator.get().getPosition() - position.height) < 2.) {
 
       Arm.get().goToPosition(position);
-      if (Math.abs(Arm.get().getPosition() - position.armRot.in(Units.Rotation)) < .5) {
+      if (Math.abs(Arm.get().getPosition() - position.armRot.in(Units.Rotation)) < .3) {
 
         EndEffector.get().run(runRollers);
         if (readyToShoot > 99999) {
@@ -82,7 +82,7 @@ public class AutoMoveSuperStructure extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Timer.getFPGATimestamp() - readyToShoot > 0.4)
+    return (Timer.getFPGATimestamp() - readyToShoot > 0.2)
         && (!waitForStall || EndEffector.get().isStalling());
   }
 }
