@@ -46,7 +46,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private double MaxSpeed = SwerveConstants.MAX_VELOCITY.in(MetersPerSecond);// aTunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
   private double MaxRotationalRate = RotationsPerSecond.of(/*10*/7).in(RadiansPerSecond);
-  private SwerveTelemetry m_SwerveTelemetry = new SwerveTelemetry(MaxSpeed);
+  //private SwerveTelemetry m_SwerveTelemetry = new SwerveTelemetry(MaxSpeed);
 
   private ProfiledPIDController thetaController = new ProfiledPIDController(1. / 200., 0, 0.,
       new TrapezoidProfile.Constraints(360, 480));
@@ -114,6 +114,7 @@ public class Robot extends TimedRobot {
   }
 
   public Robot() {
+    BackupLogger.stop();
     // TODO: strip out groundcoral system
     thetaController.enableContinuousInput(-180, 180);
     Arm.get();
@@ -123,7 +124,7 @@ public class Robot extends TimedRobot {
     Wrist.get();
     DriverStation.silenceJoystickConnectionWarning(true);
     logBuildInfo();
-    SignalLogger.start();
+    //SignalLogger.start();
     configureDriverStationBinds();
     Swerve.get().setDefaultCommand(Swerve.get().applyRequest(
         () -> Swerve.fcDriveReq.withVelocityX(
@@ -264,8 +265,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    m_SwerveTelemetry.telemeterize(Swerve.get().getState());
-    BackupLogger.logSystemInformation();
   }
 
   @Override
