@@ -8,8 +8,8 @@
     "RightSide"
   ],
   "autoFolders": [],
-  "defaultMaxVel": 3.5,
-  "defaultMaxAccel": 2.3,
+  "defaultMaxVel": 3.9,
+  "defaultMaxAccel": 2.4,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 480.0,
   "defaultNominalVoltage": 12.0,
