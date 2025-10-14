@@ -145,12 +145,12 @@ public class GameInfo {
             RobotSide.Front, new CoralScoringPosition(0., 1.75, 1.1 - wristOffset),
             RobotSide.Back, new CoralScoringPosition(0, -1., -20)),
         Position.L2, Map.of(
-            RobotSide.Front, new CoralScoringPosition(14., 1.75, 1.56 - wristOffset),
+            RobotSide.Front, new CoralScoringPosition(14., 1.75, 1.1 - wristOffset),
             RobotSide.Back, new CoralScoringPosition(3., -1., -20)),
         Position.L3, Map.of(
             RobotSide.Front, new CoralScoringPosition(33., 1.75, 1.1 - wristOffset),
             RobotSide.Back, new CoralScoringPosition(25., -1., -20.5)),
-        Position.L4, Map.of(
+        Position.L4, Map.of( 
             RobotSide.Front, new CoralScoringPosition(67., 0.7, 1.6 - wristOffset),
             RobotSide.Back, new CoralScoringPosition(64, -1.45, -22.6)),
         Position.Intake, Map.of(
@@ -164,7 +164,7 @@ public class GameInfo {
     ClimbDown = new CoralScoringPosition(2, 0, 0 - wristOffset);
     ground = new CoralScoringPosition(5., -6.3, -3. - wristOffset); // TODO: UPDATE THE WRIST COMPONENT OF THIS POSITION
     Processor = new CoralScoringPosition(0, -5., 1.3 - wristOffset); // TODO: UPDATE THE WRIST COMPONENT OF THIS POSITION
-    algaeUp=new CoralScoringPosition(0, 0, 3);
+    algaeUp=new CoralScoringPosition(0, 0, 3); //HIIIII brandon
   }
 
 }
