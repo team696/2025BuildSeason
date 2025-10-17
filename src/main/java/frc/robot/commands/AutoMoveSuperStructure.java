@@ -54,9 +54,10 @@ public class AutoMoveSuperStructure extends Command {
         && Math.abs(Elevator.get().getPosition() - position.height) < .5) {
 
       Arm.get().goToPosition(position);
-      if (Math.abs(Arm.get().getPosition() - position.armRot.in(Units.Rotation)) < .5) {
+      if (Math.abs(Arm.get().getPosition() - position.armRot.in(Units.Rotation)) < 1.) {
 
         EndEffector.get().run(runRollers);
+        
         if (readyToShoot > 99999) {
           readyToShoot = Timer.getFPGATimestamp();
         }
