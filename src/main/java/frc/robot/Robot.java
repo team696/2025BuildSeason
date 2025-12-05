@@ -128,13 +128,13 @@ public class Robot extends TimedRobot {
     configureDriverStationBinds();
     Swerve.get().setDefaultCommand(Swerve.get().applyRequest(
         () -> Swerve.fcDriveReq.withVelocityX(
-            Math.pow(applyDeadband(HumanControls.DriverPanel.leftJoyY.getAsDouble(), 0.09), 2)
-                * Math.signum(HumanControls.DriverPanel.leftJoyY.getAsDouble()) * MaxSpeed)
-            .withVelocityY(Math.pow(applyDeadband(HumanControls.DriverPanel.leftJoyX.getAsDouble(), 0.09), 2)
-                * Math.signum(HumanControls.DriverPanel.leftJoyX.getAsDouble()) * MaxSpeed)
+            Math.pow(applyDeadband(HumanControls.SingleXboxController.leftJoyY.getAsDouble(), 0.09), 2)
+                * Math.signum(HumanControls.SingleXboxController.leftJoyY.getAsDouble()) * MaxSpeed)
+            .withVelocityY(Math.pow(applyDeadband(HumanControls.SingleXboxController.leftJoyX.getAsDouble(), 0.09), 2)
+                * Math.signum(HumanControls.SingleXboxController.leftJoyX.getAsDouble()) * MaxSpeed)
             .withRotationalRate(
-                Math.pow(applyDeadband(HumanControls.DriverPanel.rightJoyX.getAsDouble(), 0.09), 2)
-                    * Math.signum(HumanControls.DriverPanel.rightJoyX.getAsDouble()) * MaxRotationalRate)));
+                Math.pow(applyDeadband(HumanControls.SingleXboxController.rightJoyX.getAsDouble(), 0.09), 2)
+                    * Math.signum(HumanControls.SingleXboxController.rightJoyX.getAsDouble()) * MaxRotationalRate)));
     /*
      * HumanControls.DriverPanel.OtherButton.whileTrue(Swerve.get().applyRequest(
      * () -> Swerve.fcDriveReq.withVelocityX(
@@ -155,12 +155,12 @@ public class Robot extends TimedRobot {
      * -> {
      * })));
      */
-    HumanControls.DriverPanel.OtherButton.whileTrue(Swerve.get().applyRequest(
+    HumanControls.SingleXboxController.RT.whileTrue(Swerve.get().applyRequest(
         () -> Swerve.fcDriveReq.withVelocityX(
-            Math.pow(applyDeadband(HumanControls.DriverPanel.leftJoyY.getAsDouble(), 0.09), 2)
-                * Math.signum(HumanControls.DriverPanel.leftJoyY.getAsDouble()) * MaxSpeed)
-            .withVelocityY(Math.pow(applyDeadband(HumanControls.DriverPanel.leftJoyX.getAsDouble(), 0.09), 2)
-                * Math.signum(HumanControls.DriverPanel.leftJoyX.getAsDouble()) * MaxSpeed)
+            Math.pow(applyDeadband(HumanControls.SingleXboxController.leftJoyY.getAsDouble(), 0.09), 2)
+                * Math.signum(HumanControls.SingleXboxController.leftJoyY.getAsDouble()) * MaxSpeed)
+            .withVelocityY(Math.pow(applyDeadband(HumanControls.SingleXboxController.leftJoyX.getAsDouble(), 0.09), 2)
+                * Math.signum(HumanControls.SingleXboxController.leftJoyX.getAsDouble()) * MaxSpeed)
 
             .withRotationalRate(
                 (thetaController.calculate(Swerve.get().getPose().getRotation().getDegrees(),
@@ -207,7 +207,7 @@ public class Robot extends TimedRobot {
   }
 
   private void configureDriverStationBinds() {
-    HumanControls.DriverPanel.resetGyro.whileTrue(new PIDtoNearest(false));
+    HumanControls.SingleXboxController.RB.whileTrue(new PIDtoNearest(false));
     HumanControls.OperatorPanel2025.gyro.onTrue(new InstantCommand(() -> Swerve.get().seedFieldCentric()));
     HumanControls.OperatorPanel2025.releaseCoral.whileTrue(
       new InstantCommand(() -> {
